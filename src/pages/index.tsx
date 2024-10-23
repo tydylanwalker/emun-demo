@@ -1,10 +1,17 @@
 import Head from "next/head";
-import Image from "next/image";
-import styles from "@/styles/Home.module.css";
 import { Stack, Typography } from "@mui/material";
 import { CustomizedTables } from "@/components/Table";
+import { BasicSelect } from "../components/Select";
+import * as React from "react";
 
 export default function Home() {
+  const [vendor, setVendor] = React.useState("All");
+
+  const vendorSelected = (value: string) => {
+    console.log(value)
+    setVendor(value);
+  };
+
   return (
     <>
       <Head>
@@ -12,17 +19,9 @@ export default function Home() {
       </Head>
         
       <Stack gap={5} p={5}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
         <Stack>
-          <Typography variant="h5" gap={2}>View Orders</Typography>
-          <CustomizedTables />
+          <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }} ><Typography variant="h5" gap={2}>View Orders</Typography><BasicSelect vendor={vendor} vendorSelected={vendorSelected}></BasicSelect></Stack>
+          <CustomizedTables vendor={vendor}/>
         </Stack>
       </Stack>
    

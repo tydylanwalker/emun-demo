@@ -1,4 +1,73 @@
-export const vendors = {
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+export interface Vendors {
+    offset:  number;
+    total:   number;
+    results: Vendor[];
+}
+
+export interface Vendor {
+    id?:                       string;
+    label?:                    string;
+    vendorName?:               string;
+    abbreviation?:             string;
+    orderMinimum?:             number;
+    reOrderMinimum?:           number;
+    minimumBalance?:           number;
+    active?:                   boolean;
+    isInvoiceOnly?:            boolean;
+    allowPriceOverride?:       boolean;
+    defaultShipDatePrevious?:  boolean;
+    enforceMinimums?:          boolean;
+    enforcePurchaseIncrement?: boolean;
+    allowDiscounts?:           boolean;
+    emailOrders?:              boolean;
+    allowBackorders?:          boolean;
+    useVendorCustId?:          boolean;
+    useVendorShipId?:          boolean;
+    useVendorTerms?:           boolean;
+    exportReviewOrders?:       boolean;
+    emailUrlToExport?:         boolean;
+    includeInBatch?:           boolean;
+    decryptCCOnExport?:        boolean;
+    customerNumber?:           string;
+    exportOrders?:             boolean;
+    splitByProductLine?:       boolean;
+    isShowroomVendor?:         boolean;
+    allowManualItemEntry?:     boolean;
+    requireCreditSheet?:       boolean;
+    address?:                  string;
+    city?:                     string;
+    state?:                    string;
+    zip?:                      string;
+    phone?:                    string;
+    fax?:                      string;
+    email?:                    string;
+    website?:                  string;
+    note?:                     string;
+    commissionPercent?:        number;
+    orderTagLine?:             string;
+    productTags?:              string[];
+    settings?:                 Setting[];
+    lastLoginAttempt?:         string;
+    lastOrderedOn?:            string;
+    meta?:                     Meta;
+    tags?:                     Tags;
+}
+
+export interface Meta {
+}
+
+export interface Setting {
+    vendorId?: string;
+    key?:      string;
+    value?:    string;
+}
+
+export interface Tags {
+    EditForm?: string[];
+}
+
+export const vendors: Vendors = {
     "offset": 0,
     "total": 20,
     "results": [

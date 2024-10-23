@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { orders } from "@/data/orders";
-import { Typography } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -129,8 +129,11 @@ const tableHeaders: ITableHeaders[] = [
   },
 ];
 
-export function CustomizedTables() {
+export function CustomizedTables(props: TableProps) {
+  const filteredData = props.vendor === 'All' ? orders.results : orders.results.filter(item => item.vendorId === props.vendor);
+
   return (
+    <Box>
     <TableContainer component={Paper} style={{ overflowX: "auto" }}>
       <Table>
         <TableHead>
@@ -143,7 +146,7 @@ export function CustomizedTables() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {orders.results.map((order, rowIndex) => (
+          {filteredData.map((order, rowIndex) => (
             <StyledTableRow key={rowIndex}>
               {tableHeaders.map((header, index) => {
                 const { fieldName, align, type } = header;
@@ -197,5 +200,11 @@ export function CustomizedTables() {
         </TableBody>
       </Table>
     </TableContainer>
+    </Box>
   );
+}
+
+
+interface TableProps {
+  vendor: string;
 }
