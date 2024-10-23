@@ -2,9 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import localFont from "next/font/local";
 import styles from "@/styles/Home.module.css";
-import { Box, Button, Stack, Typography } from "@mui/material";
-import { CustomizedTables } from "@/components/Table";
-import { useEffect, useState } from "react";
+import { Stack, Typography } from "@mui/material";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

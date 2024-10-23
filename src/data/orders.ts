@@ -1,4 +1,83 @@
-export const orders = {
+interface Purchaser {
+    id?: string;
+    companyName?: string;
+}
+
+interface Vendor {
+    id?: string;
+    label?: string;
+}
+
+interface Source {
+    id?: string;
+    label?: string;
+}
+
+interface Representative {
+    name?: string;
+}
+
+export interface Orders {
+    offset: number;
+    total: number;
+    results: Order[];
+}
+
+export interface Order {
+    purchaser?: Purchaser;
+    vendor?: Vendor;
+    showCode?: Record<string, unknown>; // Adjust the type based on the actual structure
+    source?: Source;
+    salesRep?: Record<string, unknown>; // Adjust as needed
+    currentRep?: Representative;
+    writingRep?: Representative;
+    paymentTerm?: Record<string, unknown>; // Adjust as needed
+    id?: string;
+    companyName?: string;
+    retailerId?: string;
+    purchaseOrder?: string;
+    orderedOn?: string; // Consider using Date type if parsing is needed
+    shipOn?: string; // Consider using Date type if parsing is needed
+    expectedToClear?: string; // Consider using Date type if parsing is needed
+    timeStampOn?: string; // Consider using Date type if parsing is needed
+    grandTotal?: number;
+    openTotal?: number;
+    shippedTotal?: number;
+    shippedAmount?: number;
+    checkAmount?: number;
+    balance?: number;
+    vendorId?: string;
+    vendorLabel?: string;
+    status?: string;
+    subTotal?: number;
+    promoDiscount?: number;
+    parcelCount?: number;
+    changeCount?: number;
+    pendingChangeCount?: number;
+    approvedChangeCount?: number;
+    declinedChangeCount?: number;
+    currentRepName?: string;
+    writingRepName?: string;
+    orderSourceLabel?: string;
+    shipCity?: string;
+    shipState?: string;
+    retailerIsCreditHold?: boolean;
+    exported?: boolean;
+    uploaded?: boolean;
+    generatedFrom?: string;
+    isEmunOrder?: boolean;
+    stage?: string;
+    canEdit?: boolean;
+    reviewReason?: string;
+    cancelOn?: string; // Consider using Date type if parsing is needed
+    discountPercentage?: number;
+    backorderTotal?: number;
+    shippableTotal?: number;
+    isCorpModified?: boolean;
+    hasNotes?: boolean;
+}
+
+export const orders: Orders = {
     "offset": 0,
     "total": 101376,
     "results": [

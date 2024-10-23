@@ -1,12 +1,14 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import * as React from "react";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { orders } from "@/data/orders";
+import { text } from "stream/consumers";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -19,34 +21,94 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
+  "&:nth-of-type(odd)": {
     backgroundColor: theme.palette.action.hover,
   },
   // hide last border
-  '&:last-child td, &:last-child th': {
+  "&:last-child td, &:last-child th": {
     border: 0,
   },
 }));
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
+const tableHeaders = [
+  {
+    text: "id",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Customer",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "PO #",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Source",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Vendor",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Amount",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Balance",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Order Date",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Ship Date",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Ship City",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Ship State",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Rep",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Writing Rep",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Generated From",
+    align: "right",
+    fieldName: "id",
+  },
+  {
+    text: "Status",
+    align: "right",
+    fieldName: "id",
+  },
 ];
 
-export function CustomizedTables(props: CustomizedTablesProps) {
+export function CustomizedTables() {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -60,23 +122,20 @@ export function CustomizedTables(props: CustomizedTablesProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
+          {orders.results.map((order, index) => (
+            <StyledTableRow key={index}>
               <StyledTableCell component="th" scope="row">
-                {row.name}
+                {order.companyName}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.calories}</StyledTableCell>
+              {/* <StyledTableCell align="right">{order.}</StyledTableCell>
               <StyledTableCell align="right">{row.fat}</StyledTableCell>
               <StyledTableCell align="right">{row.carbs}</StyledTableCell>
               <StyledTableCell align="right">{row.protein}</StyledTableCell>
+              <StyledTableCell align="right">{row.protein}</StyledTableCell> */}
             </StyledTableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
   );
-}
-
-interface CustomizedTablesProps { 
-
 }
