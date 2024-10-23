@@ -2,7 +2,9 @@ import Head from "next/head";
 import Image from "next/image";
 import localFont from "next/font/local";
 import styles from "@/styles/Home.module.css";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { CustomizedTables } from "@/components/Table";
+import { useEffect, useState } from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -36,7 +38,7 @@ export default function Home() {
             height={38}
             priority
           />
-          <Box><Typography variant="h1">Hello mothafucka</Typography></Box>
+          <Stack direction="row"><Typography variant="h1">Hello mothafucka</Typography><Typography variant="h1">Hello mothafucka2</Typography></Stack>
           <ol>
             <li>
               Get started by editing <code>src/pages/index.tsx</code>.
