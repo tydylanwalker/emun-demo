@@ -2,12 +2,12 @@ import Head from "next/head";
 import { Stack, Typography, Box } from "@mui/material";
 import * as React from "react";
 import { NextPage } from "next";
-import { BaseLayout } from "@/components/layout/BaseLayout";
-import BasicCard from "@/components/home/Card";
-import { orders } from "@/data/orders";
-import BarChartSet from "@/components/home/BarChartSet";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import BarChartSet from "../../components/home/BarChartSet";
+import BasicCard from "../../components/home/Card";
+import { BaseLayout } from "../../components/layout/BaseLayout";
+import { orders } from "../../data/orders";
 
 interface CurrencyProps {
   amount: number;

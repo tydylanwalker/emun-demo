@@ -1,6 +1,6 @@
 import * as React from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { Order, orders } from "@/data/orders";
+import { Order, orders } from "../../data/orders";
 
 const monthNames: string[] = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
