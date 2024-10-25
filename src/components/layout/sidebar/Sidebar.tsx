@@ -31,7 +31,7 @@ const sidebarContent: ISidebarContent[] = [
     },
     {
         icon: <ContactsRounded />,
-        label: "Venders",
+        label: "Vendors",
         href: "/contacts"
     },
     {
