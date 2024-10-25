@@ -62,14 +62,13 @@ export default function BarChartSet() {
   let ordersPerMonth = mapDatesByMonth(lastYearsOrders);
   let labels = ordersPerMonth.map((data) => data.month);
   let values = ordersPerMonth.map((data) => data.orders);
-  console.log(ordersPerMonth);
 
   let width = 1000;
 
   if (typeof window !== "undefined") {
     width = window.screen.width * 0.8
   }
-  
+
   return (
     <BarChart
       series={[
