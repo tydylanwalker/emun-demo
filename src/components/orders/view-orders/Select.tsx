@@ -4,7 +4,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { vendors } from "@/data/vendors";
+import { vendors } from "../../../data/vendors";
 
 export const BasicSelect = (props: SelectProps) => {
   const [,setVendor] = React.useState(props.vendor);

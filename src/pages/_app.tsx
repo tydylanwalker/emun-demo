@@ -1,4 +1,4 @@
-import "@/styles/globals.css";
+import "../styles/globals.css";
 import { CssBaseline } from "@mui/material";
 import { NextPage } from "next";
 import type { AppProps } from "next/app";
