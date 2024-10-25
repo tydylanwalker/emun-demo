@@ -1,19 +1,50 @@
-import { FormControl, InputAdornment, MenuItem, Stack, TextField, TextFieldProps, Typography } from "@mui/material";
-import { DesktopDatePicker } from "@mui/x-date-pickers";
+import { FormControl, InputAdornment, MenuItem, Stack, TextField, TextFieldProps } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 
 export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
-    const inputStyles =  {
+    const inputStyles = {
         "& .MuiOutlinedInput-root": {
+          borderRadius: 10,
+          position: "relative",
+          "& fieldset": {
+            display: "none", // Hide the default outline
+          },
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            border: "2px solid lightgrey",
             borderRadius: 10,
-            "& fieldset": {
-                borderColor: "transparent", 
-  
-            },
+            pointerEvents: "none",
+            zIndex: -1,
+          },
+          "&:hover::before": {
+            borderColor: "#1976d2 !important", // Hover color with higher specificity
+          },
+          "&.Mui-focused::before": {
+            borderColor: "#1976d2", // Focus color with higher specificity
+          },
         },
         borderRadius: 10,
+        marginTop: "1.5rem",
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)",
-    }
+        "& .MuiInputLabel-root": {
+          backgroundColor: "white",
+          padding: "0 4px",
+        },
+        "& .MuiInputLabel-root.Mui-focused, & .MuiInputLabel-root.MuiFormLabel-filled": {
+            top: -10, // Adjust this to move label up on focus or when filled
+            left: 0,
+            fontSize: "1rem",
+            background: 'transparent',
+        },
+        ...props.sx,
+      };
+      
 
       const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let value = event.target.value;
@@ -38,16 +69,24 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
     }
 
     return (
-        <FormControl fullWidth sx={{borderRadius: 10}}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" height="1.75rem" px={2}>
-                <Typography variant="body2">{props.label}</Typography>
+        <FormControl fullWidth sx={{ maxWidth: props.maxWidth }}>
+            <Stack sx={{position: 'absolute', top: 0, right: 0}}>
                 {props.endAction}
             </Stack>
             {props.value instanceof dayjs || props.date ? 
-                <DesktopDatePicker
+                <DatePicker
                     value={props.value as dayjs.Dayjs}
                     onChange={handleDateChange}
-                    sx={inputStyles}
+                    format="MM/DD/YYYY"
+                    slotProps={{
+                        textField: {
+                            label: props.label,
+                            required: props.required,
+                            error: props.error,
+                            size: props.size,
+                            sx: inputStyles,
+                        }
+                    }}
                 />
                 : 
                 <TextField
@@ -56,9 +95,13 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
                     variant={props.variant || "outlined"}
                     value={props.value}
                     onChange={handleChange}
+                    label={props.label}
+                    required={props.required}
                     placeholder={props.placeholder}
+                    multiline={props.multiline} 
+                    rows={props.rows || 3}
                     sx={inputStyles}
-                    slotProps={props.currency ? {
+                    slotProps={props.currency && props.value ? {
                         input: {
                           startAdornment: (
                             <InputAdornment position="start">
@@ -85,4 +128,5 @@ interface ICustomSelectProps {
     type?: "select" | "text";
     currency?: boolean;
     date?: boolean
+    maxWidth?: string;
 }

@@ -1,4 +1,3 @@
-import { sidebarWidth, topbarHeight } from "@/data/constants";
 import { Home, ShoppingBag, ViewAgenda, ContactsRounded, Person, AccountBalanceRounded, UploadFileRounded, PaymentRounded, CheckBox, PriceChangeRounded, PaidRounded } from "@mui/icons-material";
 import { Box, IconButton, List } from "@mui/material";
 import { SidebarItem } from "./SidebarItem";
@@ -10,6 +9,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { DrawerHeader } from "../DrawerHeader";
 import Link from "next/link";
+import { sidebarWidth, topbarHeight } from "../../../data/constants";
 
 export interface ISidebarContent {
     icon: JSX.Element;

@@ -1,7 +1,7 @@
 import { Toolbar, IconButton, Typography, Box, styled } from "@mui/material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MenuIcon from '@mui/icons-material/Menu';
-import { sidebarWidth, topbarHeight } from "@/data/constants";
+import { topbarHeight, sidebarWidth } from "../../../data/constants";
 
 
 interface AppBarProps extends MuiAppBarProps {
