@@ -44,9 +44,9 @@ const sidebarContent: ISidebarContent[] = [
         label: "Payments",
         children: [
             {
-                label: "Upload File",
+                label: "Upload Commissions",
                 icon: <UploadFileRounded />,
-                href: "/payments/upload-file"
+                href: "/payments/upload-commissions"
             },
             {
                 label: "Checks",

@@ -22,7 +22,7 @@ export function SidebarItem(props: ISidebarItemProps) {
     return (
         <ListItem disablePadding  sx={{
             display: 'block',
-            // Whatever page we are on set fontweight bold for that item
+            //Whatever page we are on set fontweight bold for that item
             // ...(router.asPath === href && {
             //     '& .MuiListItemIcon-root': {
             //         fontWeight: 1000, // Bold icon
@@ -31,7 +31,7 @@ export function SidebarItem(props: ISidebarItemProps) {
             //         fontWeight: 1000, // Bold text
             //     },
             //     '& .MuiSvgIcon-root': {
-            //         fontWeight: 1000, // Bold chevrons (ExpandLess, ExpandMore)
+            //         fontWeight: 1000,
             //     }
             // })
         }}>
@@ -39,11 +39,11 @@ export function SidebarItem(props: ISidebarItemProps) {
                 <ListItemIcon>
                     {icon}
                 </ListItemIcon>
-                <ListItemText primary={label} sx={{fontSize: '4rem !important'}} />
-            {children ? open ? <ExpandLess /> : <ExpandMore /> : <></>}
+                <ListItemText primary={label}/>
+                {children ? open ? <ExpandLess  /> : <ExpandMore /> : <></>}
             </ListItemButton>
             {children &&        
-                <Collapse in={open} timeout="auto" unmountOnExit>
+                <Collapse in={open && sidebarOpen} timeout="auto" unmountOnExit>
                     <List disablePadding sx={{pl: 1}}>
                         {children.map((child, index) => (
                             <SidebarItem key={index} sidebarOpen={sidebarOpen} sidebarItem={child} handleDrawerOpen={handleDrawerOpen}/> 
