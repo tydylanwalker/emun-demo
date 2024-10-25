@@ -89,7 +89,7 @@ const HomePage: NextPage = () => {
             notes="No Data"
           ></BasicCard>
         </Stack>
-        <Card sx={{ maxWidth: "auto" }}>
+        <Card>
           <CardContent>
             <BarChartSet></BarChartSet>
           </CardContent>

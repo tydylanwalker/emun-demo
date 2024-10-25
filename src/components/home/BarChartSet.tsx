@@ -39,7 +39,13 @@ const mapDatesByMonth = (orders: Order[]): SalesData[] => {
     }
   })
 
-  return orderData;
+  let sortedData = orderData.sort((a, b) => {
+    const indexA = monthNames.indexOf(a.month);
+    const indexB = monthNames.indexOf(b.month);
+    return indexA - indexB;
+  });
+
+  return sortedData;
 };
 
 function getMonthsAgo(months: number): Date {
@@ -63,20 +69,14 @@ export default function BarChartSet() {
   let labels = ordersPerMonth.map((data) => data.month);
   let values = ordersPerMonth.map((data) => data.orders);
 
-  let width = 1000;
-
-  if (typeof window !== "undefined") {
-    width = window.screen.width * 0.8
-  }
-
   return (
     <BarChart
       series={[
         { data: values, label: "orders", id: "ordersId" },
       ]}
       xAxis={[{ data: labels, scaleType: "band" }]}
-      width={width}
-      height={width * 0.4}
+      width={500}
+      height={300}
     />
   );
 }
