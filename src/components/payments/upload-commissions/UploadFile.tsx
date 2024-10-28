@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Modal, Button, Typography, Stack } from "@mui/material";
-import _ from "lodash";
-import { ChangeEvent } from "react";
-import readExcelFile from "read-excel-file";
+import { useState, ChangeEvent } from "react";
+import * as XLSX from 'xlsx';
+import { parse } from 'csv-parse/browser/esm/sync';
+import { CustomInput } from "../../shared/CustomInput";
 
 const modalStyles = {
     position: 'absolute',
@@ -16,49 +18,143 @@ const modalStyles = {
     p: 4,
 };
 
+interface IEmunHeaders {
+    label: string;
+    value: string;
+}
+
+const initialEmunHeaders: IEmunHeaders[] = [
+    { label: 'PO Number', value: "" },
+    { label: "Invoice Number", value: "" },
+    { label: "Customer ID", value: "" },
+    { label: "Customer Name", value: "" },
+    { label: "Address", value: "" },
+    { label: "Invoice Amount", value: "" },
+    { label: "Commission Amount", value: "" },
+    { label: "Invoice Date", value: "" },
+    { label: "Order Number", value: "" }
+];
+
 export function UploadFile(props: IUploadFileProps) {
-    const handleUploadFileClicked = async (e: ChangeEvent<HTMLInputElement>) => {
+    const [fileHeaders, setFileHeaders] = useState<string[]>([]);
+    const [emunHeaders, setEmunHeaders] = useState<IEmunHeaders[]>(initialEmunHeaders)
+    const [fileData, setFileData] = useState<string[][]>();
+    const [selectedHeaderIndices, setSelectedHeaderIndices] = useState<{ [key: string]: number | null }>({});
+
+    const handleUploadFileClicked = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
         const file = e.target.files ? e.target.files[0] : null;
-
-        e.preventDefault();
-
+    
         if (file) {
             if (file.name.endsWith(".xlsx") || file.name.endsWith(".xls")) {
+                const reader = new FileReader();
+    
+                reader.onload = (event: ProgressEvent<FileReader>) => {
+                    const result = event.target?.result;
+                    if (result && typeof result !== "string") {
+                        const data = new Uint8Array(result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const firstSheetName = workbook.SheetNames[0];
+                        const worksheet = workbook.Sheets[firstSheetName];
+    
+                        const fileData = XLSX.utils.sheet_to_json<string[]>(worksheet, { header: 1 });
+                        const headers = fileData[0] as string[];
+                        setFileHeaders(headers);
+                        setFileData(fileData.slice(1, 20))
+                        // setFileData(fileData.slice(1, fileData.length))
+                    }
+                };
+    
+                reader.onerror = (error) => {
+                    console.error("Error reading file:", error);
+                };
+    
+                reader.readAsArrayBuffer(file);
+    
+            } else if (file.name.endsWith(".csv")) {
+                const text = await file.text();
                 try {
-                    const fileData = await readExcelFile(file);
-
-                    const cleanedRows = fileData.map((row) => {
-                        return _.mapValues(row, (v) => (v === null ? "" : v));
+                    const records = parse(text, {
+                        columns: true,
+                        skip_empty_lines: true,
                     });
-
-                    console.log(cleanedRows);
+                    const headers = records.length ? Object.keys(records[0]) : [];
+                    setFileHeaders(headers);
+                    setFileData(records.slice(1, records.length));
                 } catch (error) {
-                    console.error("Error reading Excel file:", error);
-                    alert("There was an error reading the file. Please ensure it is a valid Excel file.");
-                }
+                    console.error("Error parsing CSV file:", error);
+                }             
             } else {
-                alert("Please upload a valid Excel file (.xlsx or .xls).");
+                alert("Please upload a valid file.");
             }
         }
     };
 
+    const handleHeaderChange = (event: any) => {
+        const {name, value} = event.target;
+        const selectedIndex = fileHeaders.indexOf(value);
+
+        const updatedHeaders: IEmunHeaders[] = emunHeaders.map((header) => {
+            if (header.label === name) {
+                return {
+                    label: header.label,
+                    value
+                };
+            } else {
+                return header;
+            }
+        })
+        setEmunHeaders(updatedHeaders)
+        setSelectedHeaderIndices((prevSelected) => ({
+            ...prevSelected,
+            [name]: selectedIndex !== -1 ? selectedIndex : null
+        }));
+    };
+
+    // Function to map the data rows based on selected indices
+    const mapFileDataToHeaders = () => {
+        const mappedFileData = fileData?.map(row => {
+            const mappedRow: { [key: string]: any } = {};
+            Object.keys(selectedHeaderIndices).forEach((customHeader) => {
+                    const index = selectedHeaderIndices[customHeader];
+                    mappedRow[customHeader] = index !== null ? row[index] : "";
+                });
+                return mappedRow;
+        });
+       props.setMappedFileData(mappedFileData);
+       props.onClose();
+    };
+
     return (
-        <Modal
-            open={props.open}
-            onClose={props.onClose}
-        >
-            <Stack sx={modalStyles}>
-                <Typography>Stuff about formatting and template download</Typography>
-                <Button variant="contained" component="label">
-                    Choose File
-                    <input type="file" accept=".xlsx, .xls" onChange={(e) => handleUploadFileClicked(e)} hidden />
-                </Button>
+        <Modal open={props.open} onClose={props.onClose}>
+            <Stack sx={modalStyles} spacing={2}>
+                <Typography variant="h6">Upload and Map Headers</Typography>
+                {fileHeaders.length > 0 ? (
+                    <Stack>
+                        <Typography variant="caption" color="info">Match the headers from your file to the headers we need</Typography>
+                        {emunHeaders.map((header, index) => (
+                            // <CustomInput key={index} select label={header.label} name={header.label} value={header.value} options={fileHeaders.filter((option) => !emunHeaders.some(header => header.value === option))} onChange={handleHeaderChange}/>
+                            <CustomInput key={index} select size="small" label={header.label} name={header.label} value={header.value} options={fileHeaders} onChange={handleHeaderChange}/>
+                        ))}
+                        <Button variant="contained" color="success" sx={{mt: 3}} onClick={mapFileDataToHeaders}>Process</Button>
+                    </Stack>
+                ) : (
+                    <Button variant="contained" component="label">
+                        Choose File
+                        <input
+                            type="file"
+                            accept=".xlsx, .xls, .csv"
+                            onChange={(e) => handleUploadFileClicked(e)}
+                            hidden
+                        />
+                    </Button>
+                )}
             </Stack>
         </Modal>
     );
 }
 
 interface IUploadFileProps {
-    open: boolean,
+    open: boolean;
     onClose: () => void;
+    setMappedFileData: (data: { [key: string]: any; }[] | undefined) => void;
 }
