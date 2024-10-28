@@ -91,6 +91,7 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
                 : 
                 <TextField
                     select={props.select}
+                    size={props.size}
                     name={props.name}
                     variant={props.variant || "outlined"}
                     value={props.value}
@@ -125,7 +126,6 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
 interface ICustomSelectProps {
     options?: string[];
     endAction?: JSX.Element;
-    type?: "select" | "text";
     currency?: boolean;
     date?: boolean
     maxWidth?: string;
