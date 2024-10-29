@@ -4,7 +4,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { vendors } from "../../../data/vendors";
+import { vendorsMock as vendorsMock } from "../../../data/vendors";
 
 export const BasicSelect = (props: SelectProps) => {
   const [,setVendor] = React.useState(props.vendor);
@@ -35,7 +35,7 @@ export const BasicSelect = (props: SelectProps) => {
           onChange={handleChange}
         >
             <MenuItem value={"All"}>All</MenuItem>
-          {vendors.results.map((vendor, rowIndex) => (
+          {vendorsMock.map((vendor, rowIndex) => (
             <MenuItem key={rowIndex} value={vendor.id}>{vendor.vendorName}</MenuItem>
           ))}
         </Select>

@@ -53,12 +53,9 @@ export function UploadFileModal(props: IUploadFileModalProps) {
                         const workbook = XLSX.read(data, { type: 'array' });
                         const firstSheetName = workbook.SheetNames[0];
                         const worksheet = workbook.Sheets[firstSheetName];
-    
                         const fileData = XLSX.utils.sheet_to_json<string[]>(worksheet, { header: 1 });
-                        const headers = fileData[0] as string[];
-                        setFileHeaders(headers);
-                        setFileData(fileData.slice(1, 20))
-                        // setFileData(fileData.slice(1, fileData.length))
+                        setFileHeaders(fileData[0] as string[]);
+                        setFileData(fileData.slice(1, fileData.length))
                     }
                 };
     
@@ -72,11 +69,9 @@ export function UploadFileModal(props: IUploadFileModalProps) {
                 const text = await file.text();
                 try {
                     const records = parse(text, {
-                        columns: true,
                         skip_empty_lines: true,
                     });
-                    const headers = records.length ? Object.keys(records[0]) : [];
-                    setFileHeaders(headers);
+                    setFileHeaders(records[0]);
                     setFileData(records.slice(1, records.length));
                 } catch (error) {
                     console.error("Error parsing CSV file:", error);

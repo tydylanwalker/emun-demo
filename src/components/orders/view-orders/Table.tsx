@@ -130,7 +130,7 @@ const tableHeaders: ITableHeaders[] = [
 ];
 
 export function CustomizedTables(props: TableProps) {
-  const filteredData = props.vendor === 'All' ? ordersMock.results : ordersMock.results.filter(item => item.vendorId === props.vendor);
+  // const filteredData = props.vendor === 'All' ? ordersMock : ordersMock.filter(item => item. === props.vendor);
 
   return (
     <Box>
@@ -146,7 +146,7 @@ export function CustomizedTables(props: TableProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {filteredData.map((order, rowIndex) => (
+          {ordersMock.map((order, rowIndex) => (
             <StyledTableRow key={rowIndex}>
               {tableHeaders.map((header, index) => {
                 const { fieldName, align, type } = header;

@@ -22,7 +22,7 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
     const renderedRows = onlyShowErrors ? rowsWithErrors : props.rows;
 
     useEffect(() => {
-        setRowsWithErrors(props.rows.filter((row) => row.columnWithError !== null))
+        setRowsWithErrors(props.rows.filter((row) => row.columnWithError.length > 0))
        }, [props.rows])
     
     function determineErrorHandling(id: keyof IUploadCommissionsRow, row: IUploadCommissionsRow) {
@@ -60,11 +60,11 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
                 </TableHead>
                 <TableBody>
                     {renderedRows.map((row, index) => (
-                        <TableRow key={index} sx={{bgcolor: row.columnWithError !== null ? "rgba(255,0,0,0.2)" : "inherit"}}>
+                        <TableRow key={index} sx={{bgcolor: row.columnWithError.length > 0 ? "rgba(255,0,0,0.2)" : "inherit"}}>
                             {props.headers.map((header, index) => {
                                 const error = row.columnWithError?.includes(header.id);
                                 const errorValues = determineErrorHandling(header.id, row);
-                                
+                                // TODO: make the error UI look better, just used the red border for rn to show which field is erroring
                                 return (
                                     <TableCell key={index} align={header.align || 'left'} onClick={() => error && errorValues.function()} sx={{cursor: error ? "pointer" : "default"}}>
                                     <Typography p={1} sx={{border: error ? "1px solid red" : "none", borderRadius: 2}}>
