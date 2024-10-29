@@ -77,7 +77,7 @@ export interface Order {
     hasNotes?: boolean;
 }
 
-export const orders: Orders = {
+export const ordersMock: Orders = {
     "offset": 0,
     "total": 101376,
     "results": [
@@ -106,7 +106,7 @@ export const orders: Orders = {
             "id": "OC-1591339",
             "companyName": "MINT JULEP",
             "retailerId": "100019962",
-            "purchaseOrder": "OC-1591339",
+            "purchaseOrder": "0000906",
             "orderedOn": "2024-10-31T00:00:00.0000000Z",
             "shipOn": "2024-10-07T09:10:46.4030000Z",
             "expectedToClear": "0001-01-01T00:00:00.0000000Z",
@@ -172,7 +172,7 @@ export const orders: Orders = {
             "id": "OC-1590056",
             "companyName": "On The Corner Gifts",
             "retailerId": "OC-241746_919",
-            "purchaseOrder": "OC-1590056",
+            "purchaseOrder": "001",
             "orderedOn": "2024-10-31T00:00:00.0000000Z",
             "shipOn": "2024-10-01T08:14:31.6670000Z",
             "expectedToClear": "0001-01-01T00:00:00.0000000Z",
@@ -238,7 +238,7 @@ export const orders: Orders = {
             "id": "OC-1589683",
             "companyName": "STITCHES CLOTHING CO.",
             "retailerId": "OC-411852",
-            "purchaseOrder": "OC-1589683",
+            "purchaseOrder": "0123",
             "orderedOn": "2024-10-31T00:00:00.0000000Z",
             "shipOn": "2024-09-27T07:09:49.6370000Z",
             "expectedToClear": "0001-01-01T00:00:00.0000000Z",
@@ -304,7 +304,7 @@ export const orders: Orders = {
             "id": "OC-1589671",
             "companyName": "BIG BRONCO",
             "retailerId": "OC-205660",
-            "purchaseOrder": "OC-1589671",
+            "purchaseOrder": "027138",
             "orderedOn": "2024-10-31T00:00:00.0000000Z",
             "shipOn": "2024-09-27T06:26:13.4600000Z",
             "expectedToClear": "0001-01-01T00:00:00.0000000Z",
@@ -370,7 +370,7 @@ export const orders: Orders = {
             "id": "OC-1589395",
             "companyName": "BAYLOR SCOTT & WHITE MEDICAL CENTER-BRENHAM",
             "retailerId": "OC-283014_966",
-            "purchaseOrder": "OC-1589395",
+            "purchaseOrder": "027259",
             "orderedOn": "2024-10-31T00:00:00.0000000Z",
             "shipOn": "2024-09-26T06:59:03.5800000Z",
             "expectedToClear": "0001-01-01T00:00:00.0000000Z",
@@ -436,7 +436,7 @@ export const orders: Orders = {
             "id": "OC-1588955",
             "companyName": "GOLDSMITH'S",
             "retailerId": "263000200",
-            "purchaseOrder": "OC-1588955",
+            "purchaseOrder": "04232024",
             "orderedOn": "2024-10-31T00:00:00.0000000Z",
             "shipOn": "2024-09-24T09:49:44.5870000Z",
             "expectedToClear": "0001-01-01T00:00:00.0000000Z",

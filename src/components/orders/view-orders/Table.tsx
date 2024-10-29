@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Typography, Box } from "@mui/material";
-import { orders } from "../../../data/orders";
+import { ordersMock } from "../../../data/orders";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -130,7 +130,7 @@ const tableHeaders: ITableHeaders[] = [
 ];
 
 export function CustomizedTables(props: TableProps) {
-  const filteredData = props.vendor === 'All' ? orders.results : orders.results.filter(item => item.vendorId === props.vendor);
+  const filteredData = props.vendor === 'All' ? ordersMock.results : ordersMock.results.filter(item => item.vendorId === props.vendor);
 
   return (
     <Box>

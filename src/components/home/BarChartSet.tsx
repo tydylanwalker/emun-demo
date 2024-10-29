@@ -1,6 +1,6 @@
 import * as React from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { Order, orders } from "../../data/orders";
+import { Order, ordersMock } from "../../data/orders";
 
 const monthNames: string[] = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -61,7 +61,7 @@ function getMonthsAgo(months: number): Date {
 export default function BarChartSet() {
 
 
-  let lastYearsOrders = orders.results.filter(
+  let lastYearsOrders = ordersMock.results.filter(
     (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(12))
   );
 

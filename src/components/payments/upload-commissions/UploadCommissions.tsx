@@ -1,22 +1,50 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, FormControlLabel, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { AddCheck } from "./AddCheck";
 import { ICheckData } from "../../../interfaces/ICheckData";
 import { CustomInput } from "../../shared/CustomInput";
-import { UploadFile } from "./UploadFile";
+import { UploadFileModal } from "./UploadFileModal";
+import { ordersMock } from "../../../data/orders";
+import { invoicesMock } from "../../../data/invoices";
+import { UploadCommissionsTable } from "./table/UploadCommissionsTable";
 
-const uploadCommissionsHeaders: string[] = [
-    'PO Number',
-    "Invoice Number",
-    "Invoice Amount",
-    "Customer ID",
-    "Customer Name",
-    "Address",
-    "Commission Amount",
-    "Invoice Date",
-    "Order Number"
+// Define a type for the header metadata
+export interface IHeaderMeta {
+    label: string;
+    id: keyof IUploadCommissionsRow;
+    type: 'currency' | 'string' | 'date';
+    align: 'left' | 'right' | 'center';
+}
+
+// Map headers to metadata
+const uploadCommissionsHeadersMeta: IHeaderMeta[] = [
+    { label: 'PO Number', id: 'poNumber', type: 'string', align: 'left' },
+    { label: 'Invoice Number', id: 'invoiceNumber', type: 'string', align: 'left' },
+    { label: 'Invoice Amount', id: 'invoiceAmount', type: 'currency', align: 'right' },
+    { label: 'Customer ID', id: 'customerId', type: 'string', align: 'left' },
+    { label: 'Customer Name', id: 'customerName', type: 'string', align: 'left' },
+    { label: 'Address', id: 'address', type: 'string', align: 'left' },
+    { label: 'Commission Amount', id: 'commissionAmount', type: 'currency', align: 'right' },
+    { label: 'Invoice Date', id: 'invoiceDate', type: 'date', align: 'center' },
+    { label: 'Order Number', id: 'orderNumber', type: 'string', align: 'left' }
 ];
+
+
+export interface IUploadCommissionsRow {
+    poNumber: string;
+    invoiceNumber: string;
+    invoiceAmount: string;
+    customerId: string;
+    customerName: string;
+    address: string;
+    commissionAmount: string;
+    invoiceDate: string;
+    orderNumber: string;
+    writingRep: string;
+    currentRep: string;
+    columnWithError: (keyof IUploadCommissionsRow)[] | null;
+}
 
 
 export function UploadCommissions() {
@@ -26,13 +54,73 @@ export function UploadCommissions() {
     const [checkOptions, setCheckOptions] = useState( ['Option 1', 'Option 2', 'Option 3'])
     const [addNewCheck, setAddNewCheck] = useState(false);
     const [uploadOpen, setUploadOpen] = useState(false);
-    const [mappedFileData, setMappedFileData] = useState<{ [key: string]: any; }[] | undefined>();
-    const [hasErrors, setHasErrors] = useState(true);
+    const [mappedFileData, setMappedFileData] = useState<IUploadCommissionsRow[]>([]);
 
     const saveCheck = (checkToSave: ICheckData) => {
         setAddNewCheck(false);
         setCheckOptions([...checkOptions, checkToSave.payPeriod]);
         setCheck(checkToSave.payPeriod || "");
+    }
+
+    // TODO: Replace these with the actually data structure we need
+    const handleSetMappedFileDate = (data: { [key: string]: any; }[] | undefined) => {
+        const mappedRows: IUploadCommissionsRow[] = data?.map((row) => {
+            const invoiceFound = invoicesMock.find((invoice) => invoice.invoiceNumber.toString() === row["Invoice Number"].toString())
+            console.log(invoiceFound, row["Invoice Number"]);
+            if (invoiceFound) {
+                const {poNumber, vendor, invoiceNumber, retailerId, shippingLocation, invoiceDate, companyName, salesRepID, orderNumber,  } = invoiceFound;
+                const newRow: IUploadCommissionsRow = {
+                    poNumber: poNumber,
+                    invoiceNumber: invoiceNumber,
+                    invoiceAmount: row["Invoice Amount"],
+                    customerId: retailerId,
+                    customerName: companyName,
+                    address: shippingLocation.id,
+                    commissionAmount: vendor.commissionPercent.toString(),
+                    invoiceDate: invoiceDate,
+                    orderNumber: orderNumber,
+                    writingRep: salesRepID,
+                    currentRep: salesRepID,
+                    columnWithError: null,
+                }
+                return newRow;
+            }
+            const orderFound = ordersMock.results.find((order) => order.purchaseOrder === row["PO Number"])
+            if (orderFound) {
+                const {purchaseOrder, purchaser, id, writingRepName, currentRepName } = orderFound;
+                const newRow: IUploadCommissionsRow = {
+                    poNumber: purchaseOrder || "",
+                    invoiceNumber: row["Invoice Number"],
+                    invoiceAmount: row["Invoice Amount"],
+                    customerId: purchaser?.id || "",
+                    customerName: purchaser?.companyName || "",
+                    address: row["Address"],
+                    commissionAmount: row["Commission Amount"],
+                    invoiceDate: row["Invoice Date"],
+                    orderNumber: id || "",
+                    writingRep: writingRepName || "",
+                    currentRep: currentRepName || "",
+                    columnWithError: ["invoiceNumber"],
+                }
+                return newRow;
+            }
+            const newRow: IUploadCommissionsRow = {
+                poNumber: row["PO Number"],
+                invoiceNumber: row["Invoice Number"],
+                invoiceAmount: row["Invoice Amount"],
+                customerId: row["Customer ID"],
+                customerName: row["Customer Name"],
+                address: row["Address"],
+                commissionAmount: row["Commission Amount"],
+                invoiceDate: row["Invoice Date"],
+                orderNumber: row["Order Number"],
+                writingRep: row["Writing Rep"],
+                currentRep: row["Current Rep"],
+                columnWithError: ["invoiceNumber", "poNumber"],
+            }
+            return newRow;
+        }) || [];
+        setMappedFileData(mappedRows)
     }
 
     return (
@@ -47,49 +135,11 @@ export function UploadCommissions() {
                     Upload File
                 </Button>
             ) : (
-                <TableContainer component={Paper}>
-                    <Stack direction="row" justifyContent="space-between" p={1}>
-                        <Stack direction="row" gap={3} alignItems="center">
-                            <Typography variant="h5">Imported Data</Typography>
-                            <Typography variant="caption">{mappedFileData.length} entries</Typography>
-                        </Stack>
-                        <Stack direction="row" gap={2}>
-                            <FormControlLabel control={<Switch />} label={`Only show errors (${Math.ceil(mappedFileData.length - mappedFileData.length / 1.25)})`} />
-                            {hasErrors ? (
-                                <Button variant="contained" color="warning" onClick={() => window.alert('submitting rows without errors....')}>Submit {Math.floor(mappedFileData.length / 1.25)} Entries without errors</Button>
-                            ) : (
-                                <Button variant="contained" onClick={() => window.alert('submitting all rows')}>Submit {mappedFileData.length} Entries</Button>
-                            )}
-                        </Stack>
-                    </Stack>
-                    <Table>
-                        <TableHead>
-                            <TableRow sx={{bgcolor: "lightgrey"}}>
-                                {uploadCommissionsHeaders.map((header, index) => (
-                                    <TableCell key={index}>
-                                        {header}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {mappedFileData.map((row, index) => (
-                                <TableRow key={index}>
-                                  {uploadCommissionsHeaders.map((header, index) => (
-                                    <TableCell key={index}>
-                                        <Typography>
-                                            {row[header]}
-                                        </Typography>
-                                    </TableCell>
-                                  ))}
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <UploadCommissionsTable rows={mappedFileData} headers={uploadCommissionsHeadersMeta} />
             )}
             <AddCheck open={addNewCheck} toggleDrawer={(open: boolean) => setAddNewCheck(open)} vendor={vendor} vendorOptions={vendorOptions} saveCheck={saveCheck}/>
-            <UploadFile open={uploadOpen} onClose={() => setUploadOpen(false)} setMappedFileData={(data) => setMappedFileData(data)} />
+            <UploadFileModal open={uploadOpen} onClose={() => setUploadOpen(false)} setMappedFileData={handleSetMappedFileDate} emunHeaders={uploadCommissionsHeadersMeta}/>
         </Stack>
     )
 }
+

@@ -4,6 +4,7 @@ import { useState, ChangeEvent } from "react";
 import * as XLSX from 'xlsx';
 import { parse } from 'csv-parse/browser/esm/sync';
 import { CustomInput } from "../../shared/CustomInput";
+import { IHeaderMeta } from "./UploadCommissions";
 
 const modalStyles = {
     position: 'absolute',
@@ -23,23 +24,20 @@ interface IEmunHeaders {
     value: string;
 }
 
-const initialEmunHeaders: IEmunHeaders[] = [
-    { label: 'PO Number', value: "" },
-    { label: "Invoice Number", value: "" },
-    { label: "Customer ID", value: "" },
-    { label: "Customer Name", value: "" },
-    { label: "Address", value: "" },
-    { label: "Invoice Amount", value: "" },
-    { label: "Commission Amount", value: "" },
-    { label: "Invoice Date", value: "" },
-    { label: "Order Number", value: "" }
-];
+function setInitialHeaderValues(headers: IHeaderMeta[]): IEmunHeaders[] {
+    return headers.map((header) => {
+       return {
+        label: header.label,
+        value: "",
+       }
+    })
+}
 
-export function UploadFile(props: IUploadFileProps) {
+export function UploadFileModal(props: IUploadFileModalProps) {
     const [fileHeaders, setFileHeaders] = useState<string[]>([]);
-    const [emunHeaders, setEmunHeaders] = useState<IEmunHeaders[]>(initialEmunHeaders)
+    const [emunHeaders, setEmunHeaders] = useState<IEmunHeaders[]>(setInitialHeaderValues(props.emunHeaders))
     const [fileData, setFileData] = useState<string[][]>();
-    const [selectedHeaderIndices, setSelectedHeaderIndices] = useState<{ [key: string]: number | null }>({});
+    const [mappedHeaderIndices, setMappedHeaderIndices] = useState<{ [key: string]: number | null }>({});
 
     const handleUploadFileClicked = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
         const file = e.target.files ? e.target.files[0] : null;
@@ -104,7 +102,7 @@ export function UploadFile(props: IUploadFileProps) {
             }
         })
         setEmunHeaders(updatedHeaders)
-        setSelectedHeaderIndices((prevSelected) => ({
+        setMappedHeaderIndices((prevSelected) => ({
             ...prevSelected,
             [name]: selectedIndex !== -1 ? selectedIndex : null
         }));
@@ -114,8 +112,8 @@ export function UploadFile(props: IUploadFileProps) {
     const mapFileDataToHeaders = () => {
         const mappedFileData = fileData?.map(row => {
             const mappedRow: { [key: string]: any } = {};
-            Object.keys(selectedHeaderIndices).forEach((customHeader) => {
-                    const index = selectedHeaderIndices[customHeader];
+            Object.keys(mappedHeaderIndices).forEach((customHeader) => {
+                    const index = mappedHeaderIndices[customHeader];
                     mappedRow[customHeader] = index !== null ? row[index] : "";
                 });
                 return mappedRow;
@@ -153,8 +151,9 @@ export function UploadFile(props: IUploadFileProps) {
     );
 }
 
-interface IUploadFileProps {
+interface IUploadFileModalProps {
     open: boolean;
     onClose: () => void;
     setMappedFileData: (data: { [key: string]: any; }[] | undefined) => void;
+    emunHeaders: IHeaderMeta[];
 }

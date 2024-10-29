@@ -7,7 +7,7 @@ import CardContent from "@mui/material/CardContent";
 import BarChartSet from "../../components/home/BarChartSet";
 import BasicCard from "../../components/home/Card";
 import { BaseLayout } from "../../components/layout/BaseLayout";
-import { orders } from "../../data/orders";
+import { ordersMock } from "../../data/orders";
 
 interface CurrencyProps {
   amount: number;
@@ -42,13 +42,13 @@ const HomePage: NextPage = () => {
     setVendor(value);
   };
   console.log(getMonthsAgo(0));
-  let lastMonthsOrders = orders.results.filter(
+  let lastMonthsOrders = ordersMock.results.filter(
     (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(0))
   );
-  let lastYearsOrders = orders.results.filter(
+  let lastYearsOrders = ordersMock.results.filter(
     (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(12))
   );
-  let lastYearsTotal = orders.results
+  let lastYearsTotal = ordersMock.results
     .filter(
       (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(12))
     )
