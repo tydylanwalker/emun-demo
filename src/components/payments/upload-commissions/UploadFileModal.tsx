@@ -36,6 +36,7 @@ function setInitialHeaderValues(headers: IHeaderMeta[]): IEmunHeaders[] {
 export function UploadFileModal(props: IUploadFileModalProps) {
     const [fileHeaders, setFileHeaders] = useState<string[]>([]);
     const [emunHeaders, setEmunHeaders] = useState<IEmunHeaders[]>(setInitialHeaderValues(props.emunHeaders))
+    const headersBeingUsed = emunHeaders.filter((header) => header.value !== "").map((header) => header.value);
     const [fileData, setFileData] = useState<string[][]>();
     const [mappedHeaderIndices, setMappedHeaderIndices] = useState<{ [key: string]: number | null }>({});
 
@@ -125,8 +126,7 @@ export function UploadFileModal(props: IUploadFileModalProps) {
                     <Stack>
                         <Typography variant="caption" color="info">Match the headers from your file to the headers we need</Typography>
                         {emunHeaders.map((header, index) => (
-                            // <CustomInput key={index} select label={header.label} name={header.label} value={header.value} options={fileHeaders.filter((option) => !emunHeaders.some(header => header.value === option))} onChange={handleHeaderChange}/>
-                            <CustomInput key={index} select size="small" label={header.label} name={header.label} value={header.value} options={fileHeaders} onChange={handleHeaderChange}/>
+                            <CustomInput key={index} select label={header.label} name={header.label} value={header.value} options={fileHeaders.filter((option) => !headersBeingUsed.some((used) => option === used && option !== header.value))} onChange={handleHeaderChange}/>
                         ))}
                         <Button variant="contained" color="success" sx={{mt: 3}} onClick={mapFileDataToHeaders}>Process</Button>
                     </Stack>
