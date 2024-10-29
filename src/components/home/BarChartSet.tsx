@@ -1,11 +1,8 @@
-import * as React from "react";
-import { BarChart } from "@mui/x-charts/BarChart";
-import { Order, ordersMock } from "../../data/orders";
+import * as React from 'react';
+import { BarChart } from '@mui/x-charts/BarChart';
+import { Order, ordersMock } from '../../data/orders';
 
-const monthNames: string[] = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-];
+const monthNames: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 interface SalesData {
   month: string;
@@ -16,28 +13,26 @@ const mapDatesByMonth = (orders: Order[]): SalesData[] => {
   let orderData: SalesData[] = [];
 
   orders.forEach((order) => {
-    const date = new Date(order.orderedOn ?? "");
-    const month = date.toLocaleString("default", { month: "short" }); // Get the month name
+    const date = new Date(order.orderedOn ?? '');
+    const month = date.toLocaleString('default', { month: 'short' }); // Get the month name
 
     // Create a key for the month and year
     const key = `${month}`;
 
     if (orderData.some((order) => order.month)) {
-      orderData = orderData.map((order) =>
-        order.month === key ? { ...order, orders: order.orders + 1 } : order
-      );
+      orderData = orderData.map((order) => (order.month === key ? { ...order, orders: order.orders + 1 } : order));
     } else {
       const newData: SalesData = { month: key, orders: 1 };
       orderData.push(newData);
     }
   });
 
-  monthNames.forEach(month => {
+  monthNames.forEach((month) => {
     if (!orderData.some((order) => order.month == month)) {
       const newData: SalesData = { month: month, orders: 0 };
       orderData.push(newData);
     }
-  })
+  });
 
   let sortedData = orderData.sort((a, b) => {
     const indexA = monthNames.indexOf(a.month);
@@ -59,8 +54,6 @@ function getMonthsAgo(months: number): Date {
 }
 
 export default function BarChartSet() {
-
-
   /* let lastYearsOrders = [] ordersMock.results.filter(
     (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(12))
   ) ;*/
@@ -71,10 +64,8 @@ export default function BarChartSet() {
 
   return (
     <BarChart
-      series={[
-        { data: values, label: "orders", id: "ordersId" },
-      ]}
-      xAxis={[{ data: labels, scaleType: "band" }]}
+      series={[{ data: values, label: 'orders', id: 'ordersId' }]}
+      xAxis={[{ data: labels, scaleType: 'band' }]}
       width={500}
       height={300}
     />
