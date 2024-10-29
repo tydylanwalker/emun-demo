@@ -42,18 +42,18 @@ const HomePage: NextPage = () => {
     setVendor(value);
   };
   console.log(getMonthsAgo(0));
-  let lastMonthsOrders = ordersMock.results.filter(
+  let lastMonthsOrders = []/*ordersMock.results.filter(
     (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(0))
-  );
-  let lastYearsOrders = ordersMock.results.filter(
+  )*/;
+  let lastYearsOrders = [] /*ordersMock.results.filter(
     (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(12))
-  );
-  let lastYearsTotal = ordersMock.results
-    .filter(
-      (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(12))
-    )
-    .reduce((sum, order) => sum + (order.grandTotal ?? 0.0), 0);
-
+  )*/;
+  let lastYearsTotal = 0;
+  // ordersMock.results
+  // .filter(
+  //   (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(12))
+  // )
+  // .reduce((sum, order) => sum + (order.grandTotal ?? 0.0), 0);
   return (
     <>
       <Stack

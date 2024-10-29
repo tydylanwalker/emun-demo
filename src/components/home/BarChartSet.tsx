@@ -61,11 +61,11 @@ function getMonthsAgo(months: number): Date {
 export default function BarChartSet() {
 
 
-  let lastYearsOrders = ordersMock.results.filter(
+  /* let lastYearsOrders = [] ordersMock.results.filter(
     (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(12))
-  );
+  ) ;*/
 
-  let ordersPerMonth = mapDatesByMonth(lastYearsOrders);
+  let ordersPerMonth = mapDatesByMonth([]);
   let labels = ordersPerMonth.map((data) => data.month);
   let values = ordersPerMonth.map((data) => data.orders);
 
