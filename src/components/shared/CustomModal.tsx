@@ -9,7 +9,7 @@ const modalStyles = {
   transform: 'translate(-50%, -50%)',
   minWidth: '30vw',
   maxHeight: '90vh',
-  bgcolor: '#171717',
+  bgcolor: '#141414',
   borderRadius: 5,
   boxShadow: 24,
   p: 4,

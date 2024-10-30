@@ -1,16 +1,22 @@
 import { Stack, Typography } from '@mui/material';
 
 export function HeaderAndValueCard(props: IHeaderAndValueCardProps) {
+  const styles = {
+    container: {
+      backgroundColor: '#141414',
+      borderRadius: '12px',
+      boxShadow: 'inset 0 0 0.5px 1px hsla(0, 0%, 100%, 0.1), 0 0 0 1px hsla(230, 13%, 9%, 0.075), 0 0.3px 0.4px hsla(230, 13%, 9%, 0.02), 0 0.9px 1.5px hsla(230, 13%, 9%, 0.045), 0 3.5px 6px hsla(230, 13%, 9%, 0.09)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
+  };
+
   return (
     <Stack
       borderRadius={5}
       width={props.width}
-      bgcolor={props.color}
-      sx={{
-        background: 'linear-gradient(to top, #4B53D9, #6967CA, #B094AE)',
-        padding: '20px',
-        transition: 'transform 0.2s',
-      }}
+      sx={styles.container}
     >
       <Typography fontSize='1.2rem' fontWeight='bold' p={1}>
         {props.header}
@@ -28,3 +34,4 @@ interface IHeaderAndValueCardProps {
   color?: string;
   width?: string;
 }
+
