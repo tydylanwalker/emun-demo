@@ -47,7 +47,6 @@ export function TopBar(props: ITopBarProps) {
           onClick={handleDrawerOpen}
           edge='start'
           sx={{
-            color: 'white',
             marginRight: 5,
             ...(open && { display: 'none' }),
           }}

@@ -18,7 +18,9 @@ const modalStyles = {
 export function CustomModal(props: ICustomModalProps) {
   return (
     <Modal open={props.open} onClose={props.closeModal}>
-      <Stack sx={{ ...modalStyles, width: props.width || 'inherit', height: props.height || 'inherit', overflowY: 'auto' }}>
+      <Stack
+        sx={{ ...modalStyles, width: props.width || 'inherit', height: props.height || 'inherit', overflowY: 'auto' }}
+      >
         <Stack
           direction='row'
           justifyContent='space-between'

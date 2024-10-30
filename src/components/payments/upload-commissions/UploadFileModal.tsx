@@ -7,7 +7,6 @@ import { CustomInput } from '../../shared/CustomInput';
 import { IHeaderMeta } from './UploadCommissions';
 import { Check, Close } from '@mui/icons-material';
 import { CustomModal } from '../../shared/CustomModal';
-import '../../../styles/Home.module.css';
 
 interface IEmunHeaders {
   label: string;
@@ -126,10 +125,16 @@ export function UploadFileModal(props: IUploadFileModalProps) {
             <input type='file' accept='.xlsx, .xls, .csv' onChange={(e) => handleUploadFileClicked(e)} hidden />
           </Button>
           <Stack gap={1}>
-            <Typography>
-              Download a template with all the correct headers{' '}
-              <span style={{ textDecoration: 'underline', color: 'blue', cursor: 'pointer' }}>here</span>
-            </Typography>
+            <Stack direction='row' alignItems='center'>
+              <Typography>Download a template with all the correct headers</Typography>
+              <Button
+                variant='text'
+                sx={{ textDecoration: 'underline', fontSize: '0.875rem', p: 0 }}
+                onClick={() => alert('downloading template....')}
+              >
+                here
+              </Button>
+            </Stack>
             <Typography fontWeight='bold'>File Requirements</Typography>
             <Stack pl={2}>
               <Typography>
@@ -146,8 +151,8 @@ export function UploadFileModal(props: IUploadFileModalProps) {
         (fileHeaders.length > 0 ? (
           <Stack pt={3}>
             <Typography variant='h5'>{"Match up the column headers in our database to your file's headers"}</Typography>
-            <Stack gap={1} py={5}>
-              <Stack direction='row' width='60vw' borderBottom={1} p={1} bgcolor='black'>
+            <Stack gap={1} my={5} borderRadius={5} border={1} overflow='hidden'>
+              <Stack direction='row' width='60vw' p={1} bgcolor='primary.main'>
                 <Stack width='40%' direction='row' alignItems='center' gap={2}>
                   <Typography fontWeight='bold'>Database Headers</Typography>
                   <Typography variant='caption'>{'(* required header)'}</Typography>
@@ -160,7 +165,13 @@ export function UploadFileModal(props: IUploadFileModalProps) {
                 </Stack>
               </Stack>
               {emunHeaders.map((header, index) => (
-                <Stack direction='row' width='60vw' p={1} key={index} borderBottom={1}>
+                <Stack
+                  direction='row'
+                  width='60vw'
+                  p={1}
+                  key={index}
+                  borderBottom={index === emunHeaders.length - 1 ? 0 : 1}
+                >
                   <Stack width='40%'>
                     <Typography>
                       {header.label}
@@ -178,7 +189,7 @@ export function UploadFileModal(props: IUploadFileModalProps) {
                         (option) => !headersBeingUsed.some((used) => option === used && option !== header.value)
                       )}
                       onChange={handleHeaderChange}
-                      sx={{ marginTop: 0, color: 'white' }}
+                      sx={{ marginTop: 0 }}
                     />
                   </Stack>
                   <Stack width='20%' textAlign='center'>

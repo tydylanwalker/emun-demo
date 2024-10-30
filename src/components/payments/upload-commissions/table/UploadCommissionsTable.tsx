@@ -29,9 +29,9 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
       />
       <Table>
         <TableHead>
-          <TableRow sx={{ bgcolor: '#171717', color: 'white', borderTop: '1px solid lightgray'}}>
+          <TableRow sx={{ borderTop: 1 }}>
             {props.headers.map((header, index) => (
-              <TableCell key={index} align={header.align || 'left'} sx={{ whiteSpace: 'nowrap', color: 'white'}}>
+              <TableCell key={index} align={header.align || 'left'} sx={{ whiteSpace: 'nowrap' }}>
                 {header.label}
               </TableCell>
             ))}

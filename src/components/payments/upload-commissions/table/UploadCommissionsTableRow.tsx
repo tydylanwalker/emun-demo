@@ -5,11 +5,12 @@ import { useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
 import { OrdersTable } from '../../../orders/OrdersTable';
 import { CustomModal } from '../../../shared/CustomModal';
+import { alpha } from '@mui/material/styles';
 
 export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps) {
   const [orderGridOpen, setOrderGridOpen] = useState(false);
   const [errorValues, setErrorValues] = useState<IUploadCommissionsTableRowError | undefined>(undefined);
-  
+
   const handleModalOpen = (error: IUploadCommissionsTableRowError) => {
     setOrderGridOpen(true);
     setErrorValues(error);
@@ -24,7 +25,10 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
     <>
       <TableRow
         sx={{
-          bgcolor: Object.values(props.row).some((field) => field.error) ? 'rgba(255,0,0,0.2)' : 'rgba(0,255,0,0.2)',
+          bgcolor: (theme) =>
+            Object.values(props.row).some((field) => field.error)
+              ? alpha(theme.palette.error.main, 0.4)
+              : alpha(theme.palette.success.main, 0.4),
         }}
       >
         {props.headers.map((header, index) => {
@@ -35,8 +39,7 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
               key={index}
               align={header.align || 'center'}
               onClick={() => error && handleModalOpen(error)}
-              // onClick={() => error && error.function()}
-              sx={{ cursor: error ? 'pointer' : 'default', whiteSpace: 'nowrap'}}
+              sx={{ cursor: error ? 'pointer' : 'default', whiteSpace: 'nowrap' }}
             >
               <Typography
                 p={1}
@@ -49,7 +52,7 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
               </Typography>
               <Stack height='0.8rem'>
                 {error && (
-                  <Typography color='error' sx={{ fontSize: '0.7rem', mt: 0.5 }}>
+                  <Typography color='error' sx={{ fontSize: '0.8rem', mt: 0.5 }}>
                     {error.reason}
                   </Typography>
                 )}

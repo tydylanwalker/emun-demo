@@ -2,7 +2,7 @@ import { Stack, Typography, FormControlLabel, Switch, Button, Alert } from '@mui
 
 export function UploadCommissionsTableTaskBar(props: IUploadCommissionsTableTaskBarProps) {
   return (
-    <Stack direction='row' justifyContent='space-between' p={1.5} bgcolor='#171717' color="white">
+    <Stack direction='row' justifyContent='space-between' p={1.5}>
       <Stack direction='row' gap={3} alignItems='center'>
         <Typography variant='h5'>Imported Data</Typography>
         <Typography variant='caption'>{props.totalRows} entries</Typography>

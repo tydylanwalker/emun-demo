@@ -140,13 +140,7 @@ export function Sidebar(props: ISidebarProps) {
   const { open, handleDrawerClose, handleDrawerOpen } = props;
 
   return (
-    <Drawer
-      variant='permanent'
-      open={open}
-      PaperProps={{
-        sx: { backgroundColor: '#171717', color: 'white' },
-      }}
-    >
+    <Drawer variant='permanent' open={open}>
       <DrawerHeader>
         <Box display='flex' width='100%' height={topbarHeight} justifyContent='space-between' borderBottom={1}>
           <Link href='/'>
