@@ -6,8 +6,8 @@ const EmunLogo = () => {
       xmlns='http://www.w3.org/2000/svg'
       id='b'
       data-name='Layer 2'
-      width='274.362'
-      height='47.064'
+      width='124.362'
+      height='60.064'
       viewBox='0 0 274.362 47.064'
     >
       <g id='c' data-name='Layer 1'>

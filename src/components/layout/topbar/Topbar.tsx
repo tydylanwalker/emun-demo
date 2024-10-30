@@ -2,6 +2,7 @@ import { Toolbar, IconButton, Typography, Box, styled } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import { topbarHeight, sidebarWidth } from '../../../data/constants';
+import EmunLogo from '../../EmunLogo';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -34,7 +35,7 @@ const AppBar = styled(MuiAppBar, {
 export function TopBar(props: ITopBarProps) {
   const { open, handleDrawerOpen } = props;
   return (
-    <AppBar position='fixed' open={props.open}>
+    <AppBar position='fixed' open={props.open} sx={{ background: 'linear-gradient(to right, #4B53D9, #6967CA, #B094AE)' }}>
       <Toolbar>
         <IconButton
           color='inherit'
@@ -42,18 +43,17 @@ export function TopBar(props: ITopBarProps) {
           onClick={handleDrawerOpen}
           edge='start'
           sx={{
+            color: 'white',
             marginRight: 5,
             ...(open && { display: 'none' }),
           }}
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant='h5' noWrap>
-          App Name
-        </Typography>
+        <EmunLogo></EmunLogo>
         <Box flexGrow={1} />
         <Typography variant='body2' noWrap>
-          account
+          ACCOUNT
         </Typography>
       </Toolbar>
     </AppBar>

@@ -9,7 +9,7 @@ const modalStyles = {
   transform: 'translate(-50%, -50%)',
   minWidth: '30vw',
   maxHeight: '90vh',
-  bgcolor: 'background.paper',
+  bgcolor: '#171717',
   borderRadius: 5,
   boxShadow: 24,
   p: 4,
@@ -18,7 +18,7 @@ const modalStyles = {
 export function CustomModal(props: ICustomModalProps) {
   return (
     <Modal open={props.open} onClose={props.closeModal}>
-      <Stack sx={{ ...modalStyles, width: props.width || 'inherit', height: props.height || 'inherit' }}>
+      <Stack sx={{ ...modalStyles, width: props.width || 'inherit', height: props.height || 'inherit', overflowY: 'auto' }}>
         <Stack
           direction='row'
           justifyContent='space-between'

@@ -22,6 +22,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { DrawerHeader } from '../DrawerHeader';
 import Link from 'next/link';
 import { sidebarWidth, topbarHeight } from '../../../data/constants';
+import EmunLogo from '../../EmunLogo';
 
 export interface ISidebarContent {
   icon: JSX.Element;
@@ -141,12 +142,12 @@ export function Sidebar(props: ISidebarProps) {
   const { open, handleDrawerClose, handleDrawerOpen } = props;
 
   return (
-    <Drawer variant='permanent' open={open}>
+    <Drawer variant='permanent' open={open} PaperProps={{
+      style: { backgroundColor: '#171717', color: 'white' } // Change this to your desired color
+    }}>
       <DrawerHeader>
         <Box display='flex' width='100%' height={topbarHeight} justifyContent='space-between' borderBottom={1}>
-          <Link href='/'>
-            <Image src={logo} alt='Logo' style={{ height: topbarHeight - 1, width: '85%' }} />
-          </Link>
+          <EmunLogo></EmunLogo>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>

@@ -17,8 +17,7 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
     <TableContainer
       component={Paper}
       sx={{
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)',
-        border: '1px solid lightgrey',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
         borderRadius: 5,
       }}
     >
@@ -30,9 +29,9 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
       />
       <Table>
         <TableHead>
-          <TableRow sx={{ bgcolor: 'lightgrey' }}>
+          <TableRow sx={{ bgcolor: '#171717', color: 'white', borderTop: '1px solid lightgray'}}>
             {props.headers.map((header, index) => (
-              <TableCell key={index} align={header.align || 'left'}>
+              <TableCell key={index} align={header.align || 'left'} sx={{ whiteSpace: 'nowrap', color: 'white'}}>
                 {header.label}
               </TableCell>
             ))}

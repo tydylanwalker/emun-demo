@@ -9,7 +9,7 @@ import { CustomModal } from '../../../shared/CustomModal';
 export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps) {
   const [orderGridOpen, setOrderGridOpen] = useState(false);
   const [errorValues, setErrorValues] = useState<IUploadCommissionsTableRowError | undefined>(undefined);
-
+  
   const handleModalOpen = (error: IUploadCommissionsTableRowError) => {
     setOrderGridOpen(true);
     setErrorValues(error);
@@ -24,7 +24,7 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
     <>
       <TableRow
         sx={{
-          bgcolor: Object.values(props.row).some((field) => field.error) ? 'rgba(255,0,0,0.2)' : 'inherit',
+          bgcolor: Object.values(props.row).some((field) => field.error) ? 'rgba(255,0,0,0.2)' : 'rgba(0,255,0,0.2)',
         }}
       >
         {props.headers.map((header, index) => {
@@ -33,10 +33,10 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
           return (
             <TableCell
               key={index}
-              align={header.align || 'left'}
+              align={header.align || 'center'}
               onClick={() => error && handleModalOpen(error)}
               // onClick={() => error && error.function()}
-              sx={{ cursor: error ? 'pointer' : 'default' }}
+              sx={{ cursor: error ? 'pointer' : 'default', whiteSpace: 'nowrap'}}
             >
               <Typography
                 p={1}

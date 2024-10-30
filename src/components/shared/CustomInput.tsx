@@ -7,8 +7,8 @@ import { Search } from '@mui/icons-material';
 export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
   const inputStyles = {
     '& .MuiOutlinedInput-root': {
-      borderRadius: 10,
-      border: '0.1rem solid lightgrey',
+      borderRadius: 5,
+      border: '0.13rem solid rgba(75, 83, 217, 0.3)',
       position: 'relative',
       '& fieldset': {
         display: 'none', // Hide the default outline
@@ -20,8 +20,7 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
         left: 0,
         right: 0,
         bottom: 0,
-        border: '2px solid lightgrey',
-        borderRadius: 10,
+        borderRadius: 5,
         pointerEvents: 'none',
         zIndex: -1,
       },
@@ -32,11 +31,13 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
         borderColor: '#1976d2', // Focus color with higher specificity
       },
     },
-    borderRadius: 10,
+    color: 'white',
+    borderRadius: 5,
     marginTop: '1.5rem',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)',
     '& .MuiInputLabel-root': {
-      backgroundColor: 'white',
+      backgroundColor: 'black',
+      color: 'white',
       padding: '0 4px',
     },
     '& .MuiInputLabel-root.Mui-focused, & .MuiInputLabel-root.MuiFormLabel-filled': {

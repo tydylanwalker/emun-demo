@@ -39,7 +39,7 @@ export function SidebarItem(props: ISidebarItemProps) {
       }}
     >
       <ListItemButton onClick={handleClick}>
-        <ListItemIcon>{icon}</ListItemIcon>
+        <ListItemIcon sx={{ color: 'rgb(75, 118, 183, 1.0)' }}>{icon}</ListItemIcon>
         <ListItemText primary={label} />
         {children ? open ? <ExpandLess /> : <ExpandMore /> : <></>}
       </ListItemButton>

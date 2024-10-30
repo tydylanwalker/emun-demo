@@ -7,6 +7,7 @@ import { CustomInput } from '../../shared/CustomInput';
 import { IHeaderMeta } from './UploadCommissions';
 import { Check, Close } from '@mui/icons-material';
 import { CustomModal } from '../../shared/CustomModal';
+import '../../../styles/Home.module.css';
 
 interface IEmunHeaders {
   label: string;
@@ -117,10 +118,9 @@ export function UploadFileModal(props: IUploadFileModalProps) {
   };
 
   return (
-    <CustomModal open={props.open} closeModal={props.onClose} header='Upload Invoices File for Commissions'>
+    <CustomModal open={props.open} closeModal={props.onClose} header='Upload Invoices File'>
       {step === 1 && (
         <Stack gap={3} pt={3}>
-          <Typography variant='h5'>Choose a file to upload</Typography>
           <Button variant='contained' component='label'>
             Choose File
             <input type='file' accept='.xlsx, .xls, .csv' onChange={(e) => handleUploadFileClicked(e)} hidden />
@@ -147,7 +147,7 @@ export function UploadFileModal(props: IUploadFileModalProps) {
           <Stack pt={3}>
             <Typography variant='h5'>{"Match up the column headers in our database to your file's headers"}</Typography>
             <Stack gap={1} py={5}>
-              <Stack direction='row' width='60vw' borderBottom={1} p={1} bgcolor='lightblue'>
+              <Stack direction='row' width='60vw' borderBottom={1} p={1} bgcolor='black'>
                 <Stack width='40%' direction='row' alignItems='center' gap={2}>
                   <Typography fontWeight='bold'>Database Headers</Typography>
                   <Typography variant='caption'>{'(* required header)'}</Typography>
@@ -178,7 +178,7 @@ export function UploadFileModal(props: IUploadFileModalProps) {
                         (option) => !headersBeingUsed.some((used) => option === used && option !== header.value)
                       )}
                       onChange={handleHeaderChange}
-                      sx={{ marginTop: 0 }}
+                      sx={{ marginTop: 0, color: 'white' }}
                     />
                   </Stack>
                   <Stack width='20%' textAlign='center'>

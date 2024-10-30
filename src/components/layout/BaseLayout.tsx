@@ -19,8 +19,8 @@ export function BaseLayout(props: IBaseLayoutProps): JSX.Element {
   return (
     <Box sx={{ display: 'flex', flex: '1 1 auto', maxWidth: '100%' }}>
       <TopBar handleDrawerOpen={handleDrawerOpen} open={open} />
-      <Sidebar handleDrawerClose={handleDrawerClose} handleDrawerOpen={handleDrawerOpen} open={open} />
-      <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
+      <Sidebar handleDrawerClose={handleDrawerClose} handleDrawerOpen={handleDrawerOpen} open={open}/>
+      <Box component='main' sx={{ flexGrow: 1, p: 3}}>
         <DrawerHeader />
         {props.children}
       </Box>
