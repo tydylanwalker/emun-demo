@@ -14,8 +14,6 @@ import {
 import { Box, IconButton, List } from '@mui/material';
 import { SidebarItem } from './SidebarItem';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
-import logo from '../../../../public/logo.jpg';
-import Image from 'next/image';
 import MuiDrawer from '@mui/material/Drawer';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -142,13 +140,19 @@ export function Sidebar(props: ISidebarProps) {
   const { open, handleDrawerClose, handleDrawerOpen } = props;
 
   return (
-    <Drawer variant='permanent' open={open} PaperProps={{
-      style: { backgroundColor: '#171717', color: 'white' } // Change this to your desired color
-    }}>
+    <Drawer
+      variant='permanent'
+      open={open}
+      PaperProps={{
+        sx: { backgroundColor: '#171717', color: 'white' },
+      }}
+    >
       <DrawerHeader>
         <Box display='flex' width='100%' height={topbarHeight} justifyContent='space-between' borderBottom={1}>
-          <EmunLogo></EmunLogo>
-          <IconButton onClick={handleDrawerClose}>
+          <Link href='/'>
+            <EmunLogo />
+          </Link>
+          <IconButton onClick={handleDrawerClose} sx={{ color: 'white' }}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </Box>

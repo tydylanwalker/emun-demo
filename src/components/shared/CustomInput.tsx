@@ -31,13 +31,13 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
         borderColor: '#1976d2', // Focus color with higher specificity
       },
     },
-    color: 'white',
+    color: 'inherit',
     borderRadius: 5,
     marginTop: '1.5rem',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)',
     '& .MuiInputLabel-root': {
-      backgroundColor: 'black',
-      color: 'white',
+      backgroundColor: 'inherit',
+      color: 'inherit',
       padding: '0 4px',
     },
     '& .MuiInputLabel-root.Mui-focused, & .MuiInputLabel-root.MuiFormLabel-filled': {

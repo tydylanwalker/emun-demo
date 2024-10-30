@@ -35,7 +35,11 @@ const AppBar = styled(MuiAppBar, {
 export function TopBar(props: ITopBarProps) {
   const { open, handleDrawerOpen } = props;
   return (
-    <AppBar position='fixed' open={props.open} sx={{ background: 'linear-gradient(to right, #4B53D9, #6967CA, #B094AE)' }}>
+    <AppBar
+      position='fixed'
+      open={props.open}
+      sx={{ background: 'linear-gradient(to right, #4B53D9, #6967CA, #B094AE)' }}
+    >
       <Toolbar>
         <IconButton
           color='inherit'
@@ -50,7 +54,7 @@ export function TopBar(props: ITopBarProps) {
         >
           <MenuIcon />
         </IconButton>
-        <EmunLogo></EmunLogo>
+        <EmunLogo />
         <Box flexGrow={1} />
         <Typography variant='body2' noWrap>
           ACCOUNT
