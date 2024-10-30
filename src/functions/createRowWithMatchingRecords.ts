@@ -1,248 +1,136 @@
+import dayjs from 'dayjs';
 import { IUploadCommissionsRow } from '../components/payments/upload-commissions/UploadCommissions';
-import { customersMock } from '../data/customers';
-import { invoicesMock } from '../data/invoices';
-import { ordersMock } from '../data/orders';
+import { ErrorEnum } from '../data/ErrorEnum';
+import { IOrder, orders } from '../data/ordersMock';
 
-function findCustomer(name: string, id: string) {
-  let customer = customersMock.filter((customer) => customer.name === name);
-  let error = {
-    errorText: '',
-    function: () => {},
-  };
-  let columnWithError = null;
-  if (customer) {
-    if (customer.length > 1) {
-      const customerFound = customer.find((customer) => customer.id === id);
-      if (customerFound) customer = [customerFound];
-      else {
-        columnWithError = 'customerId';
-        error = {
-          errorText: 'Duplicate customers found',
-          function: () => window.alert('Open dialog to search for correct ' + customer[0].name),
-        };
-      }
-    }
-  } else {
-    columnWithError = 'customerName';
-    error = {
-      errorText: 'No Matching Customer Found',
-      function: () => window.alert('dialog to look for matching customer or create a new one'),
-    };
+/**
+ * Function to find if there is a customer error and return which one
+ *
+ * @param name customer name
+ * @param id customer id
+ * @param order order object
+ * @returns ErrorEnum or undefined
+ */
+function findCustomerError(name: string, id: string, order: IOrder) {
+  if (id === order.customerId) {
+    return undefined;
   }
-
-  return {
-    customer,
-    columnWithError,
-    error,
-  };
+  // TODO: add logic to see if we have multiple customers if so ErrorEnum.multipleCustomers
+  // TODO: add logic to see if customer address is different or something like that
+  return ErrorEnum.noCustomer;
 }
 
 export function createRowWithMatchingRecords(row: { [key: string]: any }): IUploadCommissionsRow {
-  const invoiceFound = invoicesMock.find((invoice) => invoice.invoiceNumber === row['Invoice Number']);
+  // grab row data
+  const poNumber = row['PO Number'];
+  const invoiceNumber = row['Invoice Number'];
+  const invoiceAmount = Number(row['Invoice Amount']) || 0;
+  const invoiceDate = row['Invoice Date'] || dayjs().format('MM/DD/YYYY');
+  const customerName = row['Customer Name'];
+  const customerId = row['Customer ID'];
+  const customerAddress = row['Customer Address'];
+  const customerZip = row['Customer ZIP'];
+  const commissionAmount = row['Commission Amount']; // currently calculate this on 15% of invoice amount
+  const orderDate = row['Order Date'];
+  const status = row['Status'];
+  const rep = row['Rep'];
+  const writingRep = row['Writing Rep'];
 
-  if (invoiceFound) {
-    const {
-      invoiceNumber,
-      poNumber,
-      retailerId,
-      companyName,
-      invoiceDate,
-      orderNumber,
-      salesRepID,
-      commissionPercent,
-    } = invoiceFound;
-    const customer = findCustomer(companyName, retailerId);
+  // Check for matching order
+  const ordersFound = orders.filter((order) => order.poNumber === poNumber);
+  if (ordersFound.length > 1) {
+    // TODO handle if multiple found
+  }
+  if (ordersFound.length === 1) {
+    const order = ordersFound[0];
+
+    const customerError = findCustomerError(customerName, customerId, order);
 
     const newRow: IUploadCommissionsRow = {
       poNumber: {
-        value: poNumber,
+        value: order.poNumber,
       },
       invoiceNumber: {
         value: invoiceNumber,
       },
       invoiceAmount: {
-        value: row['Invoice Amount'],
-      },
-      customerId: {
-        value: customer.customer[0]?.id || retailerId,
-        error:
-          customer.columnWithError === 'customerId'
-            ? {
-                errorText: customer.error.errorText,
-                function: customer.error.function,
-              }
-            : null,
-      },
-      customerName: {
-        value: customer.customer[0]?.name || companyName,
-        error:
-          customer.columnWithError === 'customerName'
-            ? {
-                errorText: customer.error.errorText,
-                function: customer.error.function,
-              }
-            : null,
-      },
-      address: {
-        value: customer.customer[0]?.address || row['Address'],
-        error:
-          customer.columnWithError === 'address'
-            ? {
-                errorText: customer.error.errorText,
-                function: customer.error.function,
-              }
-            : null,
-      },
-      commissionPercent: {
-        value: commissionPercent + '%',
+        value: invoiceAmount,
       },
       invoiceDate: {
         value: invoiceDate,
       },
-      orderNumber: {
-        value: orderNumber,
-      },
-      writingRep: {
-        value: salesRepID,
-      },
-      currentRep: {
-        value: salesRepID,
-      },
-    };
-    return newRow;
-  }
-  const orderFound = ordersMock.find((order) => order.purchaseOrder === row['PO Number']);
-  if (orderFound) {
-    const { id, purchaseOrder, companyName, retailerId, currentRepName, writingRepName } = orderFound;
-
-    const customer = findCustomer(companyName, retailerId);
-
-    const newRow: IUploadCommissionsRow = {
-      poNumber: {
-        value: purchaseOrder,
-      },
-      invoiceNumber: {
-        value: row['Invoice Number'],
-        error: {
-          errorText: 'No matching invoice found',
-          function: () => window.alert('Open dialog to search invoices for PO #: ' + purchaseOrder),
-        },
-      },
-      invoiceAmount: {
-        value: row['Invoice Amount'],
-      },
       customerId: {
-        value: customer.customer[0]?.id || retailerId,
-        error:
-          customer.columnWithError === 'customerId'
-            ? {
-                errorText: customer.error.errorText,
-                function: customer.error.function,
-              }
-            : null,
+        value: customerId,
+        error: customerError,
       },
       customerName: {
-        value: customer.customer[0]?.name || companyName,
-        error:
-          customer.columnWithError === 'customerName'
-            ? {
-                errorText: customer.error.errorText,
-                function: customer.error.function,
-              }
-            : null,
+        value: customerName,
       },
-      address: {
-        value: customer.customer[0]?.address || row['Address'],
-        error:
-          customer.columnWithError === 'address'
-            ? {
-                errorText: customer.error.errorText,
-                function: customer.error.function,
-              }
-            : null,
+      customerAddress: {
+        value: customerAddress,
       },
-      commissionPercent: {
-        value: row['Commission Amount'] + '%',
+      customerZip: {
+        value: customerZip,
       },
-      invoiceDate: {
-        value: row['Invoice Date'],
+      commissionAmount: {
+        value: invoiceAmount * 0.15,
       },
-      orderNumber: {
-        value: id,
+      orderDate: {
+        value: order.orderDate,
+      },
+      status: {
+        value: order.status,
+      },
+      rep: {
+        value: order.rep,
       },
       writingRep: {
-        value: writingRepName,
-      },
-      currentRep: {
-        value: currentRepName,
+        value: order.writingRep,
       },
     };
     return newRow;
   }
-  const customer = findCustomer(row['Customer Name'], row['Customer ID']);
-
+  // If no order is found we end up here and just display all values from import
   const newRow: IUploadCommissionsRow = {
     poNumber: {
-      value: row['PO Number'],
-      error: {
-        errorText: 'No matching order found',
-        function: () => window.alert('Opening dialog of selected vendors orders'),
-      },
+      value: poNumber,
+      error: ErrorEnum.noPo,
     },
     invoiceNumber: {
-      value: row['Invoice Number'],
-      error: {
-        errorText: 'No matching Invoice found',
-        function: () => window.alert('Opening dialog of invoices for selected vendor'),
-      },
+      value: invoiceNumber,
     },
     invoiceAmount: {
-      value: row['Invoice Amount'],
-    },
-    customerId: {
-      value: customer.customer[0]?.id || row['Customer ID'],
-      error:
-        customer.columnWithError === 'customerId'
-          ? {
-              errorText: customer.error.errorText,
-              function: customer.error.function,
-            }
-          : null,
-    },
-    customerName: {
-      value: customer.customer[0]?.name || row['Customer Name'],
-      error:
-        customer.columnWithError === 'customerName'
-          ? {
-              errorText: customer.error.errorText,
-              function: customer.error.function,
-            }
-          : null,
-    },
-    address: {
-      value: customer.customer[0]?.address || row['Address'],
-      error:
-        customer.columnWithError === 'address'
-          ? {
-              errorText: customer.error.errorText,
-              function: customer.error.function,
-            }
-          : null,
-    },
-    commissionPercent: {
-      value: row['Commission Amount'] + '%',
+      value: invoiceAmount,
     },
     invoiceDate: {
-      value: row['Invoice Date'],
+      value: invoiceDate,
     },
-    orderNumber: {
-      value: row['Order Number'],
+    customerId: {
+      value: customerId,
+    },
+    customerName: {
+      value: customerName,
+    },
+    customerAddress: {
+      value: customerAddress,
+    },
+    customerZip: {
+      value: customerZip,
+    },
+    commissionAmount: {
+      value: invoiceAmount * 0.15,
+    },
+    orderDate: {
+      value: orderDate,
+    },
+    status: {
+      value: status,
+    },
+    rep: {
+      value: rep,
     },
     writingRep: {
-      value: row['Writing Rep'],
-    },
-    currentRep: {
-      value: row['Current Rep'],
+      value: writingRep,
     },
   };
   return newRow;

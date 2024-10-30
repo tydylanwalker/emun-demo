@@ -1,22 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Modal, Button, Typography, Stack } from '@mui/material';
+import { Button, Typography, Stack } from '@mui/material';
 import { useState, ChangeEvent } from 'react';
 import * as XLSX from 'xlsx';
 import { parse } from 'csv-parse/browser/esm/sync';
 import { CustomInput } from '../../shared/CustomInput';
 import { IHeaderMeta } from './UploadCommissions';
-
-const modalStyles = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  minWidth: '30rem',
-  bgcolor: 'background.paper',
-  borderRadius: 5,
-  boxShadow: 24,
-  p: 4,
-};
+import { Check, Close } from '@mui/icons-material';
+import { CustomModal } from '../../shared/CustomModal';
 
 interface IEmunHeaders {
   label: string;
@@ -35,6 +25,7 @@ function setInitialHeaderValues(headers: IHeaderMeta[]): IEmunHeaders[] {
 }
 
 export function UploadFileModal(props: IUploadFileModalProps) {
+  const [step, setStep] = useState(1);
   const [fileHeaders, setFileHeaders] = useState<string[]>([]);
   const [emunHeaders, setEmunHeaders] = useState<IEmunHeaders[]>(setInitialHeaderValues(props.emunHeaders));
   const headersBeingUsed = emunHeaders.filter((header) => header.value !== '').map((header) => header.value);
@@ -86,6 +77,7 @@ export function UploadFileModal(props: IUploadFileModalProps) {
         alert('Please upload a valid file.');
       }
     }
+    setStep(step + 1);
   };
 
   const handleHeaderChange = (event: any) => {
@@ -125,46 +117,96 @@ export function UploadFileModal(props: IUploadFileModalProps) {
   };
 
   return (
-    <Modal open={props.open} onClose={props.onClose}>
-      <Stack sx={modalStyles} spacing={2}>
-        <Typography variant='h6'>Upload and Map Headers</Typography>
-        {fileHeaders.length > 0 ? (
-          <Stack>
-            <Typography variant='caption' color='info'>
-              {'Match the headers from your file to the headers we need (* indicates required field)'}
+    <CustomModal open={props.open} closeModal={props.onClose} header='Upload Invoices File for Commissions'>
+      {step === 1 && (
+        <Stack gap={3} pt={3}>
+          <Typography variant='h5'>Choose a file to upload</Typography>
+          <Button variant='contained' component='label'>
+            Choose File
+            <input type='file' accept='.xlsx, .xls, .csv' onChange={(e) => handleUploadFileClicked(e)} hidden />
+          </Button>
+          <Stack gap={1}>
+            <Typography>
+              Download a template with all the correct headers{' '}
+              <span style={{ textDecoration: 'underline', color: 'blue', cursor: 'pointer' }}>here</span>
             </Typography>
-            {emunHeaders.map((header, index) => (
-              <CustomInput
-                key={index}
-                select
-                label={header.label}
-                name={header.label}
-                value={header.value}
-                required={header.required}
-                options={fileHeaders.filter(
-                  (option) => !headersBeingUsed.some((used) => option === used && option !== header.value)
-                )}
-                onChange={handleHeaderChange}
-              />
-            ))}
+            <Typography fontWeight='bold'>File Requirements</Typography>
+            <Stack pl={2}>
+              <Typography>
+                1. File must be a .xls, .xlsx, or .csv<br></br>2.File must require values for these columns:
+              </Typography>
+              <Typography pl={2}>
+                - PO Number<br></br>- Invoice Number<br></br>- Invoice Amount<br></br>- Customer ID
+              </Typography>
+            </Stack>
+          </Stack>
+        </Stack>
+      )}
+      {step == 2 &&
+        (fileHeaders.length > 0 ? (
+          <Stack pt={3}>
+            <Typography variant='h5'>{"Match up the column headers in our database to your file's headers"}</Typography>
+            <Stack gap={1} py={5}>
+              <Stack direction='row' width='60vw' borderBottom={1} p={1} bgcolor='lightblue'>
+                <Stack width='40%' direction='row' alignItems='center' gap={2}>
+                  <Typography fontWeight='bold'>Database Headers</Typography>
+                  <Typography variant='caption'>{'(* required header)'}</Typography>
+                </Stack>
+                <Stack width='40%'>
+                  <Typography fontWeight='bold'>File Headers to Match</Typography>
+                </Stack>
+                <Stack flexGrow={1} textAlign='center'>
+                  <Typography fontWeight='bold'>Matched</Typography>
+                </Stack>
+              </Stack>
+              {emunHeaders.map((header, index) => (
+                <Stack direction='row' width='60vw' p={1} key={index} borderBottom={1}>
+                  <Stack width='40%'>
+                    <Typography>
+                      {header.label}
+                      {header.required && ' *'}
+                    </Typography>
+                  </Stack>
+                  <Stack width='40%'>
+                    <CustomInput
+                      select
+                      name={header.label}
+                      value={header.value}
+                      required={header.required}
+                      size='small'
+                      options={fileHeaders.filter(
+                        (option) => !headersBeingUsed.some((used) => option === used && option !== header.value)
+                      )}
+                      onChange={handleHeaderChange}
+                      sx={{ marginTop: 0 }}
+                    />
+                  </Stack>
+                  <Stack width='20%' textAlign='center'>
+                    <Typography>{!header.value ? <Close color='error' /> : <Check color='success' />}</Typography>
+                  </Stack>
+                </Stack>
+              ))}
+            </Stack>
             <Button
               variant='contained'
               color='success'
+              size='large'
               disabled={buttonDisabled}
-              sx={{ mt: 3 }}
+              sx={{ mt: 1 }}
               onClick={mapFileDataToHeaders}
             >
               Process
             </Button>
           </Stack>
         ) : (
-          <Button variant='contained' component='label'>
-            Choose File
-            <input type='file' accept='.xlsx, .xls, .csv' onChange={(e) => handleUploadFileClicked(e)} hidden />
-          </Button>
-        )}
-      </Stack>
-    </Modal>
+          <Stack>
+            <Typography>File imported successfully but no data was found</Typography>
+            <Button variant='contained' color='warning' onClick={() => setStep(step - 1)}>
+              Go back to file upload
+            </Button>
+          </Stack>
+        ))}
+    </CustomModal>
   );
 }
 

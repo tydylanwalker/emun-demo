@@ -1,29 +1,8 @@
-import {
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Typography,
-  TableContainer,
-  Paper,
-  Stack,
-} from '@mui/material';
+import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper } from '@mui/material';
 import { IHeaderMeta, IUploadCommissionsRow } from '../UploadCommissions';
-import dayjs from 'dayjs';
 import { UploadCommissionsTableTaskBar } from './UploadCommissionsTableTaskBar';
 import { useEffect, useState } from 'react';
-
-function formatCellData(type: string, value: string) {
-  switch (type) {
-    case 'currency':
-      return '$' + (!!value ? Number(value).toFixed(2) : '0.00');
-    case 'date':
-      return dayjs(value).format('MM/DD/YYYY');
-    default:
-      return value;
-  }
-}
+import { UploadCommissionsTableRow } from './UploadCommissionsTableRow';
 
 export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
   const [rowsWithErrors, setRowsWithErrors] = useState<IUploadCommissionsRow[]>([]);
@@ -35,7 +14,14 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
   }, [props.rows]);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer
+      component={Paper}
+      sx={{
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)',
+        border: '1px solid lightgrey',
+        borderRadius: 5,
+      }}
+    >
       <UploadCommissionsTableTaskBar
         totalRows={props.rows.length}
         rowsWithErrors={rowsWithErrors.length}
@@ -54,41 +40,7 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
         </TableHead>
         <TableBody>
           {renderedRows.map((row, index) => (
-            <TableRow
-              key={index}
-              sx={{
-                bgcolor: Object.values(row).some((field) => field.error) ? 'rgba(255,0,0,0.2)' : 'inherit',
-              }}
-            >
-              {props.headers.map((header, index) => {
-                const error = row[header.id].error;
-                return (
-                  <TableCell
-                    key={index}
-                    align={header.align || 'left'}
-                    onClick={() => error && error.function()}
-                    sx={{ cursor: error ? 'pointer' : 'default' }}
-                  >
-                    <Typography
-                      p={1}
-                      sx={{
-                        border: error ? '1px solid red' : 'none',
-                        borderRadius: 2,
-                      }}
-                    >
-                      {formatCellData(header.type, row[header.id].value)}
-                    </Typography>
-                    <Stack height='0.8rem'>
-                      {error && (
-                        <Typography color='error' sx={{ fontSize: '0.7rem', mt: 0.5 }}>
-                          {error.errorText}
-                        </Typography>
-                      )}
-                    </Stack>
-                  </TableCell>
-                );
-              })}
-            </TableRow>
+            <UploadCommissionsTableRow key={index} row={row} headers={props.headers} />
           ))}
         </TableBody>
       </Table>

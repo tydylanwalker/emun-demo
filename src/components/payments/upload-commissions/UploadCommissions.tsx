@@ -8,6 +8,9 @@ import { UploadFileModal } from './UploadFileModal';
 import { UploadCommissionsTable } from './table/UploadCommissionsTable';
 import { vendorsMock } from '../../../data/vendors';
 import { createRowWithMatchingRecords } from '../../../functions/createRowWithMatchingRecords';
+import { ErrorEnum } from '../../../data/ErrorEnum';
+import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
+import { formatCurrency } from '../../../functions/formatCurrency';
 
 export interface IHeaderMeta {
   label: string;
@@ -39,46 +42,61 @@ const uploadCommissionsHeadersMeta: IHeaderMeta[] = [
     align: 'right',
     required: true,
   },
-  { label: 'Customer ID', id: 'customerId', type: 'string', align: 'left' },
+  { label: 'Invoice Date', id: 'invoiceDate', type: 'date', align: 'center' },
+  { label: 'Customer ID', id: 'customerId', type: 'string', align: 'left', required: true },
   { label: 'Customer Name', id: 'customerName', type: 'string', align: 'left' },
-  { label: 'Address', id: 'address', type: 'string', align: 'left' },
+  { label: 'Customer Address', id: 'customerAddress', type: 'string', align: 'left' },
+  { label: 'Customer ZIP', id: 'customerZip', type: 'string', align: 'left' },
   {
-    label: 'Commission',
-    id: 'commissionPercent',
-    type: 'string',
+    label: 'Commission Amount',
+    id: 'commissionAmount',
+    type: 'currency',
     align: 'right',
   },
-  { label: 'Invoice Date', id: 'invoiceDate', type: 'date', align: 'center' },
-  { label: 'Order Number', id: 'orderNumber', type: 'string', align: 'left' },
+  { label: 'Order Date', id: 'orderDate', type: 'string', align: 'left' },
+  { label: 'Status', id: 'status', type: 'string', align: 'left' },
+  { label: 'Rep', id: 'rep', type: 'string', align: 'left' },
+  { label: 'Writing Rep', id: 'writingRep', type: 'string', align: 'left' },
 ];
 
-interface IErrorObject {
-  errorText: string;
-  function: () => void;
+interface IRowObject<T> {
+  value: T;
+  error?: ErrorEnum;
 }
 
 export interface IUploadCommissionsRow {
-  poNumber: { value: string; error?: IErrorObject | null };
-  invoiceNumber: { value: string; error?: IErrorObject | null };
-  invoiceAmount: { value: string; error?: IErrorObject | null };
-  customerId: { value: string; error?: IErrorObject | null };
-  customerName: { value: string; error?: IErrorObject | null };
-  address: { value: string; error?: IErrorObject | null };
-  commissionPercent: { value: string; error?: IErrorObject | null };
-  invoiceDate: { value: string; error?: IErrorObject | null };
-  orderNumber: { value: string; error?: IErrorObject | null };
-  writingRep: { value: string; error?: IErrorObject | null };
-  currentRep: { value: string; error?: IErrorObject | null };
+  poNumber: IRowObject<string>;
+  invoiceNumber: IRowObject<string>;
+  invoiceAmount: IRowObject<number>;
+  invoiceDate: IRowObject<string>;
+  customerId: IRowObject<string>;
+  customerName: IRowObject<string>;
+  customerAddress: IRowObject<string>;
+  customerZip: IRowObject<string>;
+  commissionAmount: IRowObject<number>;
+  orderDate: IRowObject<string>;
+  status: IRowObject<string>;
+  rep: IRowObject<string>;
+  writingRep: IRowObject<string>;
 }
 
 export function UploadCommissions() {
   const vendorOptions = vendorsMock.map((vendor) => vendor.vendorName);
   const [vendor, setVendor] = useState('');
+  const [payPeriodOptions] = useState(['JUNE2024', 'JULY2024', 'AUG2024', 'SEPT2024', 'OCT2024']);
+  const [payPeriod, setPayPeriod] = useState('');
   const [check, setCheck] = useState('');
-  const [checkOptions, setCheckOptions] = useState(['SEPT2024']);
+  const [checkOptions, setCheckOptions] = useState(['001', '002', '003', '004', '005']);
   const [addNewCheck, setAddNewCheck] = useState(false);
+  const [addNewPayPeriod, setAddNewPayPeriod] = useState(false);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [mappedFileData, setMappedFileData] = useState<IUploadCommissionsRow[]>([]);
+  const invoiceTotals = mappedFileData.reduce(
+    (sum, row) => (sum += Object.values(row).some((field) => field.error) ? 0 : row.invoiceAmount.value),
+    0
+  );
+  const checkAmount = '20000';
+  const remainingBalance = Number(checkAmount) - invoiceTotals;
 
   const saveCheck = (checkToSave: ICheckData) => {
     setAddNewCheck(false);
@@ -97,32 +115,90 @@ export function UploadCommissions() {
 
   return (
     <Stack gap={1}>
-      <Typography variant='h6'>{`Upload Commissions ${vendor && 'for ' + vendor}${check && ' | ' + check}`}</Typography>
-      <Stack direction='row' gap={2} mb={3}>
-        <CustomInput
-          select
-          value={vendor}
-          label='Select Vendor'
-          options={vendorOptions}
-          onChange={(event) => setVendor(event.target.value as string)}
-        />
-        <CustomInput
-          select
-          value={check}
-          label='Select Check'
-          options={checkOptions}
-          onChange={(event) => setCheck(event.target.value as string)}
-          endAction={
-            <Button size='small' sx={{ color: 'grey', textTransform: 'none' }} onClick={() => setAddNewCheck(true)}>
-              add new check +
-            </Button>
-          }
-        />
+      <Stack direction='row' justifyContent='space-between' mb={3}>
+        <Stack>
+          <Typography fontSize='1.75rem' fontWeight='bold'>
+            Upload Commissions
+          </Typography>
+          <Typography variant='subtitle1' fontSize='1.2rem'>
+            {vendor}
+            {payPeriod && '  |  ' + payPeriod}
+            {check && '  |  ' + check}
+          </Typography>
+        </Stack>
+
+        {mappedFileData.length > 0 && (
+          <Stack direction='row' gap={2}>
+            <HeaderAndValueCard
+              header='Check Amount'
+              value={'$' + formatCurrency(checkAmount)}
+              width='15rem'
+              color='lightblue'
+            />
+            <HeaderAndValueCard
+              header='Invoice Totals'
+              value={'$' + formatCurrency(invoiceTotals)}
+              width='15rem'
+              color='lightgreen'
+            />
+            <HeaderAndValueCard
+              header='Remaining Balance'
+              value={'$' + formatCurrency(remainingBalance)}
+              width='15rem'
+              color='lightcoral'
+            />
+          </Stack>
+        )}
       </Stack>
       {!mappedFileData?.length ? (
-        <Button variant='contained' onClick={() => setUploadOpen(true)}>
-          Upload File
-        </Button>
+        <>
+          <Stack direction='row' gap={2} mb={3}>
+            <CustomInput
+              select
+              value={vendor}
+              label='Select Vendor'
+              options={vendorOptions}
+              onChange={(event) => setVendor(event.target.value as string)}
+            />
+            <CustomInput
+              select
+              value={payPeriod}
+              label='Select Pay Period'
+              options={payPeriodOptions}
+              onChange={(event) => setPayPeriod(event.target.value as string)}
+              endAction={
+                <Button
+                  size='small'
+                  sx={{ color: 'grey', textTransform: 'none' }}
+                  onClick={() => setAddNewPayPeriod(true)}
+                >
+                  add new pay period +
+                </Button>
+              }
+            />
+            <CustomInput
+              select
+              value={check}
+              label='Select Check'
+              options={checkOptions}
+              onChange={(event) => setCheck(event.target.value as string)}
+              endAction={
+                <Button size='small' sx={{ color: 'grey', textTransform: 'none' }} onClick={() => setAddNewCheck(true)}>
+                  add new check +
+                </Button>
+              }
+            />
+          </Stack>
+          <Button
+            sx={{ fontSize: '1.5rem', my: 5 }}
+            size='large'
+            variant='contained'
+            onClick={() => setUploadOpen(true)}
+            disabled={!check || !vendor || !payPeriod}
+          >
+            Upload File
+          </Button>
+        </>
       ) : (
         <UploadCommissionsTable rows={mappedFileData} headers={uploadCommissionsHeadersMeta} />
       )}

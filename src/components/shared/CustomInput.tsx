@@ -1,11 +1,14 @@
 import { FormControl, InputAdornment, MenuItem, Stack, TextField, TextFieldProps } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
+import { formatCurrency } from '../../functions/formatCurrency';
+import { Search } from '@mui/icons-material';
 
 export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
   const inputStyles = {
     '& .MuiOutlinedInput-root': {
       borderRadius: 10,
+      border: '0.1rem solid lightgrey',
       position: 'relative',
       '& fieldset': {
         display: 'none', // Hide the default outline
@@ -50,8 +53,7 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
 
     // Format the value like currency
     if (props.currency) {
-      value = value.replace(/\D/g, ''); // Remove non-digit characters
-      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Add commas
+      value = formatCurrency(value);
     }
 
     if (props.onChange) {
@@ -99,15 +101,19 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
           multiline={props.multiline}
           rows={props.rows || 3}
           sx={inputStyles}
-          slotProps={
-            props.currency && props.value
-              ? {
-                  input: {
-                    startAdornment: <InputAdornment position='start'>$</InputAdornment>,
-                  },
-                }
-              : {}
-          }
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position='start'>
+                  {props.currency && props.value ? (
+                    '$'
+                  ) : props.type === 'search' ? (
+                    <Search fontSize='small' color='primary' sx={{ mr: 1 }} />
+                  ) : null}
+                </InputAdornment>
+              ),
+            },
+          }}
         >
           {props.options?.map((option, index) => (
             <MenuItem key={index} value={option}>
