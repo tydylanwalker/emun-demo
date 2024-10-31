@@ -3,16 +3,15 @@ import Button from '@mui/material/Button';
 import { Box, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import dayjs from 'dayjs';
-import { ICheckData, ECheckStatus } from '../../../interfaces/ICheckData';
-import { CustomInput } from '../../shared/CustomInput';
+import { ICheckData, ECheckStatus } from '../../../../interfaces/ICheckData';
+import { CustomInput } from '../../../shared/CustomInput';
+import { IOrderData } from '../../../../interfaces/IOrderData';
 
-export function AddCheck(props: IAddCheckProps) {
-  const [formData, setFormData] = useState<ICheckData>({
-    vendor: props.vendor,
+export function AddOrder(props: IAddOrderProps) {
+  const [formData, setFormData] = useState<IOrderData>({
     payPeriod: '',
     number: '',
     checkAmount: '',
-    status: ECheckStatus.Open,
     receivedDate: null,
     payDate: dayjs(),
     commissionAmount: '',
@@ -43,15 +42,6 @@ export function AddCheck(props: IAddCheckProps) {
         <Box display='flex' gap={2}>
           <CustomInput
             required
-            select
-            value={formData.vendor}
-            options={props.vendorOptions}
-            label='Vendor'
-            name='vendor'
-            onChange={handleChange}
-          />
-          <CustomInput
-            required
             value={formData.payPeriod}
             label='Pay Period'
             name='payPeriod'
@@ -68,16 +58,6 @@ export function AddCheck(props: IAddCheckProps) {
             name='checkAmount'
             onChange={handleChange}
             maxWidth='12.5rem'
-          />
-          <CustomInput
-            required
-            select
-            value={formData.status}
-            label='Status'
-            name='status'
-            options={Object.values(ECheckStatus)}
-            onChange={handleChange}
-            maxWidth='10rem'
           />
         </Box>
         <Box display='flex' gap={2}>
@@ -121,7 +101,7 @@ export function AddCheck(props: IAddCheckProps) {
           multiline
         />
         <Button
-          onClick={() => props.saveCheck(formData)}
+          onClick={() => props.saveOrder(formData)}
           size='large'
           color='success'
           variant='contained'
@@ -135,10 +115,8 @@ export function AddCheck(props: IAddCheckProps) {
   );
 }
 
-interface IAddCheckProps {
+interface IAddOrderProps {
   open: boolean;
   toggleDrawer: (newOpen: boolean) => void;
-  vendor: string;
-  vendorOptions: string[];
-  saveCheck: (check: ICheckData) => void;
+  saveOrder: (check: IOrderData) => void;
 }

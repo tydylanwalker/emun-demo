@@ -146,7 +146,7 @@ export function Sidebar(props: ISidebarProps) {
           <Link href='/'>
             <EmunLogo />
           </Link>
-          <IconButton onClick={handleDrawerClose} sx={{ color: 'white' }}>
+          <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </Box>

@@ -15,13 +15,16 @@ interface IEmunHeaders {
 }
 
 function setInitialHeaderValues(headers: IHeaderMeta[]): IEmunHeaders[] {
-  return headers.map((header) => {
-    return {
+  const initialHeaders: IEmunHeaders[] = [];
+  headers.forEach((header) => {
+    if (header.hide) return;
+    initialHeaders.push({
       label: header.label,
       value: '',
       required: !!header.required,
-    };
+    });
   });
+  return initialHeaders;
 }
 
 export function UploadFileModal(props: IUploadFileModalProps) {
@@ -152,7 +155,7 @@ export function UploadFileModal(props: IUploadFileModalProps) {
           <Stack pt={3}>
             <Typography variant='h5'>{"Match up the column headers in our database to your file's headers"}</Typography>
             <Stack gap={1} my={5} borderRadius={5} border={1} overflow='hidden'>
-              <Stack direction='row' width='60vw' p={1} bgcolor='primary.main'>
+              <Stack direction='row' width='60vw' p={1} bgcolor='secondary.main' borderBottom={1}>
                 <Stack width='40%' direction='row' alignItems='center' gap={2}>
                   <Typography fontWeight='bold'>Database Headers</Typography>
                   <Typography variant='caption'>{'(* required header)'}</Typography>

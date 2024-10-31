@@ -1,4 +1,4 @@
-import { Toolbar, IconButton, Typography, Box, styled } from '@mui/material';
+import { Toolbar, IconButton, Typography, Box, styled, useMediaQuery } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import { topbarHeight, sidebarWidth } from '../../../data/constants';
@@ -38,9 +38,15 @@ export function TopBar(props: ITopBarProps) {
     <AppBar
       position='fixed'
       open={props.open}
-      sx={{ background: 'linear-gradient(to right, #4B53D9, #6967CA, #B094AE)' }}
+      sx={
+        useMediaQuery('(prefers-color-scheme: light)')
+          ? {
+              background: 'linear-gradient(to right, #4B53D9, #6967CA, #B094AE)',
+            }
+          : {}
+      }
     >
-      <Toolbar>
+      <Toolbar sx={{ boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)' }}>
         <IconButton
           color='inherit'
           aria-label='open drawer'

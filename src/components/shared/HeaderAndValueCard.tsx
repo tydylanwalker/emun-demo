@@ -5,11 +5,9 @@ export function HeaderAndValueCard(props: IHeaderAndValueCardProps) {
     <Stack
       borderRadius={5}
       width={props.width}
-      bgcolor={props.color}
       sx={{
-        background: 'linear-gradient(to top, #4B53D9, #6967CA, #B094AE)',
-        padding: '20px',
-        transition: 'transform 0.2s',
+        padding: '1.25rem',
+        boxShadow: ' 0px 8px 30px rgba(0, 0, 0, 0.5)',
       }}
     >
       <Typography fontSize='1.2rem' fontWeight='bold' p={1}>

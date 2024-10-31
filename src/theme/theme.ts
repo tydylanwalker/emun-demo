@@ -9,7 +9,7 @@ const lightPalette: ThemeOptions['palette'] = {
     main: '#1976d2',
   },
   secondary: {
-    main: '#9c27b0',
+    main: '#F7F7F7',
   },
 };
 
@@ -19,7 +19,7 @@ const darkPalette: ThemeOptions['palette'] = {
     main: '#90caf9',
   },
   secondary: {
-    main: '#f48fb1',
+    main: '#1f1f1f',
   },
 };
 
@@ -30,6 +30,14 @@ const componentOverrides: ThemeOptions['components'] = {
       root: {
         textTransform: 'none',
         borderRadius: 8,
+      },
+    },
+  },
+  MuiTableContainer: {
+    styleOverrides: {
+      root: {
+        boxShadow: ' 0px 8px 30px rgba(0, 0, 0, 0.4)',
+        borderRadius: '1rem',
       },
     },
   },

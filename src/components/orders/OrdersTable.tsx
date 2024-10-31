@@ -125,14 +125,7 @@ export function OrdersTable(props: IOrdersTableProps) {
   }, [rows, searchText]);
 
   return (
-    <TableContainer
-      component={Paper}
-      sx={{
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)',
-        border: '0.2rem solid lightgrey',
-        borderRadius: 5,
-      }}
-    >
+    <TableContainer component={Paper}>
       <Stack direction='row' justifyContent='space-between'>
         <Typography variant='h5' fontWeight='bold' p={2}>
           View Orders
@@ -151,12 +144,12 @@ export function OrdersTable(props: IOrdersTableProps) {
           type='search'
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
-          sx={{ marginTop: 0, border: '0.1rem solid grey' }}
+          sx={{ marginTop: 0 }}
         />
       </Stack>
       <Table>
         <TableHead>
-          <TableRow sx={{ bgcolor: 'lightgrey' }}>
+          <TableRow sx={{ bgcolor: 'secondary.main' }}>
             {orderHeaders.map((header, index) => (
               <TableCell key={index} align={header.align || 'left'} sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
                 {header.label}

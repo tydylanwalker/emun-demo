@@ -14,13 +14,7 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
   }, [props.rows]);
 
   return (
-    <TableContainer
-      component={Paper}
-      sx={{
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-        borderRadius: 5,
-      }}
-    >
+    <TableContainer component={Paper}>
       <UploadCommissionsTableTaskBar
         totalRows={props.rows.length}
         rowsWithErrors={rowsWithErrors.length}
@@ -29,9 +23,9 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
       />
       <Table>
         <TableHead>
-          <TableRow sx={{ borderTop: 1 }}>
+          <TableRow sx={{ bgcolor: 'secondary.main' }}>
             {props.headers.map((header, index) => (
-              <TableCell key={index} align={header.align || 'left'} sx={{ whiteSpace: 'nowrap' }}>
+              <TableCell key={index} align={header.align || 'left'} sx={{ whiteSpace: 'nowrap', fontWeight: 'bold' }}>
                 {header.label}
               </TableCell>
             ))}

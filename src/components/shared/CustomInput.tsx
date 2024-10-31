@@ -1,4 +1,4 @@
-import { FormControl, InputAdornment, MenuItem, Stack, TextField, TextFieldProps } from '@mui/material';
+import { FormControl, InputAdornment, MenuItem, Stack, TextField, TextFieldProps, useMediaQuery } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { formatCurrency } from '../../functions/formatCurrency';
@@ -8,10 +8,10 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
   const inputStyles = {
     '& .MuiOutlinedInput-root': {
       borderRadius: 5,
-      border: '0.13rem solid rgba(75, 83, 217, 0.3)',
+      border: useMediaQuery('(prefers-color-scheme: dark)') ? 1 : 0,
       position: 'relative',
       '& fieldset': {
-        display: 'none', // Hide the default outline
+        display: 'none',
       },
       '&::before': {
         content: '""',
@@ -54,7 +54,7 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
 
     // Format the value like currency
     if (props.currency) {
-      value = formatCurrency(value);
+      value = formatCurrency(Number(value));
     }
 
     if (props.onChange) {
@@ -68,6 +68,20 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       props.onChange({ target: { name: props.name, value: newValue } } as any);
     }
+  };
+
+  const getStartAdornment = () => {
+    if (props.currency && props.value) {
+      return <InputAdornment position='start'>$</InputAdornment>;
+    }
+    if (props.type === 'search') {
+      return (
+        <InputAdornment position='start'>
+          <Search fontSize='small' color='info' sx={{ mr: 1 }} />
+        </InputAdornment>
+      );
+    }
+    return null;
   };
 
   return (
@@ -104,15 +118,7 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
           sx={inputStyles}
           slotProps={{
             input: {
-              startAdornment: (
-                <InputAdornment position='start'>
-                  {props.currency && props.value ? (
-                    '$'
-                  ) : props.type === 'search' ? (
-                    <Search fontSize='small' color='primary' sx={{ mr: 1 }} />
-                  ) : null}
-                </InputAdornment>
-              ),
+              startAdornment: getStartAdornment(),
             },
           }}
         >

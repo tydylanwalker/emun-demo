@@ -29,12 +29,15 @@ export function createRowWithMatchingRecords(row: { [key: string]: any }): IUplo
   const customerName = row['Customer Name'];
   const customerId = row['Customer ID'];
   const customerAddress = row['Customer Address'];
-  const customerZip = row['Customer ZIP'];
-  const commissionAmount = row['Commission Amount']; // currently calculate this on 15% of invoice amount
-  const orderDate = row['Order Date'];
-  const status = row['Status'];
-  const rep = row['Rep'];
-  const writingRep = row['Writing Rep'];
+  const customerCity = row['City'];
+  const customerState = row['State'];
+  const customerZip = row['Zip'];
+  // These fields are not shown on the file upload
+  // const commissionAmount = row['Commission Amount'];
+  // const orderDate = row['Order Date'];
+  // const status = row['Status'];
+  // const rep = row['Rep'];
+  // const writingRep = row['Writing Rep'];
 
   // Check for matching order
   const ordersFound = orders.filter((order) => order.poNumber === poNumber);
@@ -69,6 +72,12 @@ export function createRowWithMatchingRecords(row: { [key: string]: any }): IUplo
       customerAddress: {
         value: customerAddress,
       },
+      customerCity: {
+        value: customerCity,
+      },
+      customerState: {
+        value: customerState,
+      },
       customerZip: {
         value: customerZip,
       },
@@ -77,9 +86,6 @@ export function createRowWithMatchingRecords(row: { [key: string]: any }): IUplo
       },
       orderDate: {
         value: order.orderDate,
-      },
-      status: {
-        value: order.status,
       },
       rep: {
         value: order.rep,
@@ -114,6 +120,12 @@ export function createRowWithMatchingRecords(row: { [key: string]: any }): IUplo
     customerAddress: {
       value: customerAddress,
     },
+    customerCity: {
+      value: customerCity,
+    },
+    customerState: {
+      value: customerState,
+    },
     customerZip: {
       value: customerZip,
     },
@@ -121,16 +133,13 @@ export function createRowWithMatchingRecords(row: { [key: string]: any }): IUplo
       value: invoiceAmount * 0.15,
     },
     orderDate: {
-      value: orderDate,
-    },
-    status: {
-      value: status,
+      value: '',
     },
     rep: {
-      value: rep,
+      value: '',
     },
     writingRep: {
-      value: writingRep,
+      value: '',
     },
   };
   return newRow;

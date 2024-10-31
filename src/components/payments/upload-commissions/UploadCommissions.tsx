@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
-import { AddCheck } from './AddCheck';
+import { AddCheck } from './forms/AddCheck';
 import { ICheckData } from '../../../interfaces/ICheckData';
 import { CustomInput } from '../../shared/CustomInput';
 import { UploadFileModal } from './UploadFileModal';
@@ -12,13 +12,17 @@ import { ErrorEnum } from '../../../data/ErrorEnum';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
 import { IOrderData } from '../../../interfaces/IOrderData';
-import { AddOrder } from './AddOrder';
+import { AddOrder } from './forms/AddOrder';
+import { UploadCommissionsSpeedDial } from '../../shared/UploadCommissionsSpeedDial';
+import { AddDirectOrder } from './forms/AddDirectOrder';
+import { AddAdjustment } from './forms/AddAdjustment';
 export interface IHeaderMeta {
   label: string;
   id: keyof IUploadCommissionsRow;
   type: 'currency' | 'string' | 'date';
   align: 'left' | 'right' | 'center';
   required?: boolean;
+  hide?: boolean;
 }
 
 const uploadCommissionsHeadersMeta: IHeaderMeta[] = [
@@ -26,7 +30,7 @@ const uploadCommissionsHeadersMeta: IHeaderMeta[] = [
     label: 'PO Number',
     id: 'poNumber',
     type: 'string',
-    align: 'center',
+    align: 'left',
     required: true,
   },
   {
@@ -40,24 +44,26 @@ const uploadCommissionsHeadersMeta: IHeaderMeta[] = [
     label: 'Invoice Amount',
     id: 'invoiceAmount',
     type: 'currency',
-    align: 'center',
+    align: 'right',
     required: true,
   },
   { label: 'Invoice Date', id: 'invoiceDate', type: 'date', align: 'center' },
-  { label: 'Customer ID', id: 'customerId', type: 'string', align: 'center', required: true },
-  { label: 'Customer Name', id: 'customerName', type: 'string', align: 'center' },
-  { label: 'Customer Address', id: 'customerAddress', type: 'string', align: 'center' },
-  { label: 'Customer ZIP', id: 'customerZip', type: 'string', align: 'center' },
+  { label: 'Customer ID', id: 'customerId', type: 'string', align: 'left', required: true },
+  { label: 'Customer Name', id: 'customerName', type: 'string', align: 'left' },
+  { label: 'Customer Address', id: 'customerAddress', type: 'string', align: 'left' },
+  { label: 'City', id: 'customerCity', type: 'string', align: 'left' },
+  { label: 'State', id: 'customerState', type: 'string', align: 'left' },
+  { label: 'Zip', id: 'customerZip', type: 'string', align: 'left' },
   {
     label: 'Commission Amount',
     id: 'commissionAmount',
     type: 'currency',
     align: 'right',
+    hide: true,
   },
-  { label: 'Order Date', id: 'orderDate', type: 'string', align: 'center' },
-  { label: 'Status', id: 'status', type: 'string', align: 'center' },
-  { label: 'Rep', id: 'rep', type: 'string', align: 'center' },
-  { label: 'Writing Rep', id: 'writingRep', type: 'string', align: 'center' },
+  { label: 'Order Date', id: 'orderDate', type: 'string', align: 'left', hide: true },
+  { label: 'Rep', id: 'rep', type: 'string', align: 'left', hide: true },
+  { label: 'Writing Rep', id: 'writingRep', type: 'string', align: 'left', hide: true },
 ];
 
 interface IRowObject<T> {
@@ -73,10 +79,11 @@ export interface IUploadCommissionsRow {
   customerId: IRowObject<string>;
   customerName: IRowObject<string>;
   customerAddress: IRowObject<string>;
+  customerCity: IRowObject<string>;
+  customerState: IRowObject<string>;
   customerZip: IRowObject<string>;
   commissionAmount: IRowObject<number>;
   orderDate: IRowObject<string>;
-  status: IRowObject<string>;
   rep: IRowObject<string>;
   writingRep: IRowObject<string>;
 }
@@ -97,8 +104,8 @@ export function UploadCommissions() {
     (sum, row) => (sum += Object.values(row).some((field) => field.error) ? 0 : row.invoiceAmount.value),
     0
   );
-  const checkAmount = '20000';
-  const remainingBalance = Number(checkAmount) - invoiceTotals;
+  const checkAmount = 130000;
+  const remainingBalance = checkAmount - invoiceTotals;
 
   const saveOrder = (checkToSave: IOrderData) => {
     setAddNewOrder(false);
@@ -133,27 +140,17 @@ export function UploadCommissions() {
             {payPeriod && '  |  ' + payPeriod}
             {check && '  |  ' + check}
           </Typography>
+          <UploadCommissionsSpeedDial show={mappedFileData.length > 0} />
         </Stack>
 
         {mappedFileData.length > 0 && (
           <Stack direction='row' gap={2}>
-            <HeaderAndValueCard
-              header='Check Amount'
-              value={'$' + formatCurrency(checkAmount)}
-              width='18rem'
-              color='rgb(0, 0, 255, 0.7)'
-            />
-            <HeaderAndValueCard
-              header='Invoice Totals'
-              value={'$' + formatCurrency(invoiceTotals)}
-              width='18rem'
-              color='rgb(0, 200, 0, 1.0)'
-            />
+            <HeaderAndValueCard header='Check Amount' value={'$' + formatCurrency(checkAmount)} width='18rem' />
+            <HeaderAndValueCard header='Invoice Totals' value={'$' + formatCurrency(invoiceTotals)} width='18rem' />
             <HeaderAndValueCard
               header='Remaining Balance'
               value={'$' + formatCurrency(remainingBalance)}
               width='18rem'
-              color='rgb(225, 0, 0, 1.0)'
             />
           </Stack>
         )}
@@ -177,7 +174,7 @@ export function UploadCommissions() {
               endAction={
                 <Button
                   size='small'
-                  sx={{ color: 'grey', textTransform: 'none' }}
+                  sx={{ textTransform: 'none', color: 'inherit' }}
                   onClick={() => setAddNewPayPeriod(true)}
                 >
                   add new pay period +
@@ -191,7 +188,11 @@ export function UploadCommissions() {
               options={checkOptions}
               onChange={(event) => setCheck(event.target.value as string)}
               endAction={
-                <Button size='small' sx={{ color: 'grey', textTransform: 'none' }} onClick={() => setAddNewCheck(true)}>
+                <Button
+                  size='small'
+                  sx={{ color: 'inherit', textTransform: 'none' }}
+                  onClick={() => setAddNewCheck(true)}
+                >
                   add new check +
                 </Button>
               }
@@ -217,6 +218,20 @@ export function UploadCommissions() {
         vendorOptions={vendorOptions}
         saveCheck={saveCheck}
       />
+      <AddDirectOrder
+        open={false}
+        toggleDrawer={(open: boolean) => {}}
+        vendor={vendor}
+        vendorOptions={vendorOptions}
+        saveDirectOrder={() => {}}
+      />
+      <AddAdjustment
+        open={false}
+        toggleDrawer={(open: boolean) => {}}
+        vendor={vendor}
+        vendorOptions={vendorOptions}
+        saveAdjustment={() => {}}
+      />
       <UploadFileModal
         open={uploadOpen}
         onClose={() => setUploadOpen(false)}
@@ -224,11 +239,7 @@ export function UploadCommissions() {
         emunHeaders={uploadCommissionsHeadersMeta}
       />
 
-    <AddOrder
-        open={addNewOrder}
-        toggleDrawer={(open: boolean) => setAddNewOrder(open)}
-        saveOrder={saveOrder}
-      />
+      <AddOrder open={addNewOrder} toggleDrawer={(open: boolean) => setAddNewOrder(open)} saveOrder={saveOrder} />
     </Stack>
   );
 }

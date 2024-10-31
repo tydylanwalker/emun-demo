@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
 import { OrdersTable } from '../../../orders/OrdersTable';
 import { CustomModal } from '../../../shared/CustomModal';
-import { alpha } from '@mui/material/styles';
 
 export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps) {
   const [orderGridOpen, setOrderGridOpen] = useState(false);
@@ -24,12 +23,7 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
   return (
     <>
       <TableRow
-        sx={{
-          bgcolor: (theme) =>
-            Object.values(props.row).some((field) => field.error)
-              ? alpha(theme.palette.error.main, 0.4)
-              : alpha(theme.palette.success.main, 0.4),
-        }}
+        sx={Object.values(props.row).some((field) => field.error) ? { border: 2, borderColor: 'error.main' } : {}}
       >
         {props.headers.map((header, index) => {
           const error = determineErrorHandling(props.row[header.id].error, props.row);
@@ -41,13 +35,7 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
               onClick={() => error && handleModalOpen(error)}
               sx={{ cursor: error ? 'pointer' : 'default', whiteSpace: 'nowrap' }}
             >
-              <Typography
-                p={1}
-                sx={{
-                  border: error ? '1px solid red' : 'none',
-                  borderRadius: 2,
-                }}
-              >
+              <Typography color={error ? 'error' : 'inherit'}>
                 {formatCellData(header.type, props.row[header.id].value)}
               </Typography>
               <Stack height='0.8rem'>
@@ -64,7 +52,7 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
       <CustomModal
         open={orderGridOpen}
         closeModal={handleModalClose}
-        header='Match Order Modal'
+        header='Find Matching Order For Invoice Error'
         width='90vw'
         height='90vh'
       >
@@ -98,22 +86,22 @@ function determineErrorHandling(
   switch (error) {
     case ErrorEnum.noPo:
       return {
-        reason: 'No matching order found',
+        reason: 'PO Number not found',
         searchText: row.customerName.value,
       };
     case ErrorEnum.multiplePo:
       return {
-        reason: 'Multiple orders found',
+        reason: 'Duplicate PO Numbers',
         searchText: row.poNumber.value,
       };
     case ErrorEnum.multipleCustomer:
       return {
-        reason: 'Multiple customers found',
+        reason: 'Duplicate Customers',
         searchText: row.poNumber.value,
       };
     case ErrorEnum.noCustomer:
       return {
-        reason: 'No matching customer found',
+        reason: 'Customer ID not found',
         searchText: row.poNumber.value,
       };
     case ErrorEnum.duplicateInvoice:
