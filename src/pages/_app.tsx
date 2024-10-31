@@ -26,7 +26,7 @@ export default function App(props: EnhancedAppProps) {
   useEffect(() => {
     setMode(prefersDarkMode ? 'dark' : 'light');
   }, [prefersDarkMode]);
-  const theme = useMemo(() => getTheme('light'), [mode]);
+  const theme = useMemo(() => getTheme(mode), [mode]);
 
   return (
     <ThemeProvider theme={theme}>
