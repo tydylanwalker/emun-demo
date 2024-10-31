@@ -2,15 +2,13 @@ import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import { Backdrop, Stack } from '@mui/material';
-import { CreditCardRounded, ExposureRounded, GroupRounded, NoteAddRounded } from '@mui/icons-material';
 import { useState } from 'react';
 
-const actions = [
-  { icon: <NoteAddRounded fontSize='large' />, name: 'Create Direct Order' },
-  { icon: <ExposureRounded fontSize='large' />, name: 'Adjustment' },
-  { icon: <CreditCardRounded fontSize='large' />, name: 'Credit' },
-  { icon: <GroupRounded fontSize='large' />, name: 'Customers' },
-];
+interface ISpeedDialAction {
+  icon: JSX.Element;
+  name: string;
+  action: () => void;
+}
 
 export function UploadCommissionsSpeedDial(props: IUploadCommissionsSpeedDialProps) {
   const [open, setOpen] = useState(false);
@@ -31,8 +29,9 @@ export function UploadCommissionsSpeedDial(props: IUploadCommissionsSpeedDialPro
             onOpen={handleOpen}
             onClose={handleClose}
           >
-            {actions.map((action) => (
+            {props.actions.map((action) => (
               <SpeedDialAction
+                onClick={action.action}
                 key={action.name}
                 icon={action.icon}
                 tooltipTitle={action.name}
@@ -58,4 +57,5 @@ export function UploadCommissionsSpeedDial(props: IUploadCommissionsSpeedDialPro
 
 interface IUploadCommissionsSpeedDialProps {
   show?: boolean;
+  actions: ISpeedDialAction[];
 }

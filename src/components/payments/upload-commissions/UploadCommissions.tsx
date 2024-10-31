@@ -11,11 +11,12 @@ import { createRowWithMatchingRecords } from '../../../functions/createRowWithMa
 import { ErrorEnum } from '../../../data/ErrorEnum';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
-import { IOrderData } from '../../../interfaces/IOrderData';
-import { AddOrder } from './forms/AddOrder';
 import { UploadCommissionsSpeedDial } from '../../shared/UploadCommissionsSpeedDial';
 import { AddDirectOrder } from './forms/AddDirectOrder';
 import { AddAdjustment } from './forms/AddAdjustment';
+import { IDirectOrder } from '../../../interfaces/IDirectOrder';
+import { IAdjustment } from '../../../interfaces/IAdjustment';
+import { NoteAddRounded, ExposureRounded, CreditCardRounded, GroupRounded } from '@mui/icons-material';
 export interface IHeaderMeta {
   label: string;
   id: keyof IUploadCommissionsRow;
@@ -91,13 +92,16 @@ export interface IUploadCommissionsRow {
 export function UploadCommissions() {
   const vendorOptions = vendorsMock.map((vendor) => vendor.vendorName);
   const [vendor, setVendor] = useState('');
-  const [payPeriodOptions] = useState(['JUNE2024', 'JULY2024', 'AUG2024', 'SEPT2024', 'OCT2024']);
+  const [payPeriodOptions, setPayPeriodOptions] = useState(['JUNE2024', 'JULY2024', 'AUG2024', 'SEPT2024', 'OCT2024']);
   const [payPeriod, setPayPeriod] = useState('');
   const [check, setCheck] = useState('');
   const [checkOptions, setCheckOptions] = useState(['001', '002', '003', '004', '005']);
-  const [addNewCheck, setAddNewCheck] = useState(false);
-  const [addNewOrder, setAddNewOrder] = useState(false);
-  const [addNewPayPeriod, setAddNewPayPeriod] = useState(false);
+  const [addCheckOpen, setAddCheckOpen] = useState(false);
+  const [directOrderOpen, setDirectOrderOpen] = useState(false);
+  const [adjustmentOpen, setAdjustmentOpen] = useState(false);
+  const [creditOpen, setCreditOpen] = useState(false);
+  const [customersOpen, setCustomersOpen] = useState(false);
+  const [addPayPeriodOpen, setAddPayPeriodOpen] = useState(false);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [mappedFileData, setMappedFileData] = useState<IUploadCommissionsRow[]>([]);
   const invoiceTotals = mappedFileData.reduce(
@@ -107,16 +111,21 @@ export function UploadCommissions() {
   const checkAmount = 130000;
   const remainingBalance = checkAmount - invoiceTotals;
 
-  const saveOrder = (checkToSave: IOrderData) => {
-    setAddNewOrder(false);
-    // setCheckOptions([...checkOptions, checkToSave.payPeriod]);
-    // setCheck(checkToSave.payPeriod || '');
-  };
-
   const saveCheck = (checkToSave: ICheckData) => {
-    setAddNewCheck(false);
-    setCheckOptions([...checkOptions, checkToSave.payPeriod]);
-    setCheck(checkToSave.payPeriod || '');
+    setAddCheckOpen(false);
+    setCheckOptions([...checkOptions, checkToSave.number]);
+    setCheck(checkToSave.number || '');
+  };
+  const savePayPeriod = (payPeriod: string) => {
+    setAddPayPeriodOpen(false);
+    setPayPeriodOptions([...payPeriodOptions, payPeriod]);
+    setPayPeriod(payPeriod || '');
+  };
+  const saveDirectOrder = (order: IDirectOrder) => {
+    setDirectOrderOpen(false);
+  };
+  const saveAdjustment = (adjustment: IAdjustment) => {
+    setAdjustmentOpen(false);
   };
 
   // TODO: Replace these with the actually data structure we need
@@ -127,6 +136,13 @@ export function UploadCommissions() {
       }) || [];
     setMappedFileData(mappedRows);
   };
+
+  const speedDialActions = [
+    { icon: <NoteAddRounded fontSize='large' />, name: 'Create Direct Order', action: () => setDirectOrderOpen(true) },
+    { icon: <ExposureRounded fontSize='large' />, name: 'Adjustment', action: () => setAdjustmentOpen(true) },
+    { icon: <CreditCardRounded fontSize='large' />, name: 'Credit', action: () => setCreditOpen(true) },
+    { icon: <GroupRounded fontSize='large' />, name: 'Customers', action: () => setCustomersOpen(true) },
+  ];
 
   return (
     <Stack gap={1} height={1}>
@@ -140,7 +156,7 @@ export function UploadCommissions() {
             {payPeriod && '  |  ' + payPeriod}
             {check && '  |  ' + check}
           </Typography>
-          <UploadCommissionsSpeedDial show={mappedFileData.length > 0} />
+          <UploadCommissionsSpeedDial show={mappedFileData.length > 0} actions={speedDialActions} />
         </Stack>
 
         {mappedFileData.length > 0 && (
@@ -171,7 +187,7 @@ export function UploadCommissions() {
                 <Button
                   size='small'
                   sx={{ textTransform: 'none', color: 'inherit' }}
-                  onClick={() => setAddNewPayPeriod(true)}
+                  onClick={() => setAddPayPeriodOpen(true)}
                 >
                   add new pay period +
                 </Button>
@@ -187,7 +203,7 @@ export function UploadCommissions() {
                 <Button
                   size='small'
                   sx={{ color: 'inherit', textTransform: 'none' }}
-                  onClick={() => setAddNewCheck(true)}
+                  onClick={() => setAddCheckOpen(true)}
                 >
                   add new check +
                 </Button>
@@ -208,25 +224,25 @@ export function UploadCommissions() {
         <UploadCommissionsTable rows={mappedFileData} headers={uploadCommissionsHeadersMeta} />
       )}
       <AddCheck
-        open={addNewCheck}
-        toggleDrawer={(open: boolean) => setAddNewCheck(open)}
+        open={addCheckOpen}
+        toggleDrawer={(open: boolean) => setAddCheckOpen(open)}
         vendor={vendor}
         vendorOptions={vendorOptions}
         saveCheck={saveCheck}
       />
       <AddDirectOrder
-        open={false}
-        toggleDrawer={(open: boolean) => {}}
+        open={directOrderOpen}
+        toggleDrawer={(open: boolean) => setDirectOrderOpen(open)}
         vendor={vendor}
         vendorOptions={vendorOptions}
-        saveDirectOrder={() => {}}
+        saveDirectOrder={saveDirectOrder}
       />
       <AddAdjustment
-        open={false}
-        toggleDrawer={(open: boolean) => {}}
+        open={adjustmentOpen}
+        toggleDrawer={(open: boolean) => setAdjustmentOpen(open)}
         vendor={vendor}
         vendorOptions={vendorOptions}
-        saveAdjustment={() => {}}
+        saveAdjustment={saveAdjustment}
       />
       <UploadFileModal
         open={uploadOpen}
@@ -234,8 +250,6 @@ export function UploadCommissions() {
         setMappedFileData={handleSetMappedFileDate}
         emunHeaders={uploadCommissionsHeadersMeta}
       />
-
-      <AddOrder open={addNewOrder} toggleDrawer={(open: boolean) => setAddNewOrder(open)} saveOrder={saveOrder} />
     </Stack>
   );
 }
