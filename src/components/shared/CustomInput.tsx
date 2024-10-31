@@ -54,7 +54,7 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
 
     // Format the value like currency
     if (props.currency) {
-      value = formatCurrency(value);
+      value = formatCurrency(parseFloat(value));
     }
 
     if (props.onChange) {

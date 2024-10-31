@@ -109,6 +109,19 @@ export function OrdersTable(props: IOrdersTableProps) {
   const rows = orders;
   const [filteredRows, setFilteredRows] = useState(rows);
 
+  const styles = {
+    button: {
+      padding: '15px',
+      whiteSpace: 'nowrap',
+      width: 'fit-content',
+      background: 'linear-gradient(45deg, #4B53D9, #6967CA, #B094AE)', // Linear gradient
+      color: 'white',
+      '&:hover': {
+        background: 'linear-gradient(45deg,#6967CA, #4B53D9, #B094AE)', // Hover effect
+        transform: 'scale(1.1)', // Scale up on hover
+      },
+    },
+  };
   /**
    * As search text changes we filter the rows
    */
@@ -129,35 +142,30 @@ export function OrdersTable(props: IOrdersTableProps) {
       sx={{
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)',
         borderRadius: 5,
-        bgcolor: 'black'
       }}
     >
-      <Stack direction='row' justifyContent='space-between'>
-        <Typography variant='h5' fontWeight='bold' p={2}>
-          View Orders
-        </Typography>
+      <Stack direction='row' pt={2} pb={2} gap={2}>
+      <CustomInput
+          type='search'
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          sx={{ marginTop: 0, border: '0.03rem solid rgba(75, 83, 217, 0.3)' }}
+        />
         <Stack direction='row' gap={2} pr={3} alignItems='center'>
-          <Button variant='contained' color='info' onClick={() => alert('open dialog to create direct order')}>
+          <Button variant='contained' onClick={() => alert('open dialog to create direct order')} sx={styles.button}>
             Create Direct Order
           </Button>
-          <Button variant='contained' color='info' onClick={() => alert('open dialog to add new customer')}>
+          <Button variant='contained' color='info' onClick={() => alert('open dialog to add new customer')} sx={styles.button}>
             Add New Customer
           </Button>
         </Stack>
       </Stack>
-      <Stack p={1} borderColor='lightgrey'>
-        <CustomInput
-          type='search'
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          sx={{ marginTop: 0, border: '0.1rem solid grey' }}
-        />
-      </Stack>
+
       <Table>
         <TableHead>
           <TableRow sx={{ bgcolor: 'lightgrey' }}>
             {orderHeaders.map((header, index) => (
-              <TableCell key={index} align={header.align || 'left'} sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+              <TableCell key={index} align={header.align || 'left'} sx={{ fontSize: '1.2rem', fontWeight: 'bold', bgcolor: 'black'}}>
                 {header.label}
               </TableCell>
             ))}
@@ -165,7 +173,7 @@ export function OrdersTable(props: IOrdersTableProps) {
         </TableHead>
         <TableBody>
           {filteredRows.map((row, index) => (
-            <OrdersTableRow key={index} row={row} headers={orderHeaders} />
+            <OrdersTableRow key={index} row={row} headers={orderHeaders} color={index % 2 === 0 ? '#181818' : '#141414'}/>
           ))}
         </TableBody>
       </Table>
