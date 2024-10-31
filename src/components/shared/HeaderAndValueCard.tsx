@@ -1,4 +1,4 @@
-import { Stack, Typography } from '@mui/material';
+import { Stack, Typography, useMediaQuery } from '@mui/material';
 
 export function HeaderAndValueCard(props: IHeaderAndValueCardProps) {
   // const styles = {
@@ -18,8 +18,10 @@ export function HeaderAndValueCard(props: IHeaderAndValueCardProps) {
       width={props.width}
       sx={{
         padding: '1.25rem',
-        boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.4)',
-        bgcolor: 'secondary.light',
+        boxShadow: useMediaQuery('(prefers-color-scheme: dark)')
+          ? '0px 2px 20px rgba(125, 125, 125, 0)'
+          : '0px 2px 16px rgba(0, 0, 0, 0.4)',
+        bgcolor: 'secondary.main',
       }}
     >
       <Typography fontSize='1.2rem' fontWeight='bold' p={1}>

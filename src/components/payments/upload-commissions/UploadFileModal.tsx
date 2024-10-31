@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Typography, Stack } from '@mui/material';
+import { Button, Typography, Stack, useMediaQuery } from '@mui/material';
 import { useState, ChangeEvent } from 'react';
 import * as XLSX from 'xlsx';
 import { parse } from 'csv-parse/browser/esm/sync';
@@ -119,6 +119,10 @@ export function UploadFileModal(props: IUploadFileModalProps) {
     props.onClose();
   };
 
+  const boxShadow = useMediaQuery('(prefers-color-scheme: dark)')
+    ? '0px 2px 20px rgba(125, 125, 125, 0.4)'
+    : '0px 2px 16px rgba(0, 0, 0, 0.4)';
+
   return (
     <CustomModal open={props.open} closeModal={props.onClose} header='Upload Invoices File'>
       {step === 1 && (
@@ -154,7 +158,14 @@ export function UploadFileModal(props: IUploadFileModalProps) {
         (fileHeaders.length > 0 ? (
           <Stack pt={3}>
             <Typography variant='h5'>{"Match up the column headers in our database to your file's headers"}</Typography>
-            <Stack my={5} borderRadius={5} border={1} overflow='hidden'>
+            <Stack
+              my={5}
+              overflow='hidden'
+              borderRadius={3}
+              sx={{
+                boxShadow: boxShadow,
+              }}
+            >
               <Stack direction='row' width='60vw' p={1} bgcolor='secondary.dark' borderBottom={1}>
                 <Stack width='40%' direction='row' alignItems='center' gap={2}>
                   <Typography fontWeight='bold'>Database Headers</Typography>

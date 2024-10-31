@@ -9,7 +9,7 @@ const modalStyles = {
   transform: 'translate(-50%, -50%)',
   minWidth: '30vw',
   maxHeight: '90vh',
-  bgcolor: 'background.default',
+  bgcolor: 'secondary.main',
   borderRadius: 5,
   boxShadow: 24,
 };
@@ -29,7 +29,7 @@ export function CustomModal(props: ICustomModalProps) {
           top={0}
           left={0}
           width={1}
-          bgcolor='background.default'
+          bgcolor='secondary.main'
           zIndex={10000}
         >
           <Typography fontSize='1.25rem' textTransform='uppercase' fontWeight='bold'>
