@@ -163,7 +163,12 @@ export function UploadCommissions() {
           <Stack direction='row' gap={2}>
             <HeaderAndValueCard header='Check Amount' value={'$' + formatCurrency(checkAmount)} width='18rem' />
             <HeaderAndValueCard header='Invoice Totals' value={'$' + formatCurrency(invoiceTotals)} width='18rem' />
-            <HeaderAndValueCard header='Remaining Balance' value={formatCurrency(remainingBalance)} width='18rem' />
+            <HeaderAndValueCard
+              header='Remaining Balance'
+              value={'$' + formatCurrency(remainingBalance)}
+              width='18rem'
+              color={remainingBalance !== 0 ? 'error' : 'inherit'}
+            />
           </Stack>
         )}
       </Stack>
