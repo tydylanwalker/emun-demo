@@ -25,76 +25,76 @@ export interface IOrderHeader {
 const orderHeaders: IOrderHeader[] = [
   {
     label: 'Order #',
-    align: 'left',
+    align: 'center',
     id: 'orderNumber',
   },
   {
     label: 'Customer',
-    align: 'left',
+    align: 'center',
     id: 'customerName',
   },
   {
     label: 'PO #',
-    align: 'right',
+    align: 'center',
     id: 'poNumber',
   },
   {
     label: 'Source',
-    align: 'left',
+    align: 'center',
     id: 'source',
   },
   {
     label: 'Vendor',
-    align: 'left',
+    align: 'center',
     id: 'vendorName',
   },
   {
     label: 'Amount',
-    align: 'right',
+    align: 'center',
     id: 'amount',
     type: 'currency',
   },
   {
     label: 'Balance',
-    align: 'right',
+    align: 'center',
     id: 'balance',
     type: 'currency',
   },
   {
     label: 'Order Date',
-    align: 'right',
+    align: 'center',
     id: 'orderDate',
     type: 'date',
   },
   {
     label: 'Ship Date',
-    align: 'right',
+    align: 'center',
     id: 'shipDate',
     type: 'date',
   },
   {
     label: 'Ship City',
-    align: 'left',
+    align: 'center',
     id: 'shipCity',
   },
   {
     label: 'Ship State',
-    align: 'left',
+    align: 'center',
     id: 'shipState',
   },
   {
     label: 'Rep',
-    align: 'left',
+    align: 'center',
     id: 'rep',
   },
   {
     label: 'Writing Rep',
-    align: 'left',
+    align: 'center',
     id: 'writingRep',
   },
   {
     label: 'Generated From',
-    align: 'left',
+    align: 'center',
     id: 'generatedFrom',
   },
   {
@@ -126,11 +126,10 @@ export function OrdersTable(props: IOrdersTableProps) {
 
   return (
     <TableContainer
-      component={Paper}
       sx={{
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)',
-        border: '0.2rem solid lightgrey',
         borderRadius: 5,
+        bgcolor: 'black'
       }}
     >
       <Stack direction='row' justifyContent='space-between'>
