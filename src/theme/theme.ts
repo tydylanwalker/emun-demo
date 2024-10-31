@@ -16,7 +16,7 @@ const lightPalette: ThemeOptions['palette'] = {
 const darkPalette: ThemeOptions['palette'] = {
   mode: 'dark',
   primary: {
-    main: '#90caf9',
+    main: '#90caf9'
   },
   secondary: {
     main: '#1f1f1f',
@@ -47,5 +47,7 @@ const componentOverrides: ThemeOptions['components'] = {
 export const getTheme = (mode: PaletteMode) =>
   createTheme({
     palette: mode === 'light' ? lightPalette : darkPalette,
-    components: componentOverrides,
+    components: componentOverrides
   });
+
+  

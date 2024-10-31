@@ -24,22 +24,13 @@ export function SidebarItem(props: ISidebarItemProps) {
       disablePadding
       sx={{
         display: 'block',
-        //Whatever page we are on set fontweight bold for that item
-        // ...(router.asPath === href && {
-        //     '& .MuiListItemIcon-root': {
-        //         fontWeight: 1000, // Bold icon
-        //     },
-        //     '& .MuiListItemText-root': {
-        //         fontWeight: 1000, // Bold text
-        //     },
-        //     '& .MuiSvgIcon-root': {
-        //         fontWeight: 1000,
-        //     }
-        // })
+        ...(router.asPath === href && {
+          background: 'linear-gradient(to right, #4B53D9, #6967CA, #B094AE)',
+        }),
       }}
     >
       <ListItemButton onClick={handleClick}>
-        <ListItemIcon sx={{ color: 'rgb(75, 118, 183, 1.0)' }}>{icon}</ListItemIcon>
+        <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={label} />
         {children ? open ? <ExpandLess /> : <ExpandMore /> : <></>}
       </ListItemButton>

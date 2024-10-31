@@ -5,9 +5,9 @@ import { IOrder } from '../../data/ordersMock';
 
 export function OrdersTableRow(props: IOrdersTableRowProps) {
   return (
-    <TableRow>
+    <TableRow sx={{ bgcolor: props.color, whiteSpace: 'nowrap' }}>
       {props.headers.map((header, index) => (
-        <TableCell key={index} align={header.align || 'left'}>
+        <TableCell key={index} align={header.align || 'center'}>
           <Typography>{formatCellData(header.type, props.row[header.id as keyof IOrder])}</Typography>
         </TableCell>
       ))}
@@ -16,6 +16,7 @@ export function OrdersTableRow(props: IOrdersTableRowProps) {
 }
 
 interface IOrdersTableRowProps {
+  color?: string;
   row: IOrder;
   headers: IOrderHeader[];
 }

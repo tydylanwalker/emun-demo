@@ -173,7 +173,8 @@ export function UploadFileModal(props: IUploadFileModalProps) {
                   width='60vw'
                   p={1}
                   key={index}
-                  borderBottom={index === emunHeaders.length - 1 ? 0 : 1}
+                  alignItems={'center'}
+                  bgcolor={index % 2 === 0 ? '#181818' : '#141414'}
                 >
                   <Stack width='40%'>
                     <Typography>

@@ -37,7 +37,7 @@ const uploadCommissionsHeadersMeta: IHeaderMeta[] = [
     label: 'Invoice Number',
     id: 'invoiceNumber',
     type: 'string',
-    align: 'left',
+    align: 'center',
     required: true,
   },
   {
@@ -147,11 +147,7 @@ export function UploadCommissions() {
           <Stack direction='row' gap={2}>
             <HeaderAndValueCard header='Check Amount' value={'$' + formatCurrency(checkAmount)} width='18rem' />
             <HeaderAndValueCard header='Invoice Totals' value={'$' + formatCurrency(invoiceTotals)} width='18rem' />
-            <HeaderAndValueCard
-              header='Remaining Balance'
-              value={'$' + formatCurrency(remainingBalance)}
-              width='18rem'
-            />
+            <HeaderAndValueCard header='Remaining Balance' value={formatCurrency(remainingBalance)} width='18rem' />
           </Stack>
         )}
       </Stack>
