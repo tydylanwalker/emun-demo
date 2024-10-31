@@ -141,7 +141,6 @@ export function OrdersTable(props: IOrdersTableProps) {
     <TableContainer
       sx={{
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06)',
-        borderRadius: 5,
       }}
     >
       <Stack direction='row' pt={2} pb={2} gap={2}>
@@ -165,7 +164,7 @@ export function OrdersTable(props: IOrdersTableProps) {
         <TableHead>
           <TableRow sx={{ bgcolor: 'lightgrey' }}>
             {orderHeaders.map((header, index) => (
-              <TableCell key={index} align={header.align || 'left'} sx={{ fontSize: '1.2rem', fontWeight: 'bold', bgcolor: 'black'}}>
+              <TableCell key={index} align={header.align || 'left'} sx={{ fontSize: '1.2rem', fontWeight: 'bold', bgcolor: 'black', whiteSpace: 'nowrap'}}>
                 {header.label}
               </TableCell>
             ))}

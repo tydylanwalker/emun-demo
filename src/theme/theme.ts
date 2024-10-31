@@ -39,7 +39,7 @@ const componentOverrides: ThemeOptions['components'] = {
 export const getTheme = (mode: PaletteMode) =>
   createTheme({
     palette: mode === 'light' ? lightPalette : darkPalette,
-    components: componentOverrides,
+    components: componentOverrides
   });
 
   
