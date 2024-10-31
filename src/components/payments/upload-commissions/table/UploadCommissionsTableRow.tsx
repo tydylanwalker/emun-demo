@@ -33,7 +33,7 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
               key={index}
               align={header.align || 'center'}
               onClick={() => error && handleModalOpen(error)}
-              sx={{ cursor: error ? 'pointer' : 'default', whiteSpace: 'nowrap' }}
+              sx={{ cursor: error ? 'pointer' : 'default' }}
             >
               <Typography color={error ? 'error' : 'inherit'}>
                 {formatCellData(header.type, props.row[header.id].value)}
@@ -55,13 +55,12 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
         header='Find Matching Order For Invoice Error'
         width='90vw'
         height='90vh'
+        nonScrollable
       >
-        <>
-          <Stack my={2}>
-            <UploadCommissionsTableRow row={props.row} headers={props.headers} />
-          </Stack>
-          <OrdersTable initialSearchText={errorValues?.searchText} />
-        </>
+        <Stack mb={2}>
+          <UploadCommissionsTableRow row={props.row} headers={props.headers} />
+        </Stack>
+        <OrdersTable initialSearchText={errorValues?.searchText} />
       </CustomModal>
     </>
   );

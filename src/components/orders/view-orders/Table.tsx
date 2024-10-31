@@ -1,35 +1,13 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Typography, Box } from '@mui/material';
 import { ordersMock } from '../../../data/orders';
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    whiteSpace: 'nowrap', // Prevent text wrapping in header cells
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-    whiteSpace: 'nowrap', // Prevent text wrapping in body cells
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getValueByPath = (obj: any, path: string) => {
@@ -129,7 +107,7 @@ const tableHeaders: ITableHeaders[] = [
   },
 ];
 
-export function CustomizedTables(props: TableProps) {
+export function CustomizedTables() {
   // const filteredData = props.vendor === 'All' ? ordersMock : ordersMock.filter(item => item. === props.vendor);
 
   return (
@@ -139,15 +117,15 @@ export function CustomizedTables(props: TableProps) {
           <TableHead>
             <TableRow>
               {tableHeaders.map((header, index) => (
-                <StyledTableCell key={index} align={header.align || 'left'}>
+                <TableCell key={index} align={header.align || 'left'}>
                   {header.text}
-                </StyledTableCell>
+                </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
             {ordersMock.map((order, rowIndex) => (
-              <StyledTableRow key={rowIndex}>
+              <TableRow key={rowIndex}>
                 {tableHeaders.map((header, index) => {
                   const { fieldName, align, type } = header;
                   const value = getValueByPath(order, fieldName);
@@ -182,22 +160,18 @@ export function CustomizedTables(props: TableProps) {
                   }
 
                   return (
-                    <StyledTableCell key={index} align={align || 'left'}>
+                    <TableCell key={index} align={align || 'left'}>
                       <Typography variant='caption' sx={typographyStyles}>
                         {content}
                       </Typography>
-                    </StyledTableCell>
+                    </TableCell>
                   );
                 })}
-              </StyledTableRow>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
     </Box>
   );
-}
-
-interface TableProps {
-  vendor: string;
 }

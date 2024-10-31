@@ -129,7 +129,7 @@ export function UploadCommissions() {
   };
 
   return (
-    <Stack gap={1}>
+    <Stack gap={1} height={1}>
       <Stack direction='row' justifyContent='space-between' mb={3}>
         <Stack>
           <Typography fontSize='1.75rem' fontWeight='bold'>

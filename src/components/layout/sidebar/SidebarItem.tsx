@@ -25,7 +25,7 @@ export function SidebarItem(props: ISidebarItemProps) {
       sx={{
         display: 'block',
         ...(router.asPath === href && {
-          background: 'linear-gradient(to right, #4B53D9, #6967CA, #B094AE)',
+          bgcolor: 'action.hover',
         }),
       }}
     >

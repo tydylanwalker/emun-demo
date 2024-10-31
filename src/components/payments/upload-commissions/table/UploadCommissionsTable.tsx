@@ -31,7 +31,7 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
         <TableHead>
           <TableRow sx={{ bgcolor: 'secondary.main' }}>
             {props.headers.map((header, index) => (
-              <TableCell key={index} align={header.align || 'left'} sx={{ whiteSpace: 'nowrap', fontWeight: 'bold' }}>
+              <TableCell key={index} align={header.align || 'left'}>
                 {header.label}
               </TableCell>
             ))}

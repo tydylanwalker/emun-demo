@@ -154,8 +154,8 @@ export function UploadFileModal(props: IUploadFileModalProps) {
         (fileHeaders.length > 0 ? (
           <Stack pt={3}>
             <Typography variant='h5'>{"Match up the column headers in our database to your file's headers"}</Typography>
-            <Stack gap={1} my={5} borderRadius={5} border={1} overflow='hidden'>
-              <Stack direction='row' width='60vw' p={1} bgcolor='secondary.main' borderBottom={1}>
+            <Stack my={5} borderRadius={5} border={1} overflow='hidden'>
+              <Stack direction='row' width='60vw' p={1} bgcolor='secondary.dark' borderBottom={1}>
                 <Stack width='40%' direction='row' alignItems='center' gap={2}>
                   <Typography fontWeight='bold'>Database Headers</Typography>
                   <Typography variant='caption'>{'(* required header)'}</Typography>
@@ -174,7 +174,7 @@ export function UploadFileModal(props: IUploadFileModalProps) {
                   p={1}
                   key={index}
                   alignItems={'center'}
-                  bgcolor={index % 2 === 0 ? '#181818' : '#141414'}
+                  bgcolor={index % 2 === 0 ? 'action.hover' : 'inherit'}
                 >
                   <Stack width='40%'>
                     <Typography>
