@@ -21,7 +21,7 @@ export function HeaderAndValueCard(props: IHeaderAndValueCardProps) {
       <Typography fontSize='1.2rem' fontWeight='bold' p={1}>
         {props.header}
       </Typography>
-      <Typography fontSize='2rem' fontWeight='bold' p={1}>
+      <Typography fontSize='2rem' fontWeight='bold' p={1} color={props.color}>
         {props.value}
       </Typography>
     </Stack>

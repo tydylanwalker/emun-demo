@@ -33,7 +33,7 @@ const uploadCommissionsHeadersMeta: IHeaderMeta[] = [
     label: 'Invoice Number',
     id: 'invoiceNumber',
     type: 'string',
-    align: 'left',
+    align: 'center',
     required: true,
   },
   {
@@ -52,7 +52,7 @@ const uploadCommissionsHeadersMeta: IHeaderMeta[] = [
     label: 'Commission Amount',
     id: 'commissionAmount',
     type: 'currency',
-    align: 'right',
+    align: 'center',
   },
   { label: 'Order Date', id: 'orderDate', type: 'string', align: 'center' },
   { label: 'Status', id: 'status', type: 'string', align: 'center' },
@@ -97,7 +97,7 @@ export function UploadCommissions() {
     (sum, row) => (sum += Object.values(row).some((field) => field.error) ? 0 : row.invoiceAmount.value),
     0
   );
-  const checkAmount = '20000';
+  const checkAmount = 20000;
   const remainingBalance = Number(checkAmount) - invoiceTotals;
 
   const saveOrder = (checkToSave: IOrderData) => {
@@ -139,21 +139,21 @@ export function UploadCommissions() {
           <Stack direction='row' gap={2}>
             <HeaderAndValueCard
               header='Check Amount'
-              value={'$' + formatCurrency(checkAmount)}
+              value={formatCurrency(checkAmount)}
               width='18rem'
-              color='rgb(0, 0, 255, 0.7)'
+              color='white'
             />
             <HeaderAndValueCard
               header='Invoice Totals'
-              value={'$' + formatCurrency(invoiceTotals)}
+              value={formatCurrency(invoiceTotals)}
               width='18rem'
-              color='rgb(0, 200, 0, 1.0)'
+              color='white'
             />
             <HeaderAndValueCard
               header='Remaining Balance'
-              value={'$' + formatCurrency(remainingBalance)}
+              value={formatCurrency(remainingBalance)}
               width='18rem'
-              color='rgb(225, 0, 0, 1.0)'
+              color={remainingBalance < 0 ? 'red' : 'white'}
             />
           </Stack>
         )}
