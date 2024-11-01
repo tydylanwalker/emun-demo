@@ -26,7 +26,7 @@ export const commissions: ICommissionReport[] = [
     invoiceDate: '10/01/2024',
     payPeriod: 'OCT2024',
     invoiceAmount: 2458,
-    vendorCommission: 15,
+    vendorCommission: 10,
     commissionAmount: 368.7,
     repCommissionAmount: 184.35,
     repCommissionRate: 50,
