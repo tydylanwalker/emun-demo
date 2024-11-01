@@ -1,7 +1,6 @@
 import { FormControl, InputAdornment, MenuItem, Stack, TextField, TextFieldProps, useMediaQuery } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { formatCurrency } from '../../functions/formatCurrency';
 import { Search } from '@mui/icons-material';
 
 export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
@@ -50,12 +49,12 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let value = event.target.value;
+    const value = event.target.value;
 
-    // Format the value like currency
-    if (props.currency) {
-      value = formatCurrency(Number(value));
-    }
+    // // Format the value like currency
+    // if (props.currency) {
+    //   value = formatCurrency(Number(value));
+    // }
 
     if (props.onChange) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,6 +103,7 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
         />
       ) : (
         <TextField
+          autoFocus={props.autoFocus}
           select={props.select}
           size={props.size}
           name={props.name}

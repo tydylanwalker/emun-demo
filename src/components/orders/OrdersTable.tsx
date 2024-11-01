@@ -108,20 +108,8 @@ export function OrdersTable(props: IOrdersTableProps) {
   const [searchText, setSearchText] = useState(props.initialSearchText || '');
   const rows = orders;
   const [filteredRows, setFilteredRows] = useState(rows);
+  const [selectedRow, setSelectedRow] = useState<number | null>(null);
 
-  // const styles = {
-  //   button: {
-  //     padding: '15px',
-  //     whiteSpace: 'nowrap',
-  //     width: 'fit-content',
-  //     background: 'linear-gradient(45deg, #4B53D9, #6967CA, #B094AE)', // Linear gradient
-  //     color: 'white',
-  //     '&:hover': {
-  //       background: 'linear-gradient(45deg,#6967CA, #4B53D9, #B094AE)', // Hover effect
-  //       transform: 'scale(1.1)', // Scale up on hover
-  //     },
-  //   },
-  // };
   /**
    * As search text changes we filter the rows
    */
@@ -137,11 +125,40 @@ export function OrdersTable(props: IOrdersTableProps) {
     }
   }, [rows, searchText]);
 
+  const confirmMatch = () => {
+    if (selectedRow === null) setSelectedRow(0);
+    else {
+      props.onConfirmMatch?.(filteredRows[selectedRow]);
+      setSearchText('');
+      setSelectedRow(null);
+    }
+  };
+
   return (
-    <TableContainer component={Paper}>
-      <Typography variant='h5' fontWeight='bold' p={2}>
-        View Orders
-      </Typography>
+    <TableContainer
+      component={Paper}
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (props.clickable) {
+          if (event.key === 'Enter') {
+            confirmMatch();
+          } else if (event.key === 'Tab') {
+            event.preventDefault();
+            setSelectedRow((prevRow) => (prevRow === null ? 0 : prevRow + 1 === filteredRows.length ? 0 : prevRow + 1));
+          }
+        }
+      }}
+    >
+      <Stack direction='row' alignItems='center' gap={2}>
+        <Typography variant='h5' fontWeight='bold' p={2}>
+          View Orders
+        </Typography>
+        {selectedRow !== null && (
+          <Button variant='outlined' sx={{ my: 2 }} onClick={() => props.onConfirmMatch?.(filteredRows[selectedRow])}>
+            Confirm Match
+          </Button>
+        )}
+      </Stack>
       <Stack direction='row' justifyContent='space-between' p={1} gap={3}>
         <CustomInput
           type='search'
@@ -183,7 +200,13 @@ export function OrdersTable(props: IOrdersTableProps) {
         </TableHead>
         <TableBody>
           {filteredRows.map((row, index) => (
-            <OrdersTableRow key={index} row={row} headers={orderHeaders} />
+            <OrdersTableRow
+              key={index}
+              row={row}
+              headers={orderHeaders}
+              selected={selectedRow === index}
+              onClick={props.clickable ? () => setSelectedRow(index) : undefined}
+            />
           ))}
         </TableBody>
       </Table>
@@ -193,4 +216,6 @@ export function OrdersTable(props: IOrdersTableProps) {
 
 interface IOrdersTableProps {
   initialSearchText?: string;
+  clickable?: boolean;
+  onConfirmMatch?: (order: IOrder) => void;
 }

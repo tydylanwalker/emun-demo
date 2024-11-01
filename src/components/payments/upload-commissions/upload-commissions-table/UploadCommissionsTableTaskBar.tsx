@@ -4,7 +4,7 @@ export function UploadCommissionsTableTaskBar(props: IUploadCommissionsTableTask
   return (
     <Stack direction='row' justifyContent='space-between' p={1.5}>
       <Stack direction='row' gap={3} alignItems='center'>
-        <Typography variant='h5'>Imported Data</Typography>
+        <Typography variant='h5'>Commissions</Typography>
         <Typography variant='subtitle1'>{props.totalRows} entries</Typography>
       </Stack>
       <Stack direction='row' gap={2}>
@@ -32,7 +32,7 @@ export function UploadCommissionsTableTaskBar(props: IUploadCommissionsTableTask
             Create {props.rowsWithErrors} No Detail Orders
           </Button>
         ) : props.rowsWithErrors === 0 ? (
-          <Button variant='contained' onClick={() => window.alert('Submitting all rows')}>
+          <Button variant='contained' onClick={props.submitRows}>
             Submit {props.totalRows} Entries
           </Button>
         ) : (
@@ -50,4 +50,5 @@ interface IUploadCommissionsTableTaskBarProps {
   rowsWithErrors: number;
   onlyShowErrors: boolean;
   setOnlyShowErrors: (checked: boolean) => void;
+  submitRows: () => void;
 }

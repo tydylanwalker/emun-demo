@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
 import { OrdersTable } from '../../../orders/OrdersTable';
 import { CustomModal } from '../../../shared/CustomModal';
+import { IOrder } from '../../../../data/ordersMock';
 
 export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps) {
   const [orderGridOpen, setOrderGridOpen] = useState(false);
@@ -18,6 +19,11 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
   const handleModalClose = () => {
     setOrderGridOpen(false);
     setErrorValues(undefined);
+  };
+
+  const onConfirmMatch = (order: IOrder) => {
+    setOrderGridOpen(false);
+    props.onConfirmMatch?.(order, props.row);
   };
 
   return (
@@ -60,7 +66,7 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
         <Stack mb={2}>
           <UploadCommissionsTableRow row={props.row} headers={props.headers} />
         </Stack>
-        <OrdersTable initialSearchText={errorValues?.searchText} />
+        <OrdersTable initialSearchText={errorValues?.searchText} clickable onConfirmMatch={onConfirmMatch} />
       </CustomModal>
     </>
   );
@@ -69,6 +75,7 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
 interface IUploadCommissionsTableRowProps {
   row: IUploadCommissionsRow;
   headers: IHeaderMeta[];
+  onConfirmMatch?: (order: IOrder, row: IUploadCommissionsRow) => void;
 }
 
 interface IUploadCommissionsTableRowError {

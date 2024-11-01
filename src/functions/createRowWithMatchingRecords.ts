@@ -20,6 +20,7 @@ function findCustomerError(name: string, id: string, order: IOrder) {
   return ErrorEnum.noCustomer;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createRowWithMatchingRecords(row: { [key: string]: any }): IUploadCommissionsRow {
   // grab row data
   const poNumber = row['PO Number'];

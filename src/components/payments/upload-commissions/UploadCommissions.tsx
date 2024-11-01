@@ -5,7 +5,7 @@ import { AddCheck } from './forms/AddCheck';
 import { ICheckData } from '../../../interfaces/ICheckData';
 import { CustomInput } from '../../shared/CustomInput';
 import { UploadFileModal } from './UploadFileModal';
-import { UploadCommissionsTable } from './table/UploadCommissionsTable';
+import { UploadCommissionsTable } from './upload-commissions-table/UploadCommissionsTable';
 import { vendorsMock } from '../../../data/vendors';
 import { createRowWithMatchingRecords } from '../../../functions/createRowWithMatchingRecords';
 import { ErrorEnum } from '../../../data/ErrorEnum';
@@ -17,6 +17,11 @@ import { AddAdjustment } from './forms/AddAdjustment';
 import { IDirectOrder } from '../../../interfaces/IDirectOrder';
 import { IAdjustment } from '../../../interfaces/IAdjustment';
 import { NoteAddRounded, ExposureRounded, CreditCardRounded, GroupRounded } from '@mui/icons-material';
+import { ModeButtons } from './ModeButtons';
+import { IOrder } from '../../../data/ordersMock';
+import { OrdersTable } from '../../orders/OrdersTable';
+import { IInvoiceValues, SingleEntryModal } from './SingleEntryModal';
+import dayjs from 'dayjs';
 export interface IHeaderMeta {
   label: string;
   id: keyof IUploadCommissionsRow;
@@ -102,13 +107,17 @@ export function UploadCommissions() {
   const [creditOpen, setCreditOpen] = useState(false);
   const [customersOpen, setCustomersOpen] = useState(false);
   const [addPayPeriodOpen, setAddPayPeriodOpen] = useState(false);
-  const [uploadOpen, setUploadOpen] = useState(false);
-  const [mappedFileData, setMappedFileData] = useState<IUploadCommissionsRow[]>([]);
-  const invoiceTotals = mappedFileData.reduce(
+  const [mode, setMode] = useState<'normal' | 'single' | null>(null);
+  const [uploadFileModal, setUploadFileModal] = useState(false);
+  const [commissionRows, setCommissionRows] = useState<IUploadCommissionsRow[]>([]);
+  const [singleEntryMatchOrder, setSingleEntryMatchModal] = useState<IOrder | null>(null);
+  const [successfulEntry, setSuccessfulEntry] = useState(false);
+
+  const invoiceTotals = commissionRows.reduce(
     (sum, row) => (sum += Object.values(row).some((field) => field.error) ? 0 : row.invoiceAmount.value),
     0
   );
-  const checkAmount = 130000;
+  const checkAmount = 137000;
   const remainingBalance = checkAmount - invoiceTotals;
 
   const saveCheck = (checkToSave: ICheckData) => {
@@ -134,7 +143,108 @@ export function UploadCommissions() {
       data?.map((row) => {
         return createRowWithMatchingRecords(row);
       }) || [];
-    setMappedFileData(mappedRows);
+    setCommissionRows(mappedRows);
+  };
+
+  const updateRows = (order: IOrder, rowToUpdate: IUploadCommissionsRow) => {
+    const index = commissionRows.findIndex((row) => row === rowToUpdate);
+
+    if (index !== -1) {
+      const updatedRows = [...commissionRows];
+      updatedRows[index] = {
+        ...updatedRows[index],
+        poNumber: {
+          value: order.poNumber,
+        },
+        customerId: {
+          value: order.customerId,
+        },
+        customerName: {
+          value: order.customerName,
+        },
+        // customerAddress: {
+        //   value: order.shipAddress
+        // },
+        customerCity: {
+          value: order.shipCity,
+        },
+        customerState: {
+          value: order.shipState,
+        },
+        // customerZip: {
+        //   value: order.shipZip
+        // },
+        orderDate: {
+          value: order.orderDate,
+        },
+        rep: {
+          value: order.rep,
+        },
+        writingRep: {
+          value: order.writingRep,
+        },
+      };
+      setCommissionRows(updatedRows);
+    }
+  };
+
+  const onSingleConfirmMatch = (order: IOrder) => {
+    setSingleEntryMatchModal(order);
+  };
+
+  const addSingleEntryInvoice = (data: IInvoiceValues) => {
+    console.log('order', singleEntryMatchOrder);
+    const newInvoice: IUploadCommissionsRow = {
+      poNumber: {
+        value: singleEntryMatchOrder?.poNumber || '',
+      },
+      invoiceNumber: {
+        value: data.invoiceNumber || '',
+      },
+      invoiceAmount: {
+        value: Number(data.invoiceAmount),
+      },
+      invoiceDate: {
+        value: dayjs(data.invoiceDate).format('MM/DD/YYYY') || dayjs().format('MM/DD/YYYY'),
+      },
+      customerId: {
+        value: singleEntryMatchOrder?.customerId || '',
+      },
+      customerName: {
+        value: singleEntryMatchOrder?.customerName || '',
+      },
+      customerAddress: {
+        value: '',
+      },
+      customerCity: {
+        value: singleEntryMatchOrder?.shipCity || '',
+      },
+      customerState: {
+        value: singleEntryMatchOrder?.shipState || '',
+      },
+      customerZip: {
+        value: '',
+      },
+      commissionAmount: {
+        value: Number(data.invoiceAmount) * 0.15,
+      },
+      orderDate: {
+        value: singleEntryMatchOrder?.orderDate || '',
+      },
+      rep: {
+        value: singleEntryMatchOrder?.rep || '',
+      },
+      writingRep: {
+        value: singleEntryMatchOrder?.writingRep || '',
+      },
+    };
+    setCommissionRows([newInvoice, ...commissionRows]);
+    setSingleEntryMatchModal(null);
+    setSuccessfulEntry(true);
+
+    setTimeout(() => {
+      setSuccessfulEntry(false);
+    }, 2500);
   };
 
   const speedDialActions = [
@@ -156,10 +266,10 @@ export function UploadCommissions() {
             {payPeriod && '  |  ' + payPeriod}
             {check && '  |  ' + check}
           </Typography>
-          <UploadCommissionsSpeedDial show={mappedFileData.length > 0} actions={speedDialActions} />
+          <UploadCommissionsSpeedDial show={commissionRows.length > 0} actions={speedDialActions} />
         </Stack>
 
-        {mappedFileData.length > 0 && (
+        {mode !== null && (
           <Stack direction='row' gap={2}>
             <HeaderAndValueCard header='Check Amount' value={'$' + formatCurrency(checkAmount)} width='18rem' />
             <HeaderAndValueCard header='Invoice Totals' value={'$' + formatCurrency(invoiceTotals)} width='18rem' />
@@ -172,7 +282,7 @@ export function UploadCommissions() {
           </Stack>
         )}
       </Stack>
-      {!mappedFileData?.length ? (
+      {!commissionRows?.length && (
         <>
           <Stack direction='row' gap={2} mb={3}>
             <CustomInput
@@ -215,19 +325,51 @@ export function UploadCommissions() {
               }
             />
           </Stack>
-          <Button
-            sx={{ fontSize: '1.5rem', my: 5 }}
-            size='large'
-            variant='contained'
-            onClick={() => setUploadOpen(true)}
-            disabled={!check || !vendor || !payPeriod}
-          >
-            Upload File
-          </Button>
         </>
-      ) : (
-        <UploadCommissionsTable rows={mappedFileData} headers={uploadCommissionsHeadersMeta} />
       )}
+      <ModeButtons
+        onUploadFileClick={() => {
+          setMode('normal');
+          setUploadFileModal(true);
+        }}
+        onSingleEntryClick={() => setMode(mode === 'single' ? 'normal' : 'single')}
+        mode={mode}
+        disabled={!check || !vendor || !payPeriod}
+        fontSize={mode === null ? '1.25' : 'inherit'}
+        size={mode === null ? 'large' : 'small'}
+        fullWidth={mode === null}
+      />
+      {mode === 'normal' && (
+        <UploadCommissionsTable
+          rows={commissionRows}
+          headers={uploadCommissionsHeadersMeta}
+          onConfirmMatch={updateRows}
+          submitRows={() => setCommissionRows([])}
+        />
+      )}
+      {mode === 'single' && (
+        <>
+          <OrdersTable clickable onConfirmMatch={onSingleConfirmMatch} />
+          <Stack direction='row' gap={5} my={1}>
+            <Typography fontWeight='bolder'>{commissionRows.length} Current Entries</Typography>
+            <Typography
+              fontWeight='bolder'
+              color='success'
+              sx={{
+                opacity: successfulEntry ? 1 : 0,
+                transition: 'opacity 0.5s ease-in-out',
+              }}
+            >
+              Invoice Added Successfully!
+            </Typography>
+          </Stack>
+        </>
+      )}
+      <SingleEntryModal
+        open={singleEntryMatchOrder !== null}
+        onClose={() => setSingleEntryMatchModal(null)}
+        onConfirmClick={addSingleEntryInvoice}
+      />
       <AddCheck
         open={addCheckOpen}
         toggleDrawer={(open: boolean) => setAddCheckOpen(open)}
@@ -250,8 +392,8 @@ export function UploadCommissions() {
         saveAdjustment={saveAdjustment}
       />
       <UploadFileModal
-        open={uploadOpen}
-        onClose={() => setUploadOpen(false)}
+        open={uploadFileModal}
+        onClose={() => setUploadFileModal(false)}
         setMappedFileData={handleSetMappedFileDate}
         emunHeaders={uploadCommissionsHeadersMeta}
       />
