@@ -8,12 +8,33 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ThemeProvider, CssBaseline, PaletteMode, useMediaQuery } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
 import { getTheme } from '../theme/theme';
+import { GlobalStyles } from '@mui/material';
 
 dayjs.extend(customParseFormat);
 
 type EnhancedAppProps = AppProps & {
   Component: NextPage;
 };
+
+const GlobalScrollbarStyles = () => (
+  <GlobalStyles
+    styles={{
+      '*::-webkit-scrollbar': {
+        width: '8px',
+      },
+      '*::-webkit-scrollbar-thumb': {
+        backgroundColor: 'secondary.dark',
+      },
+      '*::-webkit-scrollbar-track': {
+        backgroundColor: 'transparent',
+      },
+      '*': {
+        scrollbarWidth: 'thin',
+        scrollbarColor: 'rgba(0, 0, 0, 0.5) transparent',
+      },
+    }}
+  />
+);
 
 export default function App(props: EnhancedAppProps) {
   const { Component, pageProps } = props;
@@ -30,6 +51,7 @@ export default function App(props: EnhancedAppProps) {
 
   return (
     <ThemeProvider theme={theme}>
+      <GlobalScrollbarStyles />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Head>
           <title>EMUN Commission Portal</title>
