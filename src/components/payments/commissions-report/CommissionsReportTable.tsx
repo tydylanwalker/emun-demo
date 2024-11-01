@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import {
-  Button,
   Paper,
   Stack,
   Table,
@@ -15,8 +14,6 @@ import { CustomInput } from '../../shared/CustomInput';
 import { ICommissionReport, commissions } from '../../../data/commissions';
 import { CommissionsReportTableRow } from './CommissionsReportTableRow';
 import { vendorsMock } from '../../../data/vendors';
-import { compact } from 'lodash';
-import { unique } from 'next/dist/build/utils';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
 
@@ -40,6 +37,11 @@ const commissionsHeader: ICommissionReportHeader[] = [
     type: 'currency',
   },
   {
+    label: 'Pay Period',
+    align: 'center',
+    id: 'payPeriod',
+  },
+  {
     label: 'Invoice #',
     align: 'center',
     id: 'invoiceNumber',
@@ -54,6 +56,11 @@ const commissionsHeader: ICommissionReportHeader[] = [
     align: 'center',
     id: 'invoiceAmount',
     type: 'currency',
+  },
+  {
+    label: 'Vendor',
+    align: 'center',
+    id: 'vendor',
   },
   {
     label: 'Vendor Comm %',
@@ -100,6 +107,7 @@ export function CommissionsReportTable() {
   const [searchText, setSearchText] = useState('');
 
   const rows = commissions;
+  console.log(commissions);
   const [filteredRows, setFilteredRows] = useState(rows);
 
   const [vendor, setVendor] = useState('');
@@ -117,7 +125,7 @@ export function CommissionsReportTable() {
   const [repAmount, setRepAmount] = useState(0);
 
   useEffect(() => {
-    var filteredRows = rows;
+    let filteredRows = rows;
     if (vendor) {
       filteredRows = filteredRows.filter((commission) => commission.vendor == vendor);
     }
@@ -165,8 +173,8 @@ export function CommissionsReportTable() {
   }, [filteredRows]);
 
   return (
-    <Stack gap={2}>
-      <Stack direction='row' gap={2}>
+    <>
+      <Stack direction='row' gap={2} mb={2}>
         <HeaderAndValueCard header='Invoice Total Amount' value={'$' + formatCurrency(invoicesTotal)} width='18rem' />
         <HeaderAndValueCard header='Total Commission' value={'$' + formatCurrency(commissionAmount)} width='18rem' />
         <HeaderAndValueCard header='Rep Commission' value={'$' + formatCurrency(repAmount)} width='18rem' />
@@ -228,6 +236,6 @@ export function CommissionsReportTable() {
           </TableBody>
         </Table>
       </TableContainer>
-    </Stack>
+    </>
   );
 }

@@ -151,7 +151,7 @@ export function OrdersTable(props: IOrdersTableProps) {
     >
       <Stack direction='row' alignItems='center' gap={2}>
         <Typography variant='h5' fontWeight='bold' p={2}>
-          View Orders
+          {props.header || 'View Orders'}
         </Typography>
         {selectedRow !== null && (
           <Button variant='outlined' sx={{ my: 2 }} onClick={() => props.onConfirmMatch?.(filteredRows[selectedRow])}>
@@ -218,4 +218,5 @@ interface IOrdersTableProps {
   initialSearchText?: string;
   clickable?: boolean;
   onConfirmMatch?: (order: IOrder) => void;
+  header?: string;
 }

@@ -349,7 +349,7 @@ export function UploadCommissions() {
       )}
       {mode === 'single' && (
         <>
-          <OrdersTable clickable onConfirmMatch={onSingleConfirmMatch} />
+          <OrdersTable clickable onConfirmMatch={onSingleConfirmMatch} header='Find Order' />
           <Stack direction='row' gap={5} my={1}>
             <Typography fontWeight='bolder'>{commissionRows.length} Current Entries</Typography>
             <Typography
