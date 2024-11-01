@@ -56,7 +56,7 @@ export const vendorsMock = [
   },
   {
     id: '206',
-    vendorName: 'Harvest Goods',
+    vendorName: 'Urban Zen',
     commissionPercent: 9,
     address: '789 Harvest Rd',
     city: 'Portland',

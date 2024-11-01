@@ -7,7 +7,6 @@ import CardContent from '@mui/material/CardContent';
 import BarChartSet from '../../components/home/BarChartSet';
 import BasicCard from '../../components/home/Card';
 import { BaseLayout } from '../../components/layout/BaseLayout';
-import { ordersMock } from '../../data/orders';
 
 interface CurrencyProps {
   amount: number;

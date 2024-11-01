@@ -8,6 +8,8 @@ export function formatCellData(type: string | undefined, value: string | number 
       return '$' + formatCurrency(Number(value) || 0);
     case 'date':
       return value ? dayjs(value.toString()).format('MM/DD/YYYY') : '';
+    case 'percentage':
+      return value.toString() + '%';
     default:
       return value;
   }

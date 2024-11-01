@@ -3,8 +3,6 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
 import { BaseLayout } from '../../../components/layout/BaseLayout';
-import { BasicSelect } from '../../../components/orders/view-orders/Select';
-import { CustomizedTables } from '../../../components/orders/view-orders/Table';
 import { OrdersTable } from '../../../components/orders/OrdersTable';
 
 const ViewOrdersPage: NextPage = () => {
