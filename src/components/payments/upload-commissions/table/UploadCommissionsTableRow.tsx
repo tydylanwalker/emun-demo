@@ -4,7 +4,7 @@ import { IHeaderMeta, IUploadCommissionsRow } from '../UploadCommissions';
 import { useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
 import { IOrder } from '../../../../data/ordersMock';
-import { ErrorCommissionModal } from '../ErrorCommissionModal';
+import { ErrorCommissionModal } from '../modals/ErrorCommissionModal';
 
 export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps) {
   const [orderGridOpen, setOrderGridOpen] = useState(false);

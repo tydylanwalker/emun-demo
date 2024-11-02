@@ -3,10 +3,10 @@ import { Button, Typography, Stack, useMediaQuery } from '@mui/material';
 import { useState, ChangeEvent } from 'react';
 import * as XLSX from 'xlsx';
 import { parse } from 'csv-parse/browser/esm/sync';
-import { CustomInput } from '../../shared/CustomInput';
-import { IHeaderMeta } from './UploadCommissions';
-import { Check, Close } from '@mui/icons-material';
-import { CustomModal } from '../../shared/CustomModal';
+import { Close, Check } from '@mui/icons-material';
+import { CustomInput } from '../../../shared/CustomInput';
+import { CustomModal } from '../../../shared/CustomModal';
+import { IHeaderMeta } from '../UploadCommissions';
 
 interface IEmunHeaders {
   label: string;

@@ -14,8 +14,9 @@ import { IOrder, orders } from '../data/ordersMock';
 function findCustomerError(name: string, id: string, order: IOrder) {
   if (id === order.customerId) {
     return undefined;
+  } else if (name === order.customerName) {
+    return ErrorEnum.multipleCustomer;
   }
-  // TODO: add logic to see if we have multiple customers if so ErrorEnum.multipleCustomers
   // TODO: add logic to see if customer address is different or something like that
   return ErrorEnum.noCustomer;
 }
@@ -23,13 +24,13 @@ function findCustomerError(name: string, id: string, order: IOrder) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createRowWithMatchingRecords(row: { [key: string]: any }): IUploadCommissionsRow {
   // grab row data
-  const poNumber = row['PO Number'];
-  const invoiceNumber = row['Invoice Number'];
-  const invoiceAmount = Number(row['Invoice Amount']) || 0;
+  const poNumber = row['PO #'];
+  const invoiceNumber = row['Invoice #'];
+  const invoiceAmount = Number(row['Invoice $']) || 0;
   const invoiceDate = row['Invoice Date'] || dayjs().format('MM/DD/YYYY');
-  const customerName = row['Customer Name'];
+  const customerName = row['Customer'];
   const customerId = row['Customer ID'];
-  const customerAddress = row['Customer Address'];
+  const customerAddress = row['Address'];
   const customerCity = row['City'];
   const customerState = row['State'];
   const customerZip = row['Zip'];
@@ -40,12 +41,9 @@ export function createRowWithMatchingRecords(row: { [key: string]: any }): IUplo
   // const rep = row['Rep'];
   // const writingRep = row['Writing Rep'];
 
-  // Check for matching order
+  // If order is found, create IUploadCommissionsRow, check for duplicate PO and customer errors
   const ordersFound = orders.filter((order) => order.poNumber === poNumber);
-  if (ordersFound.length > 1) {
-    // TODO handle if multiple found
-  }
-  if (ordersFound.length === 1) {
+  if (ordersFound.length > 0) {
     const order = ordersFound[0];
 
     const customerError = findCustomerError(customerName, customerId, order);
@@ -53,6 +51,7 @@ export function createRowWithMatchingRecords(row: { [key: string]: any }): IUplo
     const newRow: IUploadCommissionsRow = {
       poNumber: {
         value: order.poNumber,
+        error: order.poNumber === '' ? ErrorEnum.noPo : ordersFound.length > 1 ? ErrorEnum.multiplePo : undefined,
       },
       invoiceNumber: {
         value: invoiceNumber,

@@ -18,7 +18,7 @@ export function OrdersTableRow(props: IOrdersTableRowProps & TableRowProps) {
     >
       {props.headers.map((header, index) => (
         <TableCell key={index} align={header.align || 'left'}>
-          <Typography>{formatCellData(header.type, props.row[header.id as keyof IOrder])}</Typography>
+          <Typography>{formatCellData(header.type, props.row[header.id])}</Typography>
         </TableCell>
       ))}
     </TableRow>

@@ -4,9 +4,7 @@ import { useState } from 'react';
 import { AddCheck } from './forms/AddCheck';
 import { ICheckData } from '../../../interfaces/ICheckData';
 import { CustomInput } from '../../shared/CustomInput';
-import { UploadFileModal } from './UploadFileModal';
-import { UploadCommissionsTable } from './upload-commissions-table/UploadCommissionsTable';
-import { vendorsMock } from '../../../data/vendors';
+import { UploadCommissionsTable } from './table/UploadCommissionsTable';
 import { createRowWithMatchingRecords } from '../../../functions/createRowWithMatchingRecords';
 import { ErrorEnum } from '../../../data/ErrorEnum';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
@@ -17,15 +15,17 @@ import { AddAdjustment } from './forms/AddAdjustment';
 import { IDirectOrder } from '../../../interfaces/IDirectOrder';
 import { IAdjustment } from '../../../interfaces/IAdjustment';
 import { NoteAddRounded, ExposureRounded, CreditCardRounded, GroupRounded } from '@mui/icons-material';
-import { ModeButtons } from './ModeButtons';
+import { ModeButtons } from './actions/ModeButtons';
 import { IOrder, orders } from '../../../data/ordersMock';
 import { OrdersTable } from '../../orders/OrdersTable';
-import { IInvoiceValues, SingleEntryModal } from './SingleEntryModal';
 import dayjs from 'dayjs';
 import { checksMock } from '../../../data/checks';
 import { AddPayPeriod } from './forms/AddPayPeriod';
 import { IPayPeriod } from '../../../interfaces/IPayPeriod';
-import { unique } from 'next/dist/build/utils';
+import CommissionModesToggleButtons from './actions/CommissionModesToggleButtons';
+import { UploadFileModal } from './modals/UploadFileModal';
+import { IInvoiceValues, SingleEntryModal } from './modals/SingleEntryModal';
+
 export interface IHeaderMeta {
   label: string;
   id: keyof IUploadCommissionsRow;
@@ -98,6 +98,11 @@ export interface IUploadCommissionsRow {
   writingRep: IRowObject<string>;
 }
 
+export enum EModes {
+  manual = 'Manual Entry',
+  view = 'View Commissions',
+}
+
 export function UploadCommissions() {
   const vendorOptions = [...new Set(orders.map((order) => order.customerName))];
   const [vendor, setVendor] = useState('');
@@ -113,7 +118,7 @@ export function UploadCommissions() {
   const [creditOpen, setCreditOpen] = useState(false);
   const [customersOpen, setCustomersOpen] = useState(false);
   const [addPayPeriodOpen, setAddPayPeriodOpen] = useState(false);
-  const [mode, setMode] = useState<'normal' | 'single' | null>(null);
+  const [mode, setMode] = useState<EModes | null>(null);
   const [uploadFileModal, setUploadFileModal] = useState(false);
   const [commissionRows, setCommissionRows] = useState<IUploadCommissionsRow[]>([]);
   const [singleEntryMatchOrder, setSingleEntryMatchModal] = useState<IOrder | null>(null);
@@ -123,9 +128,12 @@ export function UploadCommissions() {
     (sum, row) => (sum += Object.values(row).some((field) => field.error) ? 0 : row.commissionAmount.value),
     0
   );
+
+  // TODO Replace with actual check logic
   const checkAmount = 20507.25;
   const remainingBalance = checkAmount - commissionTotals;
 
+  // Modal Saves
   const saveCheck = (checkToSave: ICheckData) => {
     setAddCheckOpen(false);
     setCheckOptions([...checkOptions, checkToSave.number]);
@@ -143,8 +151,7 @@ export function UploadCommissions() {
     setAdjustmentOpen(false);
   };
 
-  // TODO: Replace these with the actually data structure we need
-  const handleSetMappedFileDate = (data: { [key: string]: any }[] | undefined) => {
+  const handleCreatingCommissionRows = (data: { [key: string]: any }[] | undefined) => {
     const mappedRows: IUploadCommissionsRow[] =
       data?.map((row) => {
         return createRowWithMatchingRecords(row);
@@ -199,7 +206,6 @@ export function UploadCommissions() {
   };
 
   const addSingleEntryInvoice = (data: IInvoiceValues) => {
-    console.log('order', singleEntryMatchOrder);
     const newInvoice: IUploadCommissionsRow = {
       poNumber: {
         value: singleEntryMatchOrder?.poNumber || '',
@@ -261,6 +267,7 @@ export function UploadCommissions() {
   ];
 
   return (
+    // Page Header Stuff
     <Stack gap={1} height={1}>
       <Stack direction='row' justifyContent='space-between' mb={3}>
         <Stack>
@@ -275,24 +282,19 @@ export function UploadCommissions() {
           <UploadCommissionsSpeedDial show={mode !== null} actions={speedDialActions} />
         </Stack>
 
-        {mode !== null && (
-          <Stack direction='row' gap={2}>
-            <HeaderAndValueCard header='Check Amount' value={'$' + formatCurrency(checkAmount)} width='18rem' />
-            <HeaderAndValueCard
-              header='Commission Totals'
-              value={'$' + formatCurrency(commissionTotals)}
-              width='18rem'
-            />
-            <HeaderAndValueCard
-              header='Remaining Balance'
-              value={'$' + formatCurrency(remainingBalance)}
-              width='18rem'
-              color={remainingBalance !== 0 ? 'error' : 'inherit'}
-            />
-          </Stack>
-        )}
+        <Stack direction='row' gap={2} sx={{ opacity: mode ? 1 : 0, transition: 'opacity 2s ease-in' }}>
+          <HeaderAndValueCard header='Check Amount' value={'$' + formatCurrency(checkAmount)} width='18rem' />
+          <HeaderAndValueCard header='Commission Totals' value={'$' + formatCurrency(commissionTotals)} width='18rem' />
+          <HeaderAndValueCard
+            header='Remaining Balance'
+            value={'$' + formatCurrency(remainingBalance)}
+            width='18rem'
+            color={remainingBalance !== 0 ? 'error' : 'inherit'}
+          />
+        </Stack>
       </Stack>
-      {!commissionRows?.length && (
+      {/* Content Rendered based on what mode we are in */}
+      {mode === null ? (
         <>
           <Stack direction='row' gap={2} mb={1}>
             <CustomInput
@@ -335,46 +337,47 @@ export function UploadCommissions() {
               }
             />
           </Stack>
+          <ModeButtons
+            onUploadFileClick={() => {
+              setMode(EModes.view);
+              setUploadFileModal(true);
+            }}
+            onSingleEntryClick={() => setMode(EModes.manual)}
+            disabled={!check || !vendor || !payPeriod}
+          />
         </>
-      )}
-      <ModeButtons
-        onUploadFileClick={() => {
-          setMode('normal');
-          setUploadFileModal(true);
-        }}
-        onSingleEntryClick={() => setMode(mode === 'single' ? 'normal' : 'single')}
-        mode={mode}
-        disabled={!check || !vendor || !payPeriod}
-        fontSize={mode === null ? '1.25' : 'inherit'}
-        size={mode === null ? 'large' : 'small'}
-        fullWidth={mode === null}
-      />
-      {mode === 'normal' && (
-        <UploadCommissionsTable
-          rows={commissionRows}
-          headers={uploadCommissionsHeadersMeta}
-          onConfirmMatch={updateRows}
-          submitRows={() => setCommissionRows([])}
-        />
-      )}
-      {mode === 'single' && (
+      ) : (
         <>
-          <OrdersTable clickable onConfirmMatch={onSingleConfirmMatch} header='Find Order' />
-          <Stack direction='row' gap={5} my={1}>
-            <Typography fontWeight='bolder'>{commissionRows.length} Current Entries</Typography>
-            <Typography
-              fontWeight='bolder'
-              color='success'
-              sx={{
-                opacity: successfulEntry ? 1 : 0,
-                transition: 'opacity 0.5s ease-in-out',
-              }}
-            >
-              Invoice Added Successfully!
-            </Typography>
-          </Stack>
+          <CommissionModesToggleButtons mode={mode} setMode={setMode} />
+          {mode === EModes.view ? (
+            <UploadCommissionsTable
+              rows={commissionRows}
+              headers={uploadCommissionsHeadersMeta}
+              onConfirmMatch={updateRows}
+              submitRows={() => setCommissionRows([])}
+            />
+          ) : (
+            <>
+              <OrdersTable clickable onConfirmMatch={onSingleConfirmMatch} header='Find Order' />
+              <Stack direction='row' gap={5} my={1}>
+                <Typography fontWeight='bolder'>{commissionRows.length} Current Entries</Typography>
+                <Typography
+                  fontWeight='bolder'
+                  color='success'
+                  sx={{
+                    opacity: successfulEntry ? 1 : 0,
+                    transition: 'opacity 0.5s ease-in-out',
+                  }}
+                >
+                  Invoice Added Successfully!
+                </Typography>
+              </Stack>
+            </>
+          )}
         </>
       )}
+
+      {/* Modals */}
       <SingleEntryModal
         open={singleEntryMatchOrder !== null}
         onClose={() => setSingleEntryMatchModal(null)}
@@ -409,7 +412,7 @@ export function UploadCommissions() {
       <UploadFileModal
         open={uploadFileModal}
         onClose={() => setUploadFileModal(false)}
-        setMappedFileData={handleSetMappedFileDate}
+        setMappedFileData={handleCreatingCommissionRows}
         emunHeaders={uploadCommissionsHeadersMeta}
       />
     </Stack>

@@ -1,16 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Button,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
+import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { CustomInput } from '../../shared/CustomInput';
 import { ICommissionReport, commissions } from '../../../data/commissions';
 import { CommissionsReportTableRow } from './CommissionsReportTableRow';

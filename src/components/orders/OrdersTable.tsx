@@ -1,20 +1,11 @@
 import { useEffect, useState } from 'react';
 import { IOrder, orders } from '../../data/ordersMock';
-import {
-  Button,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
+import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { CustomInput } from '../shared/CustomInput';
 import { OrdersTableRow } from './OrdersTableRow';
 import { CustomTableContainer } from '../shared/CustomTableContainer';
+import { createDirectOrder } from '../../functions/createDirectOrder';
+import { IUploadCommissionsRow } from '../payments/upload-commissions/UploadCommissions';
 
 export interface IOrderHeader {
   label: string;
@@ -105,6 +96,11 @@ const orderHeaders: IOrderHeader[] = [
   },
 ];
 
+export enum EOrderButtons {
+  directOrder = 'Create Direct Order',
+  newCustomer = 'Add New Customer',
+}
+
 export function OrdersTable(props: IOrdersTableProps) {
   const [searchText, setSearchText] = useState(props.initialSearchText || '');
   const rows = orders;
@@ -131,18 +127,29 @@ export function OrdersTable(props: IOrdersTableProps) {
     }
   }, [rows, searchText]);
 
-  const confirmMatch = () => {
-    if (selectedRow === null) setSelectedRow(0);
-    else {
-      props.onConfirmMatch?.(filteredRows[selectedRow]);
-      setSearchText('');
-      setSelectedRow(null);
+  const confirmMatch = (type?: EOrderButtons) => {
+    switch (type) {
+      case EOrderButtons.directOrder:
+        props.onConfirmMatch?.(createDirectOrder(props.commissionRow));
+        break;
+      case EOrderButtons.newCustomer:
+        props.onConfirmMatch?.(createDirectOrder(props.commissionRow, true));
+        break;
+      default:
+        if (selectedRow === null) {
+          setSelectedRow(0);
+          return;
+        } else {
+          props.onConfirmMatch?.(filteredRows[selectedRow]);
+        }
+        break;
     }
+    setSearchText('');
+    setSelectedRow(null);
   };
 
   return (
     <CustomTableContainer
-      component={Paper}
       tabIndex={0}
       header={
         <Stack direction='row' alignItems='center' gap={2}>
@@ -178,27 +185,23 @@ export function OrdersTable(props: IOrdersTableProps) {
             }}
           />
           <Stack direction='row' gap={2} alignItems='center'>
-            <Button
-              variant='contained'
-              onClick={() => alert('open dialog to create direct order')}
-              sx={{ whiteSpace: 'nowrap' }}
-            >
-              Create Direct Order
-            </Button>
-            <Button
-              variant='contained'
-              onClick={() => alert('open dialog to add new customer')}
-              sx={{ whiteSpace: 'nowrap' }}
-            >
-              Add New Customer
-            </Button>
+            {Object.values(EOrderButtons).map((button) => (
+              <Button
+                key={button}
+                variant='contained'
+                onClick={() => confirmMatch(button)}
+                sx={{ whiteSpace: 'nowrap' }}
+              >
+                {button}
+              </Button>
+            ))}
           </Stack>
         </Stack>
       }
     >
       <Table stickyHeader>
         <TableHead>
-          <TableRow sx={{ bgcolor: 'secondary.main' }}>
+          <TableRow>
             {orderHeaders.map((header, index) => (
               <TableCell
                 key={index}
@@ -243,4 +246,5 @@ interface IOrdersTableProps {
   clickable?: boolean;
   onConfirmMatch?: (order: IOrder) => void;
   header?: string;
+  commissionRow?: IUploadCommissionsRow;
 }

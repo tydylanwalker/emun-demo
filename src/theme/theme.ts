@@ -36,6 +36,7 @@ const componentOverrides: ThemeOptions['components'] = {
         backgroundColor: theme.palette.secondary.dark,
         whiteSpace: 'nowrap',
         fontWeight: 'bold',
+        fontSize: '1.2rem',
       }),
       body: {
         whiteSpace: 'nowrap',
