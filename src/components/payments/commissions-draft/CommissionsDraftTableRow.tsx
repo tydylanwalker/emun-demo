@@ -1,13 +1,15 @@
-import { Stack, TableCell, TableRow, Typography } from '@mui/material';
+import { Stack, TableCell, TableRow, Typography, Button } from '@mui/material';
 import { formatCellData } from '../../../functions/formatCellData';
 import { ICommissionDraft } from '../../../data/commissions';
 import { ICommissionDraftHeader } from './CommissionsDraftTable';
 import { SafetyDividerRounded } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
+import { ConfirmDeleteModal } from '../../shared/ConfirmDeleteModal';
 
 export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) {
   const [totalCommissionAmount, setTotalCommissionAmount] = useState(0);
   const [repCommissionAmount, setRepCommissionAmount] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   let commissionId = props.headers.find((header) => header.id === 'commissionAmount')?.id;
   let commissionTotal = commissionId ? parseFloat(props.row[commissionId].toString()) : 0.0;
@@ -26,8 +28,20 @@ export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) 
     setTotalCommissionAmount((invoiceAmount * vendorCommission) / 100);
   }, [props.row]);
 
+  const handleDelete = (row: ICommissionDraft) => {
+    props.handleDeleteRow(row);
+    setIsModalOpen(false); // Close the modal
+  };
+
   return (
-    <TableRow sx={{ bgcolor: props.color, whiteSpace: 'nowrap' }}>
+    <TableRow sx={{ bgcolor: props.color, whiteSpace: 'nowrap', alignItems: 'center' }}>
+      <TableCell align={'center'}>
+        <Stack direction='row' gap={1} alignItems='center' justifyContent='space-around'>
+          <Button variant='contained' color='error' onClick={() => setIsModalOpen(true)}>
+            Delete Item
+          </Button>
+        </Stack>
+      </TableCell>
       {props.headers.map((header, index) => (
         <TableCell key={index} align={header.align || 'center'}>
           <Stack direction='row' gap={1} alignItems='center' justifyContent='space-around'>
@@ -44,6 +58,12 @@ export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) 
           </Stack>
         </TableCell>
       ))}
+
+      <ConfirmDeleteModal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        onConfirm={() => handleDelete(props.row)}
+      />
     </TableRow>
   );
 }
@@ -52,4 +72,5 @@ interface ICommissionsDraftTableRowProps {
   color?: string;
   row: ICommissionDraft;
   headers: ICommissionDraftHeader[];
+  handleDeleteRow: (row: ICommissionDraft) => void;
 }

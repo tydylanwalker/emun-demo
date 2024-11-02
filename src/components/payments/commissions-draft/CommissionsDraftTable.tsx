@@ -98,9 +98,9 @@ const commissionsHeader: ICommissionDraftHeader[] = [
 export function CommissionsDraftTable() {
   const [searchText, setSearchText] = useState('');
 
-  const rows = commissions;
   console.log(commissions);
-  const [filteredRows, setFilteredRows] = useState(rows);
+  const [rows, setRows] = useState(commissions);
+  const [filteredRows, setFilteredRows] = useState(commissions);
 
   const [vendor, setVendor] = useState('');
   const vendorOptions = vendorsMock.map((vendor) => vendor.vendorName);
@@ -164,6 +164,12 @@ export function CommissionsDraftTable() {
     );
   }, [filteredRows]);
 
+  const handleDeleteRow = (row: ICommissionDraft) => {
+    let items = rows;
+
+    setRows(items.filter((item) => item !== row));
+  };
+
   return (
     <>
       <Stack direction='row' justifyContent='space-between'>
@@ -217,6 +223,9 @@ export function CommissionsDraftTable() {
         <Table stickyHeader>
           <TableHead sx={{ bgcolor: 'secondary.main' }}>
             <TableRow>
+              <TableCell align={'center'} sx={{ fontSize: '1.2rem', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
+                {/* Empty header for delete button */}
+              </TableCell>
               {commissionsHeader.map((header, index) => (
                 <TableCell
                   key={index}
@@ -230,7 +239,12 @@ export function CommissionsDraftTable() {
           </TableHead>
           <TableBody>
             {filteredRows.map((row, index) => (
-              <CommissionsDraftTableRow key={index} row={row} headers={commissionsHeader} />
+              <CommissionsDraftTableRow
+                key={index}
+                row={row}
+                headers={commissionsHeader}
+                handleDeleteRow={handleDeleteRow}
+              />
             ))}
           </TableBody>
         </Table>
