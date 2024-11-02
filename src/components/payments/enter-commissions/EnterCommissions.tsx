@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { AddCheck } from './forms/AddCheck';
 import { ICheckData } from '../../../interfaces/ICheckData';
 import { CustomInput } from '../../shared/CustomInput';
-import { UploadCommissionsTable } from './table/UploadCommissionsTable';
+import { EnterCommissionsTable } from './table/EnterCommissionsTable';
 import { createRowWithMatchingRecords } from '../../../functions/createRowWithMatchingRecords';
 import { ErrorEnum } from '../../../data/ErrorEnum';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
-import { UploadCommissionsSpeedDial } from '../../shared/UploadCommissionsSpeedDial';
+import { EnterCommissionsSpeedDial } from '../../shared/EnterCommissionsSpeedDial';
 import { AddDirectOrder } from './forms/AddDirectOrder';
 import { AddAdjustment } from './forms/AddAdjustment';
 import { IDirectOrder } from '../../../interfaces/IDirectOrder';
@@ -28,14 +28,14 @@ import { IInvoiceValues, SingleEntryModal } from './modals/SingleEntryModal';
 
 export interface IHeaderMeta {
   label: string;
-  id: keyof IUploadCommissionsRow;
+  id: keyof IEnterCommissionsRow;
   type: 'currency' | 'string' | 'date';
   align: 'left' | 'right' | 'center';
   required?: boolean;
   hide?: boolean;
 }
 
-const uploadCommissionsHeadersMeta: IHeaderMeta[] = [
+const EnterCommissionsHeadersMeta: IHeaderMeta[] = [
   {
     label: 'PO #',
     id: 'poNumber',
@@ -81,7 +81,7 @@ interface IRowObject<T> {
   error?: ErrorEnum;
 }
 
-export interface IUploadCommissionsRow {
+export interface IEnterCommissionsRow {
   poNumber: IRowObject<string>;
   invoiceNumber: IRowObject<string>;
   invoiceAmount: IRowObject<number>;
@@ -103,7 +103,7 @@ export enum EModes {
   view = 'View Commissions',
 }
 
-export function UploadCommissions() {
+export function EnterCommissions() {
   const vendorOptions = [...new Set(orders.map((order) => order.customerName))];
   const [vendor, setVendor] = useState('');
   const [payPeriodOptions, setPayPeriodOptions] = useState(['JUNE2024', 'JULY2024', 'AUG2024', 'SEPT2024', 'OCT2024']);
@@ -120,7 +120,7 @@ export function UploadCommissions() {
   const [addPayPeriodOpen, setAddPayPeriodOpen] = useState(false);
   const [mode, setMode] = useState<EModes | null>(null);
   const [uploadFileModal, setUploadFileModal] = useState(false);
-  const [commissionRows, setCommissionRows] = useState<IUploadCommissionsRow[]>([]);
+  const [commissionRows, setCommissionRows] = useState<IEnterCommissionsRow[]>([]);
   const [singleEntryMatchOrder, setSingleEntryMatchModal] = useState<IOrder | null>(null);
   const [successfulEntry, setSuccessfulEntry] = useState(false);
 
@@ -152,14 +152,14 @@ export function UploadCommissions() {
   };
 
   const handleCreatingCommissionRows = (data: { [key: string]: any }[] | undefined) => {
-    const mappedRows: IUploadCommissionsRow[] =
+    const mappedRows: IEnterCommissionsRow[] =
       data?.map((row) => {
         return createRowWithMatchingRecords(row);
       }) || [];
     setCommissionRows(mappedRows);
   };
 
-  const updateRows = (order: IOrder, rowToUpdate: IUploadCommissionsRow) => {
+  const updateRows = (order: IOrder, rowToUpdate: IEnterCommissionsRow) => {
     const index = commissionRows.findIndex((row) => row === rowToUpdate);
 
     if (index !== -1) {
@@ -206,7 +206,7 @@ export function UploadCommissions() {
   };
 
   const addSingleEntryInvoice = (data: IInvoiceValues) => {
-    const newInvoice: IUploadCommissionsRow = {
+    const newInvoice: IEnterCommissionsRow = {
       poNumber: {
         value: singleEntryMatchOrder?.poNumber || '',
       },
@@ -279,7 +279,7 @@ export function UploadCommissions() {
             {payPeriod && '  |  ' + payPeriod}
             {check && '  |  ' + check}
           </Typography>
-          <UploadCommissionsSpeedDial show={mode !== null} actions={speedDialActions} />
+          <EnterCommissionsSpeedDial show={mode !== null} actions={speedDialActions} />
         </Stack>
 
         <Stack direction='row' gap={2} sx={{ opacity: mode ? 1 : 0, transition: 'opacity 2s ease-in' }}>
@@ -350,9 +350,9 @@ export function UploadCommissions() {
         <>
           <CommissionModesToggleButtons mode={mode} setMode={setMode} />
           {mode === EModes.view ? (
-            <UploadCommissionsTable
+            <EnterCommissionsTable
               rows={commissionRows}
-              headers={uploadCommissionsHeadersMeta}
+              headers={EnterCommissionsHeadersMeta}
               onConfirmMatch={updateRows}
               submitRows={() => setCommissionRows([])}
             />
@@ -413,7 +413,7 @@ export function UploadCommissions() {
         open={uploadFileModal}
         onClose={() => setUploadFileModal(false)}
         setMappedFileData={handleCreatingCommissionRows}
-        emunHeaders={uploadCommissionsHeadersMeta}
+        emunHeaders={EnterCommissionsHeadersMeta}
       />
     </Stack>
   );

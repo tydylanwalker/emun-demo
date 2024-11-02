@@ -1,6 +1,6 @@
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { EModes } from '../UploadCommissions';
+import { EModes } from '../EnterCommissions';
 
 export default function CommissionModesToggleButtons(props: ICommissionModesToggleButtonsProps) {
   return (

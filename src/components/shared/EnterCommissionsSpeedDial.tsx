@@ -10,7 +10,7 @@ interface ISpeedDialAction {
   action: () => void;
 }
 
-export function UploadCommissionsSpeedDial(props: IUploadCommissionsSpeedDialProps) {
+export function EnterCommissionsSpeedDial(props: IEnterCommissionsSpeedDialProps) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -55,7 +55,7 @@ export function UploadCommissionsSpeedDial(props: IUploadCommissionsSpeedDialPro
   );
 }
 
-interface IUploadCommissionsSpeedDialProps {
+interface IEnterCommissionsSpeedDialProps {
   show?: boolean;
   actions: ISpeedDialAction[];
 }

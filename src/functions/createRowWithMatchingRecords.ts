@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { IUploadCommissionsRow } from '../components/payments/upload-commissions/UploadCommissions';
+import { IEnterCommissionsRow } from '../components/payments/enter-commissions/EnterCommissions';
 import { ErrorEnum } from '../data/ErrorEnum';
 import { IOrder, orders } from '../data/ordersMock';
 
@@ -22,7 +22,7 @@ function findCustomerError(name: string, id: string, order: IOrder) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function createRowWithMatchingRecords(row: { [key: string]: any }): IUploadCommissionsRow {
+export function createRowWithMatchingRecords(row: { [key: string]: any }): IEnterCommissionsRow {
   // grab row data
   const poNumber = row['PO #'];
   const invoiceNumber = row['Invoice #'];
@@ -41,14 +41,14 @@ export function createRowWithMatchingRecords(row: { [key: string]: any }): IUplo
   // const rep = row['Rep'];
   // const writingRep = row['Writing Rep'];
 
-  // If order is found, create IUploadCommissionsRow, check for duplicate PO and customer errors
+  // If order is found, create IEnterCommissionsRow, check for duplicate PO and customer errors
   const ordersFound = orders.filter((order) => order.poNumber === poNumber);
   if (ordersFound.length > 0) {
     const order = ordersFound[0];
 
     const customerError = findCustomerError(customerName, customerId, order);
 
-    const newRow: IUploadCommissionsRow = {
+    const newRow: IEnterCommissionsRow = {
       poNumber: {
         value: order.poNumber,
         error: order.poNumber === '' ? ErrorEnum.noPo : ordersFound.length > 1 ? ErrorEnum.multiplePo : undefined,
@@ -97,7 +97,7 @@ export function createRowWithMatchingRecords(row: { [key: string]: any }): IUplo
     return newRow;
   }
   // If no order is found we end up here and just display all values from import
-  const newRow: IUploadCommissionsRow = {
+  const newRow: IEnterCommissionsRow = {
     poNumber: {
       value: poNumber,
       error: ErrorEnum.noPo,

@@ -5,7 +5,7 @@ import { CustomInput } from '../shared/CustomInput';
 import { OrdersTableRow } from './OrdersTableRow';
 import { CustomTableContainer } from '../shared/CustomTableContainer';
 import { createDirectOrder } from '../../functions/createDirectOrder';
-import { IUploadCommissionsRow } from '../payments/upload-commissions/UploadCommissions';
+import { IEnterCommissionsRow } from '../payments/enter-commissions/EnterCommissions';
 
 export interface IOrderHeader {
   label: string;
@@ -246,5 +246,5 @@ interface IOrdersTableProps {
   clickable?: boolean;
   onConfirmMatch?: (order: IOrder) => void;
   header?: string;
-  commissionRow?: IUploadCommissionsRow;
+  commissionRow?: IEnterCommissionsRow;
 }

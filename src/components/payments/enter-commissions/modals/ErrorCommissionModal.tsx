@@ -1,8 +1,8 @@
 import { Alert, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { OrdersTable } from '../../../orders/OrdersTable';
 import { CustomModal } from '../../../shared/CustomModal';
-import { IUploadCommissionsTableRowError } from '../table/UploadCommissionsTableRow';
-import { IHeaderMeta, IUploadCommissionsRow } from '../UploadCommissions';
+import { IEnterCommissionsTableRowError } from '../table/EnterCommissionsTableRow';
+import { IHeaderMeta, IEnterCommissionsRow } from '../EnterCommissions';
 import { IOrder } from '../../../../data/ordersMock';
 import { useEffect, useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
@@ -73,8 +73,8 @@ export function ErrorCommissionModal(props: IErrorCommissionModalProps) {
 interface IErrorCommissionModalProps {
   open: boolean;
   handleModalClose: () => void;
-  row: IUploadCommissionsRow;
+  row: IEnterCommissionsRow;
   headers: IHeaderMeta[];
-  errorValues?: IUploadCommissionsTableRowError;
+  errorValues?: IEnterCommissionsTableRowError;
   onConfirmMatch: (order: IOrder) => void;
 }

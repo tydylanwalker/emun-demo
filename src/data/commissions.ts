@@ -1,4 +1,4 @@
-export interface ICommissionReport {
+export interface ICommissionDraft {
   checkNumber: number;
   checkAmount: number;
   invoiceNumber: number;
@@ -18,7 +18,7 @@ export interface ICommissionReport {
   poNumber: string;
 }
 
-export const commissions: ICommissionReport[] = [
+export const commissions: ICommissionDraft[] = [
   {
     checkNumber: 1,
     checkAmount: 20000,

@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react';
 import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { CustomInput } from '../../shared/CustomInput';
-import { ICommissionReport, commissions } from '../../../data/commissions';
-import { CommissionsReportTableRow } from './CommissionsReportTableRow';
+import { ICommissionDraft, commissions } from '../../../data/commissions';
+import { CommissionsDraftTableRow } from './CommissionsDraftTableRow';
 import { vendorsMock } from '../../../data/vendors';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
 import { Visibility } from '@mui/icons-material';
 import { CustomTableContainer } from '../../shared/CustomTableContainer';
 
-export interface ICommissionReportHeader {
+export interface ICommissionDraftHeader {
   label: string;
-  id: keyof ICommissionReport;
+  id: keyof ICommissionDraft;
   align: 'left' | 'right' | 'center';
   type?: 'currency' | 'date' | 'percentage';
 }
 
-const commissionsHeader: ICommissionReportHeader[] = [
+const commissionsHeader: ICommissionDraftHeader[] = [
   {
     label: 'Check #',
     align: 'center',
@@ -95,7 +95,7 @@ const commissionsHeader: ICommissionReportHeader[] = [
   },
 ];
 
-export function CommissionsReportTable() {
+export function CommissionsDraftTable() {
   const [searchText, setSearchText] = useState('');
 
   const rows = commissions;
@@ -230,7 +230,7 @@ export function CommissionsReportTable() {
           </TableHead>
           <TableBody>
             {filteredRows.map((row, index) => (
-              <CommissionsReportTableRow key={index} row={row} headers={commissionsHeader} />
+              <CommissionsDraftTableRow key={index} row={row} headers={commissionsHeader} />
             ))}
           </TableBody>
         </Table>

@@ -63,7 +63,7 @@ const sidebarContent: ISidebarContent[] = [
       {
         label: 'Enter Commissions',
         icon: <UploadFileRounded />,
-        href: '/payments/upload-commissions',
+        href: '/payments/enter-commissions',
       },
       {
         label: 'Checks',
@@ -83,7 +83,7 @@ const sidebarContent: ISidebarContent[] = [
       {
         label: 'Commissions Draft',
         icon: <PaidRounded />,
-        href: '/payments/commissions-report',
+        href: '/payments/commissions-draft',
       },
     ],
   },

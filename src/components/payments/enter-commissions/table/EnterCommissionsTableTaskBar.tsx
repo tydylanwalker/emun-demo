@@ -1,6 +1,6 @@
 import { Stack, Typography, FormControlLabel, Switch, Button } from '@mui/material';
 
-export function UploadCommissionsTableTaskBar(props: IUploadCommissionsTableTaskBarProps) {
+export function EnterCommissionsTableTaskBar(props: IEnterCommissionsTableTaskBarProps) {
   return (
     <Stack direction='row' justifyContent='space-between' p={1.5}>
       <Stack direction='row' gap={3} alignItems='center'>
@@ -45,7 +45,7 @@ export function UploadCommissionsTableTaskBar(props: IUploadCommissionsTableTask
   );
 }
 
-interface IUploadCommissionsTableTaskBarProps {
+interface IEnterCommissionsTableTaskBarProps {
   totalRows: number;
   rowsWithErrors: number;
   onlyShowErrors: boolean;

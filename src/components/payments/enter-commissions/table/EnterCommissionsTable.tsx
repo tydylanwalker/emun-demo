@@ -1,13 +1,13 @@
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import { IHeaderMeta, IUploadCommissionsRow } from '../UploadCommissions';
-import { UploadCommissionsTableTaskBar } from './UploadCommissionsTableTaskBar';
+import { IHeaderMeta, IEnterCommissionsRow } from '../EnterCommissions';
+import { EnterCommissionsTableTaskBar } from './EnterCommissionsTableTaskBar';
 import { useEffect, useState } from 'react';
-import { UploadCommissionsTableRow } from './UploadCommissionsTableRow';
+import { EnterCommissionsTableRow } from './EnterCommissionsTableRow';
 import { IOrder } from '../../../../data/ordersMock';
 import { CustomTableContainer } from '../../../shared/CustomTableContainer';
 
-export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
-  const [rowsWithErrors, setRowsWithErrors] = useState<IUploadCommissionsRow[]>([]);
+export function EnterCommissionsTable(props: IEnterCommissionsTableProps) {
+  const [rowsWithErrors, setRowsWithErrors] = useState<IEnterCommissionsRow[]>([]);
   const [onlyShowErrors, setOnlyShowErrors] = useState(false);
   const renderedRows = onlyShowErrors ? rowsWithErrors : props.rows;
 
@@ -20,7 +20,7 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
   return (
     <CustomTableContainer
       taskBar={
-        <UploadCommissionsTableTaskBar
+        <EnterCommissionsTableTaskBar
           totalRows={props.rows.length}
           rowsWithErrors={rowsWithErrors.length}
           onlyShowErrors={onlyShowErrors}
@@ -41,7 +41,7 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
         </TableHead>
         <TableBody>
           {renderedRows.map((row, index) => (
-            <UploadCommissionsTableRow
+            <EnterCommissionsTableRow
               key={index}
               row={row}
               headers={props.headers}
@@ -54,9 +54,9 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
   );
 }
 
-interface IUploadCommissionsTableProps {
+interface IEnterCommissionsTableProps {
   headers: IHeaderMeta[];
-  rows: IUploadCommissionsRow[];
-  onConfirmMatch?: (order: IOrder, row: IUploadCommissionsRow) => void;
+  rows: IEnterCommissionsRow[];
+  onConfirmMatch?: (order: IOrder, row: IEnterCommissionsRow) => void;
   submitRows: () => void;
 }

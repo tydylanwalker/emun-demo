@@ -1,11 +1,11 @@
 import { Stack, TableCell, TableRow, Typography } from '@mui/material';
 import { formatCellData } from '../../../functions/formatCellData';
-import { ICommissionReport } from '../../../data/commissions';
-import { ICommissionReportHeader } from './CommissionsReportTable';
+import { ICommissionDraft } from '../../../data/commissions';
+import { ICommissionDraftHeader } from './CommissionsDraftTable';
 import { SafetyDividerRounded } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
-export function CommissionsReportTableRow(props: ICommissionsReportTableRowProps) {
+export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) {
   const [totalCommissionAmount, setTotalCommissionAmount] = useState(0);
   const [repCommissionAmount, setRepCommissionAmount] = useState(0);
 
@@ -36,7 +36,7 @@ export function CommissionsReportTableRow(props: ICommissionsReportTableRowProps
                 ? formatCellData(header.type, repCommissionAmount)
                 : header.id === 'commissionAmount'
                   ? formatCellData(header.type, totalCommissionAmount)
-                  : formatCellData(header.type, props.row[header.id as keyof ICommissionReport])}
+                  : formatCellData(header.type, props.row[header.id as keyof ICommissionDraft])}
             </Typography>
             {header.id === 'repCommissionRate' ? (
               <SafetyDividerRounded onClick={() => alert('Open Split Commissions Modal')} sx={{ cursor: 'pointer' }} />
@@ -48,8 +48,8 @@ export function CommissionsReportTableRow(props: ICommissionsReportTableRowProps
   );
 }
 
-interface ICommissionsReportTableRowProps {
+interface ICommissionsDraftTableRowProps {
   color?: string;
-  row: ICommissionReport;
-  headers: ICommissionReportHeader[];
+  row: ICommissionDraft;
+  headers: ICommissionDraftHeader[];
 }

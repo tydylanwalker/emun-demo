@@ -1,16 +1,16 @@
 import { TableRow, TableCell, Typography, Stack } from '@mui/material';
 import { ErrorEnum } from '../../../../data/ErrorEnum';
-import { IHeaderMeta, IUploadCommissionsRow } from '../UploadCommissions';
+import { IHeaderMeta, IEnterCommissionsRow } from '../EnterCommissions';
 import { useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
 import { IOrder } from '../../../../data/ordersMock';
 import { ErrorCommissionModal } from '../modals/ErrorCommissionModal';
 
-export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps) {
+export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) {
   const [orderGridOpen, setOrderGridOpen] = useState(false);
-  const [errorValues, setErrorValues] = useState<IUploadCommissionsTableRowError | undefined>(undefined);
+  const [errorValues, setErrorValues] = useState<IEnterCommissionsTableRowError | undefined>(undefined);
 
-  const handleModalOpen = (error: IUploadCommissionsTableRowError) => {
+  const handleModalOpen = (error: IEnterCommissionsTableRowError) => {
     setOrderGridOpen(true);
     setErrorValues(error);
   };
@@ -66,21 +66,21 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
   );
 }
 
-interface IUploadCommissionsTableRowProps {
-  row: IUploadCommissionsRow;
+interface IEnterCommissionsTableRowProps {
+  row: IEnterCommissionsRow;
   headers: IHeaderMeta[];
-  onConfirmMatch?: (order: IOrder, row: IUploadCommissionsRow) => void;
+  onConfirmMatch?: (order: IOrder, row: IEnterCommissionsRow) => void;
 }
 
-export interface IUploadCommissionsTableRowError {
+export interface IEnterCommissionsTableRowError {
   reason: string;
   searchText: string;
 }
 
 function determineErrorHandling(
   error: ErrorEnum | undefined,
-  row: IUploadCommissionsRow
-): IUploadCommissionsTableRowError | undefined {
+  row: IEnterCommissionsRow
+): IEnterCommissionsTableRowError | undefined {
   if (error === undefined) return undefined;
 
   switch (error) {

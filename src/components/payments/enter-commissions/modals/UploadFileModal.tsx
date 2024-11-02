@@ -6,7 +6,7 @@ import { parse } from 'csv-parse/browser/esm/sync';
 import { Close, Check } from '@mui/icons-material';
 import { CustomInput } from '../../../shared/CustomInput';
 import { CustomModal } from '../../../shared/CustomModal';
-import { IHeaderMeta } from '../UploadCommissions';
+import { IHeaderMeta } from '../EnterCommissions';
 
 interface IEmunHeaders {
   label: string;
