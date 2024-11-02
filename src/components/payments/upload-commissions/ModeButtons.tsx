@@ -11,7 +11,7 @@ export function ModeButtons(props: ButtonProps & IModeButtonsProps) {
         onClick={props.onSingleEntryClick}
         disabled={props.disabled}
       >
-        {props.mode === 'single' ? 'View Commissions' : 'Single Entry Mode'}
+        {props.mode === 'single' ? 'View Commissions' : 'Manual Entry'}
       </Button>
       <Button
         sx={{ fontSize: props.fontSize }}
@@ -21,7 +21,7 @@ export function ModeButtons(props: ButtonProps & IModeButtonsProps) {
         onClick={props.onUploadFileClick}
         disabled={props.disabled}
       >
-        Upload File Mode
+        Upload File
       </Button>
     </Stack>
   );

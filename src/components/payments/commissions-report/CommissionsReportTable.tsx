@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
+  Button,
   Paper,
   Stack,
   Table,
@@ -16,6 +17,8 @@ import { CommissionsReportTableRow } from './CommissionsReportTableRow';
 import { vendorsMock } from '../../../data/vendors';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
+import { Visibility } from '@mui/icons-material';
+import { CustomTableContainer } from '../../shared/CustomTableContainer';
 
 export interface ICommissionReportHeader {
   label: string;
@@ -174,50 +177,57 @@ export function CommissionsReportTable() {
 
   return (
     <>
-      <Stack direction='row' gap={2} mb={2}>
-        <HeaderAndValueCard header='Invoice Total Amount' value={'$' + formatCurrency(invoicesTotal)} width='18rem' />
-        <HeaderAndValueCard header='Total Commission' value={'$' + formatCurrency(commissionAmount)} width='18rem' />
-        <HeaderAndValueCard header='Rep Commission' value={'$' + formatCurrency(repAmount)} width='18rem' />
-      </Stack>
-      <TableContainer component={Paper}>
-        <Typography variant='h5' fontWeight='bold' p={2}>
-          Commissions Report
+      <Stack direction='row' justifyContent='space-between'>
+        <Typography variant='h4' fontWeight='bold' p={2}>
+          Commissions Draft
         </Typography>
-        <Stack direction='column' justifyContent='space-between' alignItems={'baseline'} p={1} gap={2}>
-          <CustomInput
-            type='search'
-            size='small'
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            sx={{ maxWidth: '50%' }}
-          />
-          <Stack direction='row' justifyContent='space-between' width={1} gap={2}>
+        <Stack direction='row' gap={2} mb={2}>
+          <HeaderAndValueCard header='Invoice Total Amount' value={'$' + formatCurrency(invoicesTotal)} width='18rem' />
+          <HeaderAndValueCard header='Total Commission' value={'$' + formatCurrency(commissionAmount)} width='18rem' />
+          <HeaderAndValueCard header='Rep Commission' value={'$' + formatCurrency(repAmount)} width='18rem' />
+        </Stack>
+      </Stack>
+      <Button size='large' sx={{ width: 'fit-content' }}>
+        <Visibility /> View Statement
+      </Button>
+      <CustomTableContainer
+        taskBar={
+          <Stack px={1} pb={1} gap={0} position='sticky' top={0} zIndex={2} bgcolor='background.paper'>
+            <Stack direction='row' width={1} gap={2}>
+              <CustomInput
+                select
+                value={payPeriod}
+                label='Select Pay Period'
+                options={payPeriodOptions}
+                onChange={(event) => setPayPeriod(event.target.value as string)}
+              />
+              <CustomInput
+                select
+                value={vendor}
+                label='Select Vendor'
+                options={vendorOptions}
+                onChange={(event) => setVendor(event.target.value as string)}
+              />
+              <CustomInput
+                select
+                value={rep}
+                label='Select Rep'
+                options={repOptions}
+                onChange={(event) => setRep(event.target.value as string)}
+              />
+            </Stack>
             <CustomInput
-              select
-              value={vendor}
-              label='Select Vendor'
-              options={vendorOptions}
-              onChange={(event) => setVendor(event.target.value as string)}
-            />
-            <CustomInput
-              select
-              value={rep}
-              label='Select Rep'
-              options={repOptions}
-              onChange={(event) => setRep(event.target.value as string)}
-            />
-            <CustomInput
-              select
-              value={payPeriod}
-              label='Select Pay Period'
-              options={payPeriodOptions}
-              onChange={(event) => setPayPeriod(event.target.value as string)}
+              type='search'
+              size='small'
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
             />
           </Stack>
-        </Stack>
-        <Table>
-          <TableHead>
-            <TableRow sx={{ bgcolor: 'secondary.main' }}>
+        }
+      >
+        <Table stickyHeader>
+          <TableHead sx={{ bgcolor: 'secondary.main' }}>
+            <TableRow>
               {commissionsHeader.map((header, index) => (
                 <TableCell
                   key={index}
@@ -235,7 +245,7 @@ export function CommissionsReportTable() {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </CustomTableContainer>
     </>
   );
 }

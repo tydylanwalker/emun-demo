@@ -4,6 +4,7 @@ import { UploadCommissionsTableTaskBar } from './UploadCommissionsTableTaskBar';
 import { useEffect, useState } from 'react';
 import { UploadCommissionsTableRow } from './UploadCommissionsTableRow';
 import { IOrder } from '../../../../data/ordersMock';
+import { CustomTableContainer } from '../../../shared/CustomTableContainer';
 
 export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
   const [rowsWithErrors, setRowsWithErrors] = useState<IUploadCommissionsRow[]>([]);
@@ -17,15 +18,18 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
   }, [props.rows]);
 
   return (
-    <TableContainer component={Paper}>
-      <UploadCommissionsTableTaskBar
-        totalRows={props.rows.length}
-        rowsWithErrors={rowsWithErrors.length}
-        onlyShowErrors={onlyShowErrors}
-        setOnlyShowErrors={setOnlyShowErrors}
-        submitRows={props.submitRows}
-      />
-      <Table>
+    <CustomTableContainer
+      taskBar={
+        <UploadCommissionsTableTaskBar
+          totalRows={props.rows.length}
+          rowsWithErrors={rowsWithErrors.length}
+          onlyShowErrors={onlyShowErrors}
+          setOnlyShowErrors={setOnlyShowErrors}
+          submitRows={props.submitRows}
+        />
+      }
+    >
+      <Table stickyHeader>
         <TableHead>
           <TableRow sx={{ bgcolor: 'secondary.main' }}>
             {props.headers.map((header, index) => (
@@ -46,7 +50,7 @@ export function UploadCommissionsTable(props: IUploadCommissionsTableProps) {
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
+    </CustomTableContainer>
   );
 }
 

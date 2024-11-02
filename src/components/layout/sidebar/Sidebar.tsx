@@ -11,7 +11,7 @@ import {
   PriceChangeRounded,
   PaidRounded,
 } from '@mui/icons-material';
-import { Box, IconButton, List } from '@mui/material';
+import { Box, IconButton, List, useMediaQuery } from '@mui/material';
 import { SidebarItem } from './SidebarItem';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
@@ -61,7 +61,7 @@ const sidebarContent: ISidebarContent[] = [
     label: 'Payments',
     children: [
       {
-        label: 'Upload Commissions',
+        label: 'Enter Commissions',
         icon: <UploadFileRounded />,
         href: '/payments/upload-commissions',
       },
@@ -81,7 +81,7 @@ const sidebarContent: ISidebarContent[] = [
         href: '/payments/adjustments',
       },
       {
-        label: 'Commissions Report',
+        label: 'Commissions Draft',
         icon: <PaidRounded />,
         href: '/payments/commissions-report',
       },
@@ -138,13 +138,14 @@ const Drawer = styled(MuiDrawer, {
 export function Sidebar(props: ISidebarProps) {
   const theme = useTheme();
   const { open, handleDrawerClose, handleDrawerOpen } = props;
+  const color = useMediaQuery('(prefers-color-scheme: dark)') ? '#fff' : 'secondary.main';
 
   return (
     <Drawer variant='permanent' open={open}>
       <DrawerHeader>
         <Box display='flex' width='100%' height={topbarHeight} justifyContent='space-between' borderBottom={1}>
           <Link href='/'>
-            <EmunLogo />
+            <EmunLogo color={color} />
           </Link>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}

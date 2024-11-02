@@ -1,11 +1,13 @@
-import { TableCell, TableRow, Typography } from '@mui/material';
+import { TableCell, TableRow, TableRowProps, Typography } from '@mui/material';
 import { IOrderHeader } from './OrdersTable';
 import { formatCellData } from '../../functions/formatCellData';
 import { IOrder } from '../../data/ordersMock';
 
-export function OrdersTableRow(props: IOrdersTableRowProps) {
+export function OrdersTableRow(props: IOrdersTableRowProps & TableRowProps) {
   return (
     <TableRow
+      onKeyDown={props.onKeyDown}
+      tabIndex={-1}
       sx={{
         bgcolor: props.color,
         border: props.selected ? 2 : 0,
@@ -15,7 +17,7 @@ export function OrdersTableRow(props: IOrdersTableRowProps) {
       onClick={props.onClick}
     >
       {props.headers.map((header, index) => (
-        <TableCell key={index} align={header.align || 'center'}>
+        <TableCell key={index} align={header.align || 'left'}>
           <Typography>{formatCellData(header.type, props.row[header.id as keyof IOrder])}</Typography>
         </TableCell>
       ))}

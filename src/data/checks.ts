@@ -1,0 +1,55 @@
+import dayjs from 'dayjs';
+import { ECheckStatus, ICheckData } from '../interfaces/ICheckData';
+
+export const checksMock: ICheckData[] = [
+  {
+    vendor: 'Green Earth Products',
+    payPeriod: 'OCT2024',
+    number: '1021',
+    checkAmount: '20507.25',
+    status: ECheckStatus.Open,
+    receivedDate: dayjs(),
+    payDate: dayjs(),
+    additionalDetails: '',
+  },
+  {
+    vendor: 'Green Earth Products',
+    payPeriod: 'OCT2024',
+    number: '1022',
+    checkAmount: '10000',
+    status: ECheckStatus.Open,
+    receivedDate: dayjs(),
+    payDate: dayjs(),
+    additionalDetails: '',
+  },
+  {
+    vendor: 'Green Earth Products',
+    payPeriod: 'OCT2024',
+    number: '1023',
+    checkAmount: '17500',
+    status: ECheckStatus.Open,
+    receivedDate: dayjs(),
+    payDate: dayjs(),
+    additionalDetails: '',
+  },
+  {
+    vendor: 'Green Earth Products',
+    payPeriod: 'OCT2024',
+    number: '1024',
+    checkAmount: '2500',
+    status: ECheckStatus.Open,
+    receivedDate: dayjs(),
+    payDate: dayjs(),
+    additionalDetails: '',
+  },
+  {
+    vendor: 'Green Earth Products',
+    payPeriod: 'OCT2024',
+    number: '1025',
+    checkAmount: '10000',
+    status: ECheckStatus.Open,
+    receivedDate: dayjs(),
+    payDate: dayjs(),
+    additionalDetails: '',
+  },
+];

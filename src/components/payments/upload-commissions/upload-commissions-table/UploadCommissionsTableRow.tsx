@@ -3,9 +3,8 @@ import { ErrorEnum } from '../../../../data/ErrorEnum';
 import { IHeaderMeta, IUploadCommissionsRow } from '../UploadCommissions';
 import { useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
-import { OrdersTable } from '../../../orders/OrdersTable';
-import { CustomModal } from '../../../shared/CustomModal';
 import { IOrder } from '../../../../data/ordersMock';
+import { ErrorCommissionModal } from '../ErrorCommissionModal';
 
 export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps) {
   const [orderGridOpen, setOrderGridOpen] = useState(false);
@@ -55,19 +54,14 @@ export function UploadCommissionsTableRow(props: IUploadCommissionsTableRowProps
           );
         })}
       </TableRow>
-      <CustomModal
+      <ErrorCommissionModal
         open={orderGridOpen}
-        closeModal={handleModalClose}
-        header='Find Matching Order For Invoice Error'
-        width='90vw'
-        height='90vh'
-        nonScrollable
-      >
-        <Stack mb={2}>
-          <UploadCommissionsTableRow row={props.row} headers={props.headers} />
-        </Stack>
-        <OrdersTable initialSearchText={errorValues?.searchText} clickable onConfirmMatch={onConfirmMatch} />
-      </CustomModal>
+        handleModalClose={handleModalClose}
+        row={props.row}
+        headers={props.headers}
+        onConfirmMatch={onConfirmMatch}
+        errorValues={errorValues}
+      />
     </>
   );
 }
@@ -78,7 +72,7 @@ interface IUploadCommissionsTableRowProps {
   onConfirmMatch?: (order: IOrder, row: IUploadCommissionsRow) => void;
 }
 
-interface IUploadCommissionsTableRowError {
+export interface IUploadCommissionsTableRowError {
   reason: string;
   searchText: string;
 }

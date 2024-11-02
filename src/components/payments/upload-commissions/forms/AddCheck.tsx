@@ -7,7 +7,7 @@ import { ICheckData, ECheckStatus } from '../../../../interfaces/ICheckData';
 import { CustomInput } from '../../../shared/CustomInput';
 
 export function AddCheck(props: IAddCheckProps) {
-  const [formData, setFormData] = useState<ICheckData>({
+  const initialData = {
     vendor: props.vendor,
     payPeriod: '',
     number: '',
@@ -15,13 +15,13 @@ export function AddCheck(props: IAddCheckProps) {
     status: ECheckStatus.Open,
     receivedDate: null,
     payDate: dayjs(),
-    commissionAmount: '',
-    statementGroup: '',
     additionalDetails: '',
-  });
+  };
+  const [formData, setFormData] = useState<ICheckData>(initialData);
 
   const closeDrawer = () => {
     props.toggleDrawer(false);
+    setFormData(initialData);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,21 +95,6 @@ export function AddCheck(props: IAddCheckProps) {
             value={formData.payDate}
             label='Pay Date'
             datatype='payDate'
-            onChange={handleChange}
-          />
-        </Box>
-        <Box display='flex' gap={2}>
-          <CustomInput
-            required
-            value={formData.commissionAmount}
-            label='Commission Amount'
-            name='commissionAmount'
-            onChange={handleChange}
-          />
-          <CustomInput
-            value={formData.statementGroup}
-            label='Statement Group'
-            name='statementGroup'
             onChange={handleChange}
           />
         </Box>

@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { CustomInput } from '../shared/CustomInput';
 import { OrdersTableRow } from './OrdersTableRow';
+import { CustomTableContainer } from '../shared/CustomTableContainer';
 
 export interface IOrderHeader {
   label: string;
@@ -25,17 +26,17 @@ export interface IOrderHeader {
 const orderHeaders: IOrderHeader[] = [
   {
     label: 'Order #',
-    align: 'center',
+    align: 'left',
     id: 'orderNumber',
   },
   {
     label: 'Customer',
-    align: 'center',
+    align: 'left',
     id: 'customerName',
   },
   {
     label: 'PO #',
-    align: 'center',
+    align: 'left',
     id: 'poNumber',
   },
   {
@@ -45,18 +46,18 @@ const orderHeaders: IOrderHeader[] = [
   },
   {
     label: 'Vendor',
-    align: 'center',
+    align: 'left',
     id: 'vendorName',
   },
   {
     label: 'Amount',
-    align: 'center',
+    align: 'right',
     id: 'amount',
     type: 'currency',
   },
   {
     label: 'Balance',
-    align: 'center',
+    align: 'right',
     id: 'balance',
     type: 'currency',
   },
@@ -74,7 +75,7 @@ const orderHeaders: IOrderHeader[] = [
   },
   {
     label: 'Ship City',
-    align: 'center',
+    align: 'left',
     id: 'shipCity',
   },
   {
@@ -84,12 +85,12 @@ const orderHeaders: IOrderHeader[] = [
   },
   {
     label: 'Rep',
-    align: 'center',
+    align: 'left',
     id: 'rep',
   },
   {
     label: 'Writing Rep',
-    align: 'center',
+    align: 'left',
     id: 'writingRep',
   },
   {
@@ -110,10 +111,15 @@ export function OrdersTable(props: IOrdersTableProps) {
   const [filteredRows, setFilteredRows] = useState(rows);
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
 
+  useEffect(() => {
+    setSearchText(props.initialSearchText || '');
+  }, [props.initialSearchText]);
+
   /**
    * As search text changes we filter the rows
    */
   useEffect(() => {
+    setSelectedRow(null);
     if (searchText === '') {
       setFilteredRows(rows);
     } else {
@@ -135,56 +141,62 @@ export function OrdersTable(props: IOrdersTableProps) {
   };
 
   return (
-    <TableContainer
+    <CustomTableContainer
       component={Paper}
       tabIndex={0}
-      onKeyDown={(event) => {
-        if (props.clickable) {
-          if (event.key === 'Enter') {
-            confirmMatch();
-          } else if (event.key === 'Tab') {
-            event.preventDefault();
-            setSelectedRow((prevRow) => (prevRow === null ? 0 : prevRow + 1 === filteredRows.length ? 0 : prevRow + 1));
-          }
-        }
-      }}
-    >
-      <Stack direction='row' alignItems='center' gap={2}>
-        <Typography variant='h5' fontWeight='bold' p={2}>
-          {props.header || 'View Orders'}
-        </Typography>
-        {selectedRow !== null && (
-          <Button variant='outlined' sx={{ my: 2 }} onClick={() => props.onConfirmMatch?.(filteredRows[selectedRow])}>
-            Confirm Match
-          </Button>
-        )}
-      </Stack>
-      <Stack direction='row' justifyContent='space-between' p={1} gap={3}>
-        <CustomInput
-          type='search'
-          size='small'
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          sx={{ marginTop: 0 }}
-        />
-        <Stack direction='row' gap={2} alignItems='center'>
-          <Button
-            variant='contained'
-            onClick={() => alert('open dialog to create direct order')}
-            sx={{ whiteSpace: 'nowrap' }}
-          >
-            Create Direct Order
-          </Button>
-          <Button
-            variant='contained'
-            onClick={() => alert('open dialog to add new customer')}
-            sx={{ whiteSpace: 'nowrap' }}
-          >
-            Add New Customer
-          </Button>
+      header={
+        <Stack direction='row' alignItems='center' gap={2}>
+          <Typography variant='h5' fontWeight='bold' p={2}>
+            {props.header || 'View Orders'}
+          </Typography>
+          {selectedRow !== null && (
+            <Button variant='outlined' sx={{ my: 2 }} onClick={() => props.onConfirmMatch?.(filteredRows[selectedRow])}>
+              Confirm Match
+            </Button>
+          )}
         </Stack>
-      </Stack>
-      <Table>
+      }
+      taskBar={
+        <Stack direction='row' justifyContent='space-between' p={1} gap={3}>
+          <CustomInput
+            type='search'
+            size='small'
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            sx={{ marginTop: 0 }}
+            onKeyDown={(event) => {
+              if (props.clickable) {
+                if (event.key === 'Enter') {
+                  confirmMatch();
+                } else if (event.key === 'Tab') {
+                  event.preventDefault();
+                  setSelectedRow((prevRow) =>
+                    prevRow === null ? 0 : prevRow + 1 === filteredRows.length ? 0 : prevRow + 1
+                  );
+                }
+              }
+            }}
+          />
+          <Stack direction='row' gap={2} alignItems='center'>
+            <Button
+              variant='contained'
+              onClick={() => alert('open dialog to create direct order')}
+              sx={{ whiteSpace: 'nowrap' }}
+            >
+              Create Direct Order
+            </Button>
+            <Button
+              variant='contained'
+              onClick={() => alert('open dialog to add new customer')}
+              sx={{ whiteSpace: 'nowrap' }}
+            >
+              Add New Customer
+            </Button>
+          </Stack>
+        </Stack>
+      }
+    >
+      <Table stickyHeader>
         <TableHead>
           <TableRow sx={{ bgcolor: 'secondary.main' }}>
             {orderHeaders.map((header, index) => (
@@ -206,11 +218,23 @@ export function OrdersTable(props: IOrdersTableProps) {
               headers={orderHeaders}
               selected={selectedRow === index}
               onClick={props.clickable ? () => setSelectedRow(index) : undefined}
+              onKeyDown={(event) => {
+                if (props.clickable) {
+                  if (event.key === 'Enter') {
+                    confirmMatch();
+                  } else if (event.key === 'Tab') {
+                    event.preventDefault();
+                    setSelectedRow((prevRow) =>
+                      prevRow === null ? 0 : prevRow + 1 === filteredRows.length ? 0 : prevRow + 1
+                    );
+                  }
+                }
+              }}
             />
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
+    </CustomTableContainer>
   );
 }
 

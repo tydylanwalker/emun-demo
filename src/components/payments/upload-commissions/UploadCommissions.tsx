@@ -18,10 +18,14 @@ import { IDirectOrder } from '../../../interfaces/IDirectOrder';
 import { IAdjustment } from '../../../interfaces/IAdjustment';
 import { NoteAddRounded, ExposureRounded, CreditCardRounded, GroupRounded } from '@mui/icons-material';
 import { ModeButtons } from './ModeButtons';
-import { IOrder } from '../../../data/ordersMock';
+import { IOrder, orders } from '../../../data/ordersMock';
 import { OrdersTable } from '../../orders/OrdersTable';
 import { IInvoiceValues, SingleEntryModal } from './SingleEntryModal';
 import dayjs from 'dayjs';
+import { checksMock } from '../../../data/checks';
+import { AddPayPeriod } from './forms/AddPayPeriod';
+import { IPayPeriod } from '../../../interfaces/IPayPeriod';
+import { unique } from 'next/dist/build/utils';
 export interface IHeaderMeta {
   label: string;
   id: keyof IUploadCommissionsRow;
@@ -33,42 +37,42 @@ export interface IHeaderMeta {
 
 const uploadCommissionsHeadersMeta: IHeaderMeta[] = [
   {
-    label: 'PO Number',
+    label: 'PO #',
     id: 'poNumber',
     type: 'string',
     align: 'left',
     required: true,
   },
   {
-    label: 'Invoice Number',
+    label: 'Invoice #',
     id: 'invoiceNumber',
     type: 'string',
     align: 'center',
     required: true,
   },
+  { label: 'Invoice Date', id: 'invoiceDate', type: 'date', align: 'center' },
   {
-    label: 'Invoice Amount',
+    label: 'Invoice $',
     id: 'invoiceAmount',
     type: 'currency',
     align: 'right',
     required: true,
   },
-  { label: 'Invoice Date', id: 'invoiceDate', type: 'date', align: 'center' },
-  { label: 'Customer ID', id: 'customerId', type: 'string', align: 'left', required: true },
-  { label: 'Customer Name', id: 'customerName', type: 'string', align: 'left' },
-  { label: 'Customer Address', id: 'customerAddress', type: 'string', align: 'left' },
-  { label: 'City', id: 'customerCity', type: 'string', align: 'left' },
-  { label: 'State', id: 'customerState', type: 'string', align: 'left' },
-  { label: 'Zip', id: 'customerZip', type: 'string', align: 'left' },
   {
-    label: 'Commission Amount',
+    label: 'Commission $',
     id: 'commissionAmount',
     type: 'currency',
     align: 'right',
     hide: true,
   },
-  { label: 'Order Date', id: 'orderDate', type: 'string', align: 'left', hide: true },
   { label: 'Rep', id: 'rep', type: 'string', align: 'left', hide: true },
+  { label: 'Customer ID', id: 'customerId', type: 'string', align: 'left', required: true },
+  { label: 'Customer', id: 'customerName', type: 'string', align: 'left' },
+  { label: 'Address', id: 'customerAddress', type: 'string', align: 'left' },
+  { label: 'City', id: 'customerCity', type: 'string', align: 'left' },
+  { label: 'State', id: 'customerState', type: 'string', align: 'left' },
+  { label: 'Zip', id: 'customerZip', type: 'string', align: 'left' },
+  { label: 'Order Date', id: 'orderDate', type: 'string', align: 'left', hide: true },
   { label: 'Writing Rep', id: 'writingRep', type: 'string', align: 'left', hide: true },
 ];
 
@@ -95,12 +99,14 @@ export interface IUploadCommissionsRow {
 }
 
 export function UploadCommissions() {
-  const vendorOptions = vendorsMock.map((vendor) => vendor.vendorName);
+  const vendorOptions = [...new Set(orders.map((order) => order.customerName))];
   const [vendor, setVendor] = useState('');
   const [payPeriodOptions, setPayPeriodOptions] = useState(['JUNE2024', 'JULY2024', 'AUG2024', 'SEPT2024', 'OCT2024']);
   const [payPeriod, setPayPeriod] = useState('');
   const [check, setCheck] = useState('');
-  const [checkOptions, setCheckOptions] = useState(['001', '002', '003', '004', '005']);
+  const [checkOptions, setCheckOptions] = useState(
+    checksMock.map((check) => `${check.number} - $${formatCurrency(Number(check.checkAmount))}`)
+  );
   const [addCheckOpen, setAddCheckOpen] = useState(false);
   const [directOrderOpen, setDirectOrderOpen] = useState(false);
   const [adjustmentOpen, setAdjustmentOpen] = useState(false);
@@ -113,22 +119,22 @@ export function UploadCommissions() {
   const [singleEntryMatchOrder, setSingleEntryMatchModal] = useState<IOrder | null>(null);
   const [successfulEntry, setSuccessfulEntry] = useState(false);
 
-  const invoiceTotals = commissionRows.reduce(
-    (sum, row) => (sum += Object.values(row).some((field) => field.error) ? 0 : row.invoiceAmount.value),
+  const commissionTotals = commissionRows.reduce(
+    (sum, row) => (sum += Object.values(row).some((field) => field.error) ? 0 : row.commissionAmount.value),
     0
   );
-  const checkAmount = 137000;
-  const remainingBalance = checkAmount - invoiceTotals;
+  const checkAmount = 20507.25;
+  const remainingBalance = checkAmount - commissionTotals;
 
   const saveCheck = (checkToSave: ICheckData) => {
     setAddCheckOpen(false);
     setCheckOptions([...checkOptions, checkToSave.number]);
     setCheck(checkToSave.number || '');
   };
-  const savePayPeriod = (payPeriod: string) => {
+  const savePayPeriod = (payPeriod: IPayPeriod) => {
     setAddPayPeriodOpen(false);
-    setPayPeriodOptions([...payPeriodOptions, payPeriod]);
-    setPayPeriod(payPeriod || '');
+    setPayPeriodOptions([...payPeriodOptions, payPeriod.payPeriod]);
+    setPayPeriod(payPeriod.payPeriod || '');
   };
   const saveDirectOrder = (order: IDirectOrder) => {
     setDirectOrderOpen(false);
@@ -259,20 +265,24 @@ export function UploadCommissions() {
       <Stack direction='row' justifyContent='space-between' mb={3}>
         <Stack>
           <Typography fontSize='1.75rem' fontWeight='bold'>
-            Upload Commissions
+            Enter Commissions
           </Typography>
           <Typography variant='subtitle1' fontSize='1.2rem'>
             {vendor}
             {payPeriod && '  |  ' + payPeriod}
             {check && '  |  ' + check}
           </Typography>
-          <UploadCommissionsSpeedDial show={commissionRows.length > 0} actions={speedDialActions} />
+          <UploadCommissionsSpeedDial show={mode !== null} actions={speedDialActions} />
         </Stack>
 
         {mode !== null && (
           <Stack direction='row' gap={2}>
             <HeaderAndValueCard header='Check Amount' value={'$' + formatCurrency(checkAmount)} width='18rem' />
-            <HeaderAndValueCard header='Invoice Totals' value={'$' + formatCurrency(invoiceTotals)} width='18rem' />
+            <HeaderAndValueCard
+              header='Commission Totals'
+              value={'$' + formatCurrency(commissionTotals)}
+              width='18rem'
+            />
             <HeaderAndValueCard
               header='Remaining Balance'
               value={'$' + formatCurrency(remainingBalance)}
@@ -284,14 +294,7 @@ export function UploadCommissions() {
       </Stack>
       {!commissionRows?.length && (
         <>
-          <Stack direction='row' gap={2} mb={3}>
-            <CustomInput
-              select
-              value={vendor}
-              label='Select Vendor'
-              options={vendorOptions}
-              onChange={(event) => setVendor(event.target.value as string)}
-            />
+          <Stack direction='row' gap={2} mb={1}>
             <CustomInput
               select
               value={payPeriod}
@@ -307,6 +310,13 @@ export function UploadCommissions() {
                   add new pay period +
                 </Button>
               }
+            />
+            <CustomInput
+              select
+              value={vendor}
+              label='Select Vendor'
+              options={vendorOptions}
+              onChange={(event) => setVendor(event.target.value as string)}
             />
             <CustomInput
               select
@@ -376,6 +386,11 @@ export function UploadCommissions() {
         vendor={vendor}
         vendorOptions={vendorOptions}
         saveCheck={saveCheck}
+      />
+      <AddPayPeriod
+        open={addPayPeriodOpen}
+        toggleDrawer={(open: boolean) => setAddPayPeriodOpen(open)}
+        savePayPeriod={savePayPeriod}
       />
       <AddDirectOrder
         open={directOrderOpen}

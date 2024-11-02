@@ -6,7 +6,7 @@ import { CustomInput } from '../../../shared/CustomInput';
 import { IDirectOrder } from '../../../../interfaces/IDirectOrder';
 
 export function AddDirectOrder(props: IAddDirectOrderProps) {
-  const [formData, setFormData] = useState<IDirectOrder>({
+  const initialData = {
     customer: '',
     shipTo: '',
     poNumber: '',
@@ -14,10 +14,13 @@ export function AddDirectOrder(props: IAddDirectOrderProps) {
     invoiceNumber: '',
     invoiceAmount: '',
     invoiceDate: null,
-  });
+  };
+
+  const [formData, setFormData] = useState<IDirectOrder>(initialData);
 
   const closeDrawer = () => {
     props.toggleDrawer(false);
+    setFormData(initialData);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

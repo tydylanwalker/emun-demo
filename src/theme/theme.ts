@@ -23,11 +23,10 @@ const componentOverrides: ThemeOptions['components'] = {
       },
     },
   },
-  MuiTableContainer: {
+  MuiTable: {
     styleOverrides: {
       root: {
-        boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.4)',
-        borderRadius: '1rem',
+        borderCollapse: 'collapse',
       },
     },
   },

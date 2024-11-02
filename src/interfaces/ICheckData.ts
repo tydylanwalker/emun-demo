@@ -14,7 +14,5 @@ export interface ICheckData {
   status: ECheckStatus;
   receivedDate: dayjs.Dayjs | null;
   payDate: dayjs.Dayjs | null;
-  commissionAmount: string;
-  statementGroup: string;
   additionalDetails?: string;
 }

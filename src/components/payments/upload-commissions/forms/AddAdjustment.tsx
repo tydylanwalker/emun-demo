@@ -6,10 +6,8 @@ import { CustomInput } from '../../../shared/CustomInput';
 import { IAdjustment } from '../../../../interfaces/IAdjustment';
 import dayjs from 'dayjs';
 
-// commissions are %
-
 export function AddAdjustment(props: IAddAdjustmentProps) {
-  const [formData, setFormData] = useState<IAdjustment>({
+  const initialData = {
     vendor: props.vendor,
     adjustmentDate: dayjs(),
     adjustmentAmount: '',
@@ -18,10 +16,13 @@ export function AddAdjustment(props: IAddAdjustmentProps) {
     repCommission: '',
     agencyCommission: '',
     reasonCode: '',
-  });
+  };
+
+  const [formData, setFormData] = useState<IAdjustment>(initialData);
 
   const closeDrawer = () => {
     props.toggleDrawer(false);
+    setFormData(initialData);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -103,6 +103,7 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
         />
       ) : (
         <TextField
+          onKeyDown={props.onKeyDown}
           autoFocus={props.autoFocus}
           select={props.select}
           size={props.size}
