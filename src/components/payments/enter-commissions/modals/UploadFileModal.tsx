@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Typography, Stack } from '@mui/material';
 import { useState, ChangeEvent } from 'react';
-import * as XLSX from 'xlsx';
+import * as ExcelJS from 'exceljs';
 import { parse } from 'csv-parse/browser/esm/sync';
 import { Close, Check } from '@mui/icons-material';
 import { CustomInput } from '../../../shared/CustomInput';
@@ -47,18 +46,30 @@ export function UploadFileModal(props: IUploadFileModalProps) {
       if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
         const reader = new FileReader();
 
-        reader.onload = (event: ProgressEvent<FileReader>) => {
+        reader.onload = async (event: ProgressEvent<FileReader>) => {
           const result = event.target?.result;
           if (result && typeof result !== 'string') {
-            const data = new Uint8Array(result);
-            const workbook = XLSX.read(data, { type: 'array' });
-            const firstSheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[firstSheetName];
-            const fileData = XLSX.utils.sheet_to_json<string[]>(worksheet, {
-              header: 1,
+            const workbook = new ExcelJS.Workbook();
+            await workbook.xlsx.load(result);
+
+            const firstSheet = workbook.worksheets[0];
+            const fileData: string[][] = [];
+
+            firstSheet.eachRow((row) => {
+              const rowValues = row.values;
+
+              if (Array.isArray(rowValues)) {
+                fileData.push(rowValues.slice(1) as string[]);
+              } else if (typeof rowValues === 'object') {
+                const valuesArray: string[] = Object.values(rowValues).slice(1) as string[];
+                fileData.push(valuesArray);
+              }
             });
-            setFileHeaders(fileData[0] as string[]);
-            setFileData(fileData.slice(1, fileData.length));
+
+            if (fileData.length > 0) {
+              setFileHeaders(fileData[0]);
+              setFileData(fileData.slice(1));
+            }
           }
         };
 

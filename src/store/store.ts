@@ -1,9 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import { themeReducer } from './slices/themeSlice';
+import { dataReducer } from './slices/dataSlice';
 
 const rootReducer = combineReducers({
   theme: themeReducer,
+  data: dataReducer,
 });
 
 export const store = configureStore({

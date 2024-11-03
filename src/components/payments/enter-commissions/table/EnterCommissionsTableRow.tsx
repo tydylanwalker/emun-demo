@@ -1,9 +1,9 @@
 import { TableRow, TableCell, Typography, Stack } from '@mui/material';
-import { ErrorEnum } from '../../../../data/ErrorEnum';
+import { ErrorEnum } from '../../../../data/mock/ErrorEnum';
 import { IHeaderMeta, IEnterCommissionsRow } from '../EnterCommissions';
 import { useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
-import { IOrder } from '../../../../data/ordersMock';
+import { IOrder } from '../../../../data/interfaces/IOrder';
 import { ErrorCommissionModal } from '../modals/ErrorCommissionModal';
 
 export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) {

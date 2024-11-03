@@ -9,6 +9,7 @@ import { getTheme } from '../theme/theme';
 import { GlobalStyles } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/ReduxHooks';
 import { getMode, setMode } from '../store/slices/themeSlice';
+import { initializeData } from '../store/thunks/initializeData';
 
 dayjs.extend(customParseFormat);
 
@@ -42,6 +43,10 @@ export function AppWrapper(props: IAppWrapper) {
     dispatch(setMode(preferredMode));
   }, [prefersDarkMode, dispatch]);
 
+  useEffect(() => {
+    dispatch(initializeData());
+  }, []);
+
   const theme = useMemo(() => getTheme(mode), [mode]);
   return (
     <ThemeProvider theme={theme}>
@@ -59,6 +64,5 @@ export function AppWrapper(props: IAppWrapper) {
 }
 
 interface IAppWrapper {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   children: any;
 }

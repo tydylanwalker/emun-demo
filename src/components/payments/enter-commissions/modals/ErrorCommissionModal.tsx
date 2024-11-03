@@ -3,7 +3,7 @@ import { OrdersTable } from '../../../orders/OrdersTable';
 import { CustomModal } from '../../../shared/CustomModal';
 import { IEnterCommissionsTableRowError } from '../table/EnterCommissionsTableRow';
 import { IHeaderMeta, IEnterCommissionsRow } from '../EnterCommissions';
-import { IOrder } from '../../../../data/ordersMock';
+import { IOrder } from '../../../../data/interfaces/IOrder';
 import { useEffect, useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
 import { CustomTableContainer } from '../../../shared/CustomTableContainer';

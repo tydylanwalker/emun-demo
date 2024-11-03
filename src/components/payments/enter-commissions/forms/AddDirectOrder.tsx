@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import { Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import { CustomInput } from '../../../shared/CustomInput';
-import { IDirectOrder } from '../../../../interfaces/IDirectOrder';
+import { IDirectOrder } from '../../../../data/interfaces/IDirectOrder';
 
 export function AddDirectOrder(props: IAddDirectOrderProps) {
   const initialData = {
@@ -23,7 +23,6 @@ export function AddDirectOrder(props: IAddDirectOrderProps) {
     setFormData(initialData);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (event: any) => {
     const { name, value } = event.target;
 

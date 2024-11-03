@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { IEnterCommissionsRow } from '../components/payments/enter-commissions/EnterCommissions';
-import { ErrorEnum } from '../data/ErrorEnum';
-import { IOrder, orders } from '../data/ordersMock';
+import { ErrorEnum } from '../data/mock/ErrorEnum';
+import { IOrder, orders } from '../data/interfaces/IOrder';
 
 /**
  * Function to find if there is a customer error and return which one
@@ -21,7 +21,6 @@ function findCustomerError(name: string, id: string, order: IOrder) {
   return ErrorEnum.noCustomer;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createRowWithMatchingRecords(row: { [key: string]: any }): IEnterCommissionsRow {
   // grab row data
   const poNumber = row['PO #'];

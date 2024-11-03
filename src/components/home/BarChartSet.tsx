@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { Order, ordersMock } from '../../data/orders';
+import { Order, ordersMock } from '../../data/mock/orders';
 
 const monthNames: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 

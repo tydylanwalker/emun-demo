@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IOrder, orders } from '../../data/ordersMock';
+import { IOrder, orders } from '../../data/interfaces/IOrder';
 import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { CustomInput } from '../shared/CustomInput';
 import { OrdersTableRow } from './OrdersTableRow';

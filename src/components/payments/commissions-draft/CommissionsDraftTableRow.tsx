@@ -1,6 +1,6 @@
 import { Stack, TableCell, TableRow, Typography, Button, IconButton } from '@mui/material';
 import { formatCellData } from '../../../functions/formatCellData';
-import { ICommissionDraft } from '../../../data/commissions';
+import { ICommissionDraft } from '../../../data/mock/commissions';
 import { ICommissionDraftHeader } from './CommissionsDraftTable';
 import { DeleteOutlineRounded, EditRounded, SafetyDividerRounded } from '@mui/icons-material';
 import { useState } from 'react';

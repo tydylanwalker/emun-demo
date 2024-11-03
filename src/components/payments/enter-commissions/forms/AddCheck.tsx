@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import { Box, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import dayjs from 'dayjs';
-import { ICheckData, ECheckStatus } from '../../../../interfaces/ICheckData';
+import { ICheckData, ECheckStatus } from '../../../../data/interfaces/ICheckData';
 import { CustomInput } from '../../../shared/CustomInput';
 
 export function AddCheck(props: IAddCheckProps) {
@@ -24,7 +24,6 @@ export function AddCheck(props: IAddCheckProps) {
     setFormData(initialData);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (event: any) => {
     const { name, value } = event.target;
 

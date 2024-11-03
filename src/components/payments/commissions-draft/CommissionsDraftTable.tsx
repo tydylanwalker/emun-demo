@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { CustomInput } from '../../shared/CustomInput';
-import { ICommissionDraft, commissions } from '../../../data/commissions';
+import { ICommissionDraft, commissions } from '../../../data/mock/commissions';
 import { CommissionsDraftTableRow } from './CommissionsDraftTableRow';
-import { vendorsMock } from '../../../data/vendors';
+import { vendorsMock } from '../../../data/mock/vendors';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
 import { Visibility } from '@mui/icons-material';

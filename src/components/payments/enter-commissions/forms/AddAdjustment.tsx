@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import { Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import { CustomInput } from '../../../shared/CustomInput';
-import { IAdjustment } from '../../../../interfaces/IAdjustment';
+import { IAdjustment } from '../../../../data/interfaces/IAdjustment';
 import dayjs from 'dayjs';
 
 export function AddAdjustment(props: IAddAdjustmentProps) {
@@ -25,7 +25,6 @@ export function AddAdjustment(props: IAddAdjustmentProps) {
     setFormData(initialData);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (event: any) => {
     const { name, value } = event.target;
 

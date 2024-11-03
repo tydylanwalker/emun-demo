@@ -59,14 +59,12 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
     // }
 
     if (props.onChange) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       props.onChange({ target: { name: props.name, value } } as any);
     }
   };
 
   const handleDateChange = (newValue: dayjs.Dayjs | null) => {
     if (newValue && props.onChange) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       props.onChange({ target: { name: props.name, value: newValue } } as any);
     }
   };

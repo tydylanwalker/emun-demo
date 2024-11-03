@@ -1,7 +1,7 @@
 import { TableCell, TableRow, TableRowProps, Typography } from '@mui/material';
 import { IOrderHeader } from './OrdersTable';
 import { formatCellData } from '../../functions/formatCellData';
-import { IOrder } from '../../data/ordersMock';
+import { IOrder } from '../../data/interfaces/IOrder';
 
 export function OrdersTableRow(props: IOrdersTableRowProps & TableRowProps) {
   return (

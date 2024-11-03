@@ -3,7 +3,7 @@ import { IHeaderMeta, IEnterCommissionsRow } from '../EnterCommissions';
 import { EnterCommissionsTableTaskBar } from './EnterCommissionsTableTaskBar';
 import { useEffect, useState } from 'react';
 import { EnterCommissionsTableRow } from './EnterCommissionsTableRow';
-import { IOrder } from '../../../../data/ordersMock';
+import { IOrder } from '../../../../data/interfaces/IOrder';
 import { CustomTableContainer } from '../../../shared/CustomTableContainer';
 
 export function EnterCommissionsTable(props: IEnterCommissionsTableProps) {

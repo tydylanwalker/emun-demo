@@ -19,7 +19,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { DrawerHeader } from '../DrawerHeader';
 import Link from 'next/link';
-import { sidebarWidth, topbarHeight } from '../../../data/constants';
+import { sidebarWidth, topbarHeight } from '../../../data/mock/constants';
 import EmunLogo from '../../shared/EmunLogo';
 import { useAppSelector } from '../../../hooks/ReduxHooks';
 import { isModeDark } from '../../../store/slices/themeSlice';
