@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["EMUN", "topbar"],
+  "cSpell.words": ["EMUN", "reduxjs", "topbar"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "[javascript]": {

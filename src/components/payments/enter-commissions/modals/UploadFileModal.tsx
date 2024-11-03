@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Typography, Stack, useMediaQuery } from '@mui/material';
+import { Button, Typography, Stack } from '@mui/material';
 import { useState, ChangeEvent } from 'react';
 import * as XLSX from 'xlsx';
 import { parse } from 'csv-parse/browser/esm/sync';
@@ -7,6 +7,8 @@ import { Close, Check } from '@mui/icons-material';
 import { CustomInput } from '../../../shared/CustomInput';
 import { CustomModal } from '../../../shared/CustomModal';
 import { IHeaderMeta } from '../EnterCommissions';
+import { useAppSelector } from '../../../../hooks/ReduxHooks';
+import { isModeDark } from '../../../../store/slices/themeSlice';
 
 interface IEmunHeaders {
   label: string;
@@ -119,7 +121,7 @@ export function UploadFileModal(props: IUploadFileModalProps) {
     props.onClose();
   };
 
-  const boxShadow = useMediaQuery('(prefers-color-scheme: dark)')
+  const boxShadow = useAppSelector(isModeDark)
     ? '0px 2px 20px rgba(125, 125, 125, 0.4)'
     : '0px 2px 16px rgba(0, 0, 0, 0.4)';
 

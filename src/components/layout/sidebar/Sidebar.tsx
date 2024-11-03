@@ -11,7 +11,7 @@ import {
   PriceChangeRounded,
   PaidRounded,
 } from '@mui/icons-material';
-import { Box, IconButton, List, useMediaQuery } from '@mui/material';
+import { Box, IconButton, List } from '@mui/material';
 import { SidebarItem } from './SidebarItem';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
@@ -20,7 +20,9 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { DrawerHeader } from '../DrawerHeader';
 import Link from 'next/link';
 import { sidebarWidth, topbarHeight } from '../../../data/constants';
-import EmunLogo from '../../EmunLogo';
+import EmunLogo from '../../shared/EmunLogo';
+import { useAppSelector } from '../../../hooks/ReduxHooks';
+import { isModeDark } from '../../../store/slices/themeSlice';
 
 export interface ISidebarContent {
   icon: JSX.Element;
@@ -138,7 +140,7 @@ const Drawer = styled(MuiDrawer, {
 export function Sidebar(props: ISidebarProps) {
   const theme = useTheme();
   const { open, handleDrawerClose, handleDrawerOpen } = props;
-  const color = useMediaQuery('(prefers-color-scheme: dark)') ? '#fff' : 'secondary.main';
+  const color = useAppSelector(isModeDark) ? '#fff' : 'secondary.main';
 
   return (
     <Drawer variant='permanent' open={open}>

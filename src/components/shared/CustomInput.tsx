@@ -1,13 +1,15 @@
-import { FormControl, InputAdornment, MenuItem, Stack, TextField, TextFieldProps, useMediaQuery } from '@mui/material';
+import { FormControl, InputAdornment, MenuItem, Stack, TextField, TextFieldProps } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { Search } from '@mui/icons-material';
+import { useAppSelector } from '../../hooks/ReduxHooks';
+import { isModeDark } from '../../store/slices/themeSlice';
 
 export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
   const inputStyles = {
     '& .MuiOutlinedInput-root': {
       borderRadius: 5,
-      border: useMediaQuery('(prefers-color-scheme: dark)') ? 1 : 0,
+      border: useAppSelector(isModeDark) ? 1 : 0,
       position: 'relative',
       '& fieldset': {
         display: 'none',

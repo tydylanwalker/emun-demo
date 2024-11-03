@@ -1,4 +1,6 @@
-import { Stack, Typography, useMediaQuery } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
+import { useAppSelector } from '../../hooks/ReduxHooks';
+import { isModeDark } from '../../store/slices/themeSlice';
 
 export function HeaderAndValueCard(props: IHeaderAndValueCardProps) {
   return (
@@ -7,9 +9,7 @@ export function HeaderAndValueCard(props: IHeaderAndValueCardProps) {
       width={props.width || '12.5rem'}
       sx={{
         padding: '1rem',
-        boxShadow: useMediaQuery('(prefers-color-scheme: dark)')
-          ? '-2px 2px 16px rgba(50, 50, 50, 1)'
-          : '0px 2px 16px rgba(0, 0, 0, 0.4)',
+        boxShadow: useAppSelector(isModeDark) ? '-2px 2px 16px rgba(50, 50, 50, 1)' : '0px 2px 16px rgba(0, 0, 0, 0.4)',
         bgcolor: 'secondary.main',
       }}
     >

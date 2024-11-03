@@ -2,7 +2,7 @@ import { Toolbar, IconButton, Typography, Box, styled } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MenuIcon from '@mui/icons-material/Menu';
 import { topbarHeight, sidebarWidth } from '../../../data/constants';
-import EmunLogo from '../../EmunLogo';
+import EmunLogo from '../../shared/EmunLogo';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -35,18 +35,7 @@ const AppBar = styled(MuiAppBar, {
 export function TopBar(props: ITopBarProps) {
   const { open, handleDrawerOpen } = props;
   return (
-    <AppBar
-      position='fixed'
-      open={props.open}
-      // sx={
-      //   useMediaQuery('(prefers-color-scheme: light)')
-      //     ? {
-      //         background: 'linear-gradient(to right, #4B53D9, #6967CA, #B094AE)',
-      //       }
-      //     : {}
-      // }
-      sx={{ bgcolor: 'secondary.dark' }}
-    >
+    <AppBar position='fixed' open={props.open} sx={{ bgcolor: 'secondary.dark' }}>
       <Toolbar sx={{ boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)' }}>
         <IconButton
           color='inherit'

@@ -99,7 +99,6 @@ const commissionsHeader: ICommissionDraftHeader[] = [
 export function CommissionsDraftTable() {
   const [searchText, setSearchText] = useState('');
 
-  console.log(commissions);
   const [rows, setRows] = useState(commissions);
   const [filteredRows, setFilteredRows] = useState(commissions);
 
