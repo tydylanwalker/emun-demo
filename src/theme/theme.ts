@@ -19,7 +19,8 @@ const componentOverrides: ThemeOptions['components'] = {
     styleOverrides: {
       root: {
         textTransform: 'none',
-        borderRadius: 8,
+        borderRadius: 10,
+        height: 'fit-content',
       },
     },
   },

@@ -1,56 +1,57 @@
-import { Stack, TableCell, TableRow, Typography, Button } from '@mui/material';
+import { Stack, TableCell, TableRow, Typography, Button, IconButton } from '@mui/material';
 import { formatCellData } from '../../../functions/formatCellData';
 import { ICommissionDraft } from '../../../data/commissions';
 import { ICommissionDraftHeader } from './CommissionsDraftTable';
-import { SafetyDividerRounded } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
-import { ConfirmDeleteModal } from '../../shared/ConfirmDeleteModal';
+import { DeleteOutlineRounded, EditRounded, SafetyDividerRounded } from '@mui/icons-material';
+import { useState } from 'react';
+import { CustomModal } from '../../shared/CustomModal';
 
 export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) {
-  const [totalCommissionAmount, setTotalCommissionAmount] = useState(0);
-  const [repCommissionAmount, setRepCommissionAmount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [, setEditDrawerOpen] = useState(false);
 
-  let commissionId = props.headers.find((header) => header.id === 'commissionAmount')?.id;
-  let commissionTotal = commissionId ? parseFloat(props.row[commissionId].toString()) : 0.0;
+  // ! LT Im confused what your doing here
+  // const [totalCommissionAmount, setTotalCommissionAmount] = useState(0);
+  // const [repCommissionAmount, setRepCommissionAmount] = useState(0);
 
-  let repCommissionRateId = props.headers.find((header) => header.id === 'repCommissionRate')?.id;
-  let repCommissionRate = repCommissionRateId ? parseFloat(props.row[repCommissionRateId].toString()) : 0.0;
+  // const commissionTotal = parseFloat(props.row['commissionAmount'].toString()) || 0.0;
+  // const repCommissionRate = parseFloat(props.row['repCommissionRate'].toString()) || 0.0;
+  // const invoiceAmount = parseFloat(props.row['invoiceAmount'].toString()) || 0.0;
+  // const vendorCommission = parseFloat(props.row['vendorCommission'].toString()) || 0.0;
 
-  let invoiceAmountId = props.headers.find((header) => header.id === 'invoiceAmount')?.id;
-  let invoiceAmount = invoiceAmountId ? parseFloat(props.row[invoiceAmountId].toString()) : 0.0;
-
-  let vendorCommissionId = props.headers.find((header) => header.id === 'vendorCommission')?.id;
-  let vendorCommission = vendorCommissionId ? parseFloat(props.row[vendorCommissionId].toString()) : 0.0;
-
-  useEffect(() => {
-    setRepCommissionAmount((commissionTotal * repCommissionRate) / 100);
-    setTotalCommissionAmount((invoiceAmount * vendorCommission) / 100);
-  }, [props.row]);
+  // useEffect(() => {
+  //   setRepCommissionAmount((commissionTotal * repCommissionRate) / 100);
+  //   setTotalCommissionAmount((invoiceAmount * vendorCommission) / 100);
+  // }, [commissionTotal, invoiceAmount, props.row, repCommissionRate, vendorCommission]);
 
   const handleDelete = (row: ICommissionDraft) => {
     props.handleDeleteRow(row);
-    setIsModalOpen(false); // Close the modal
+    setIsModalOpen(false);
   };
 
   return (
-    <TableRow sx={{ bgcolor: props.color, whiteSpace: 'nowrap', alignItems: 'center' }}>
-      <TableCell align={'center'}>
-        <Stack direction='row' gap={1} alignItems='center' justifyContent='space-around'>
-          <Button variant='contained' color='error' onClick={() => setIsModalOpen(true)}>
-            Delete Item
-          </Button>
+    <TableRow sx={{ bgcolor: props.color }}>
+      <TableCell>
+        <Stack direction='row' gap={2}>
+          <IconButton color='error' onClick={() => setIsModalOpen(true)}>
+            <DeleteOutlineRounded />
+          </IconButton>
+          <IconButton color='inherit' onClick={() => setEditDrawerOpen(true)}>
+            <EditRounded />
+          </IconButton>
         </Stack>
       </TableCell>
       {props.headers.map((header, index) => (
-        <TableCell key={index} align={header.align || 'center'}>
-          <Stack direction='row' gap={1} alignItems='center' justifyContent='space-around'>
-            <Typography alignItems='center'>
-              {header.id === 'repCommissionAmount'
+        <TableCell key={index}>
+          <Stack justifyContent={header.align} direction='row' gap={2}>
+            <Typography>
+              {formatCellData(header.type, props.row[header.id])}
+              {/* LT im confused wut you doing here */}
+              {/* {header.id === 'repCommissionAmount'
                 ? formatCellData(header.type, repCommissionAmount)
                 : header.id === 'commissionAmount'
                   ? formatCellData(header.type, totalCommissionAmount)
-                  : formatCellData(header.type, props.row[header.id as keyof ICommissionDraft])}
+                  : formatCellData(header.type, props.row[header.id])} */}
             </Typography>
             {header.id === 'repCommissionRate' ? (
               <SafetyDividerRounded onClick={() => alert('Open Split Commissions Modal')} sx={{ cursor: 'pointer' }} />
@@ -58,12 +59,19 @@ export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) 
           </Stack>
         </TableCell>
       ))}
-
-      <ConfirmDeleteModal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        onConfirm={() => handleDelete(props.row)}
-      />
+      <CustomModal open={isModalOpen} closeModal={() => setIsModalOpen(false)} header='Confirm Delete'>
+        <Stack gap={3}>
+          <Typography>Are you sure you want to delete this invoice from the commission draft?</Typography>
+          <Stack justifyContent='flex-end' direction='row' gap={2}>
+            <Button variant='outlined' onClick={() => setIsModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button color='error' variant='outlined' onClick={() => handleDelete(props.row)}>
+              Delete
+            </Button>
+          </Stack>
+        </Stack>
+      </CustomModal>
     </TableRow>
   );
 }

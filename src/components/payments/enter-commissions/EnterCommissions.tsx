@@ -9,7 +9,7 @@ import { createRowWithMatchingRecords } from '../../../functions/createRowWithMa
 import { ErrorEnum } from '../../../data/ErrorEnum';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
-import { EnterCommissionsSpeedDial } from '../../shared/EnterCommissionsSpeedDial';
+import { CommissionsSpeedDial } from '../../shared/CommissionsSpeedDial';
 import { AddDirectOrder } from './forms/AddDirectOrder';
 import { AddAdjustment } from './forms/AddAdjustment';
 import { IDirectOrder } from '../../../interfaces/IDirectOrder';
@@ -115,8 +115,8 @@ export function EnterCommissions() {
   const [addCheckOpen, setAddCheckOpen] = useState(false);
   const [directOrderOpen, setDirectOrderOpen] = useState(false);
   const [adjustmentOpen, setAdjustmentOpen] = useState(false);
-  const [creditOpen, setCreditOpen] = useState(false);
-  const [customersOpen, setCustomersOpen] = useState(false);
+  const [, setCreditOpen] = useState(false);
+  const [, setCustomersOpen] = useState(false);
   const [addPayPeriodOpen, setAddPayPeriodOpen] = useState(false);
   const [mode, setMode] = useState<EModes | null>(null);
   const [uploadFileModal, setUploadFileModal] = useState(false);
@@ -145,9 +145,11 @@ export function EnterCommissions() {
     setPayPeriod(payPeriod.payPeriod || '');
   };
   const saveDirectOrder = (order: IDirectOrder) => {
+    console.log(order);
     setDirectOrderOpen(false);
   };
   const saveAdjustment = (adjustment: IAdjustment) => {
+    console.log(adjustment);
     setAdjustmentOpen(false);
   };
 
@@ -260,35 +262,44 @@ export function EnterCommissions() {
   };
 
   const speedDialActions = [
-    { icon: <NoteAddRounded fontSize='large' />, name: 'Create Direct Order', action: () => setDirectOrderOpen(true) },
-    { icon: <ExposureRounded fontSize='large' />, name: 'Adjustment', action: () => setAdjustmentOpen(true) },
-    { icon: <CreditCardRounded fontSize='large' />, name: 'Credit', action: () => setCreditOpen(true) },
-    { icon: <GroupRounded fontSize='large' />, name: 'Customers', action: () => setCustomersOpen(true) },
+    { icon: <NoteAddRounded fontSize='small' />, name: 'Create Direct Order', action: () => setDirectOrderOpen(true) },
+    { icon: <ExposureRounded fontSize='small' />, name: 'Adjustment', action: () => setAdjustmentOpen(true) },
+    { icon: <CreditCardRounded fontSize='small' />, name: 'Credit', action: () => setCreditOpen(true) },
+    { icon: <GroupRounded fontSize='small' />, name: 'Customers', action: () => setCustomersOpen(true) },
   ];
 
   return (
     // Page Header Stuff
-    <Stack gap={1} height={1}>
-      <Stack direction='row' justifyContent='space-between' mb={3}>
+    <Stack height={1}>
+      <Stack direction='row' justifyContent='space-between' gap={2} mb={1}>
         <Stack>
           <Typography fontSize='1.75rem' fontWeight='bold'>
             Enter Commissions
           </Typography>
-          <Typography variant='subtitle1' fontSize='1.2rem'>
+          <Typography variant='subtitle2'>
             {vendor}
             {payPeriod && '  |  ' + payPeriod}
             {check && '  |  ' + check}
           </Typography>
-          <EnterCommissionsSpeedDial show={mode !== null} actions={speedDialActions} />
+          {mode !== null && (
+            <Stack direction='row' gap={3} alignItems='center' position='relative' my={1}>
+              <CommissionModesToggleButtons mode={mode} setMode={setMode} />
+              <CommissionsSpeedDial show={mode !== null} actions={speedDialActions} />
+            </Stack>
+          )}
         </Stack>
 
-        <Stack direction='row' gap={2} sx={{ opacity: mode ? 1 : 0, transition: 'opacity 2s ease-in' }}>
-          <HeaderAndValueCard header='Check Amount' value={'$' + formatCurrency(checkAmount)} width='18rem' />
-          <HeaderAndValueCard header='Commission Totals' value={'$' + formatCurrency(commissionTotals)} width='18rem' />
+        <Stack
+          direction='row'
+          gap={2}
+          sx={{ opacity: mode ? 1 : 0, transition: 'opacity 2s ease-in' }}
+          height='fit-content'
+        >
+          <HeaderAndValueCard header='Check Amount' value={'$' + formatCurrency(checkAmount)} />
+          <HeaderAndValueCard header='Commission Totals' value={'$' + formatCurrency(commissionTotals)} />
           <HeaderAndValueCard
             header='Remaining Balance'
             value={'$' + formatCurrency(remainingBalance)}
-            width='18rem'
             color={remainingBalance !== 0 ? 'error' : 'inherit'}
           />
         </Stack>
@@ -298,6 +309,7 @@ export function EnterCommissions() {
         <>
           <Stack direction='row' gap={2} mb={1}>
             <CustomInput
+              size='small'
               select
               value={payPeriod}
               label='Select Pay Period'
@@ -314,6 +326,7 @@ export function EnterCommissions() {
               }
             />
             <CustomInput
+              size='small'
               select
               value={vendor}
               label='Select Vendor'
@@ -321,6 +334,7 @@ export function EnterCommissions() {
               onChange={(event) => setVendor(event.target.value as string)}
             />
             <CustomInput
+              size='small'
               select
               value={check}
               label='Select Check'
@@ -348,7 +362,6 @@ export function EnterCommissions() {
         </>
       ) : (
         <>
-          <CommissionModesToggleButtons mode={mode} setMode={setMode} />
           {mode === EModes.view ? (
             <EnterCommissionsTable
               rows={commissionRows}

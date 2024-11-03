@@ -4,7 +4,14 @@ import { EModes } from '../EnterCommissions';
 
 export default function CommissionModesToggleButtons(props: ICommissionModesToggleButtonsProps) {
   return (
-    <ToggleButtonGroup color='primary' value={props.mode} exclusive onChange={(_, mode) => props.setMode(mode)}>
+    <ToggleButtonGroup
+      color='primary'
+      value={props.mode}
+      exclusive
+      onChange={(_, mode) => props.setMode(mode)}
+      size='small'
+      sx={{ whiteSpace: 'nowrap' }}
+    >
       <ToggleButton value={EModes.manual}>{EModes.manual}</ToggleButton>
       <ToggleButton value={EModes.view}>{EModes.view}</ToggleButton>
     </ToggleButtonGroup>

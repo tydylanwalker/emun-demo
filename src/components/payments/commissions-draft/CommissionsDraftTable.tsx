@@ -8,6 +8,7 @@ import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
 import { Visibility } from '@mui/icons-material';
 import { CustomTableContainer } from '../../shared/CustomTableContainer';
+import { CommissionsSpeedDial } from '../../shared/CommissionsSpeedDial';
 
 export interface ICommissionDraftHeader {
   label: string;
@@ -19,23 +20,23 @@ export interface ICommissionDraftHeader {
 const commissionsHeader: ICommissionDraftHeader[] = [
   {
     label: 'Check #',
-    align: 'center',
+    align: 'left',
     id: 'checkNumber',
   },
   {
     label: 'Check Amount',
-    align: 'center',
+    align: 'right',
     id: 'checkAmount',
     type: 'currency',
   },
   {
     label: 'Pay Period',
-    align: 'center',
+    align: 'left',
     id: 'payPeriod',
   },
   {
     label: 'Invoice #',
-    align: 'center',
+    align: 'left',
     id: 'invoiceNumber',
   },
   {
@@ -45,13 +46,13 @@ const commissionsHeader: ICommissionDraftHeader[] = [
   },
   {
     label: 'Invoice Amount',
-    align: 'center',
+    align: 'right',
     id: 'invoiceAmount',
     type: 'currency',
   },
   {
     label: 'Vendor',
-    align: 'center',
+    align: 'left',
     id: 'vendor',
   },
   {
@@ -62,13 +63,13 @@ const commissionsHeader: ICommissionDraftHeader[] = [
   },
   {
     label: 'Total Comm Amt',
-    align: 'center',
+    align: 'right',
     id: 'commissionAmount',
     type: 'currency',
   },
   {
     label: 'Rep Comm Amt.',
-    align: 'center',
+    align: 'right',
     id: 'repCommissionAmount',
     type: 'currency',
   },
@@ -85,7 +86,7 @@ const commissionsHeader: ICommissionDraftHeader[] = [
   },
   {
     label: 'strCategory',
-    align: 'center',
+    align: 'left',
     id: 'strCategory',
   },
   {
@@ -165,31 +166,41 @@ export function CommissionsDraftTable() {
   }, [filteredRows]);
 
   const handleDeleteRow = (row: ICommissionDraft) => {
-    let items = rows;
+    const items = rows;
 
     setRows(items.filter((item) => item !== row));
   };
 
   return (
     <>
-      <Stack direction='row' justifyContent='space-between'>
-        <Typography variant='h4' fontWeight='bold' p={2}>
-          Commissions Draft
-        </Typography>
-        <Stack direction='row' gap={2} mb={2}>
-          <HeaderAndValueCard header='Invoice Total Amount' value={'$' + formatCurrency(invoicesTotal)} width='18rem' />
-          <HeaderAndValueCard header='Total Commission' value={'$' + formatCurrency(commissionAmount)} width='18rem' />
-          <HeaderAndValueCard header='Rep Commission' value={'$' + formatCurrency(repAmount)} width='18rem' />
+      <Stack direction='row' justifyContent='space-between' gap={2} mb={2}>
+        <Stack>
+          <Typography variant='h4' fontWeight='bold' p={2}>
+            Commissions Draft
+          </Typography>
+          <Stack direction='row' gap={3} alignItems='center'>
+            <Button size='large' variant='contained'>
+              <Visibility /> View Statement
+            </Button>
+            <Button color='primary' size='large' variant='outlined'>
+              Close Draft
+            </Button>
+            <CommissionsSpeedDial show actions={[]} />
+          </Stack>
+        </Stack>
+        <Stack direction='row' gap={2} height='fit-content'>
+          <HeaderAndValueCard header='Invoice Amount' value={'$' + formatCurrency(invoicesTotal)} />
+          <HeaderAndValueCard header='Total Commission' value={'$' + formatCurrency(commissionAmount)} />
+          <HeaderAndValueCard header='Rep Commission' value={'$' + formatCurrency(repAmount)} />
         </Stack>
       </Stack>
-      <Button size='large' sx={{ width: 'fit-content' }}>
-        <Visibility /> View Statement
-      </Button>
+
       <CustomTableContainer
         taskBar={
-          <Stack px={1} pb={1} gap={0} position='sticky' top={0} zIndex={2} bgcolor='background.paper'>
+          <Stack px={1} pb={1} gap={0} position='sticky' top={0} zIndex={2}>
             <Stack direction='row' width={1} gap={2}>
               <CustomInput
+                size='small'
                 select
                 value={payPeriod}
                 label='Select Pay Period'
@@ -197,6 +208,7 @@ export function CommissionsDraftTable() {
                 onChange={(event) => setPayPeriod(event.target.value as string)}
               />
               <CustomInput
+                size='small'
                 select
                 value={vendor}
                 label='Select Vendor'
@@ -204,6 +216,7 @@ export function CommissionsDraftTable() {
                 onChange={(event) => setVendor(event.target.value as string)}
               />
               <CustomInput
+                size='small'
                 select
                 value={rep}
                 label='Select Rep'
@@ -221,17 +234,11 @@ export function CommissionsDraftTable() {
         }
       >
         <Table stickyHeader>
-          <TableHead sx={{ bgcolor: 'secondary.main' }}>
+          <TableHead>
             <TableRow>
-              <TableCell align={'center'} sx={{ fontSize: '1.2rem', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
-                {/* Empty header for delete button */}
-              </TableCell>
+              <TableCell>{/* Empty header for delete button */}</TableCell>
               {commissionsHeader.map((header, index) => (
-                <TableCell
-                  key={index}
-                  align={header.align || 'left'}
-                  sx={{ fontSize: '1.2rem', fontWeight: 'bold', whiteSpace: 'nowrap' }}
-                >
+                <TableCell key={index} align={header.align || 'left'}>
                   {header.label}
                 </TableCell>
               ))}

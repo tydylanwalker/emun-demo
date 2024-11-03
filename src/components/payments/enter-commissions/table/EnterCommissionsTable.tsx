@@ -31,7 +31,7 @@ export function EnterCommissionsTable(props: IEnterCommissionsTableProps) {
     >
       <Table stickyHeader>
         <TableHead>
-          <TableRow sx={{ bgcolor: 'secondary.main' }}>
+          <TableRow>
             {props.headers.map((header, index) => (
               <TableCell key={index} align={header.align || 'left'}>
                 {header.label}

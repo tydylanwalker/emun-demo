@@ -32,13 +32,9 @@ export function ErrorCommissionModal(props: IErrorCommissionModalProps) {
       <Stack mb={2} gap={1}>
         <CustomTableContainer header={<Alert color='error'>Error: {props.errorValues?.reason}</Alert>}>
           <Table stickyHeader>
-            <TableHead sx={{ bgcolor: 'secondary.main' }}>
+            <TableHead>
               {props.headers.map((header, index) => (
-                <TableCell
-                  key={index}
-                  align={header.align || 'left'}
-                  sx={{ fontSize: '1.2rem', fontWeight: 'bold', whiteSpace: 'nowrap' }}
-                >
+                <TableCell key={index} align={header.align || 'left'}>
                   {header.label}
                 </TableCell>
               ))}

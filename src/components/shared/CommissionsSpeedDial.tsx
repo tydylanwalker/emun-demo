@@ -10,14 +10,14 @@ interface ISpeedDialAction {
   action: () => void;
 }
 
-export function EnterCommissionsSpeedDial(props: IEnterCommissionsSpeedDialProps) {
+export function CommissionsSpeedDial(props: IEnterCommissionsSpeedDialProps) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
-    <Stack py={2} height='2.5rem'>
+    <Stack height='3rem' justifyContent='center'>
       {props.show && (
         <>
           <Backdrop open={open} onClick={handleClose} sx={{ zIndex: 1000 }} />
@@ -25,7 +25,14 @@ export function EnterCommissionsSpeedDial(props: IEnterCommissionsSpeedDialProps
             ariaLabel='speed-dial'
             icon={<SpeedDialIcon />}
             direction='right'
-            sx={{ position: 'absolute', zIndex: 1001 }}
+            sx={{
+              zIndex: 1001,
+              position: 'absolute',
+              '& .MuiFab-root': {
+                width: '2.5rem',
+                height: '2.5rem',
+              },
+            }}
             onOpen={handleOpen}
             onClose={handleClose}
           >
@@ -43,8 +50,8 @@ export function EnterCommissionsSpeedDial(props: IEnterCommissionsSpeedDialProps
                   },
                 }}
                 sx={{
-                  border: 1,
-                  p: 3,
+                  bgcolor: 'secondary.main',
+                  boxShadow: '-2px 2px 16px rgba(50, 50, 50, 1)',
                 }}
               />
             ))}
