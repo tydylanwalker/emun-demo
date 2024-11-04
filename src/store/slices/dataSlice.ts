@@ -51,7 +51,7 @@ const dataSlice = createSlice({
 });
 
 export const getOrders = (state: RootState) => state.data.orders;
-export const getChecks = (state: RootState) => state.data.orders;
+export const getChecks = (state: RootState) => state.data.checks;
 export const getVendors = (state: RootState) => state.data.vendors;
 export const getPayPeriods = (state: RootState) => state.data.payPeriods;
 export const getInvoices = (state: RootState) => state.data.invoices;

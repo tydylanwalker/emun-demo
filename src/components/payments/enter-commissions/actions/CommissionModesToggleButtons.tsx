@@ -1,6 +1,6 @@
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { EModes } from '../EnterCommissions';
+import { EEnterCommissionModes } from '../EnterCommissions';
 
 export default function CommissionModesToggleButtons(props: ICommissionModesToggleButtonsProps) {
   return (
@@ -12,13 +12,13 @@ export default function CommissionModesToggleButtons(props: ICommissionModesTogg
       size='small'
       sx={{ whiteSpace: 'nowrap' }}
     >
-      <ToggleButton value={EModes.manual}>{EModes.manual}</ToggleButton>
-      <ToggleButton value={EModes.view}>{EModes.view}</ToggleButton>
+      <ToggleButton value={EEnterCommissionModes.manual}>{EEnterCommissionModes.manual}</ToggleButton>
+      <ToggleButton value={EEnterCommissionModes.view}>{EEnterCommissionModes.view}</ToggleButton>
     </ToggleButtonGroup>
   );
 }
 
 interface ICommissionModesToggleButtonsProps {
-  setMode: (mode: EModes) => void;
-  mode: EModes;
+  setMode: (mode: EEnterCommissionModes) => void;
+  mode: EEnterCommissionModes;
 }

@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 export enum EPayPeriodStatus {
   open = 'Open',
   close = 'Closed',
@@ -8,6 +6,6 @@ export enum EPayPeriodStatus {
 export interface IPayPeriod {
   payPeriod: string;
   status: string;
-  startDate: dayjs.Dayjs | null;
-  endDate: dayjs.Dayjs | null;
+  startDate: string;
+  endDate: string;
 }

@@ -3,24 +3,33 @@ import Button from '@mui/material/Button';
 import { Box, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import dayjs from 'dayjs';
-import { ICheckData, ECheckStatus } from '../../../../data/interfaces/ICheckData';
 import { CustomInput } from '../../../shared/CustomInput';
+import { ECheckStatus } from '../../../../data/enums/ECheckStatus';
+import { ICheck } from '../../../../data/interfaces/ICheck';
+import { useAppDispatch, useAppSelector } from '../../../../hooks/ReduxHooks';
+import { getVendors } from '../../../../store/slices/dataSlice';
+import { getAddCheckOpen, getVendorSelected, setAddCheckOpen } from '../../../../store/slices/enterCommissionsSlice';
 
-export function AddCheck(props: IAddCheckProps) {
+export function AddCheck() {
+  const dispatch = useAppDispatch();
+  const vendors = useAppSelector(getVendors);
+  const vendorOptions = vendors.map((vendor) => vendor.VendorName);
+  const vendorSelected = useAppSelector(getVendorSelected);
+
   const initialData = {
-    vendor: props.vendor,
+    vendor: vendorSelected,
     payPeriod: '',
     number: '',
-    checkAmount: '',
+    checkAmount: 0,
     status: ECheckStatus.Open,
-    receivedDate: null,
-    payDate: dayjs(),
+    receivedDate: '',
+    payDate: dayjs().format('MM/DD/YYYY'),
     additionalDetails: '',
   };
-  const [formData, setFormData] = useState<ICheckData>(initialData);
+  const [formData, setFormData] = useState<ICheck>(initialData);
 
   const closeDrawer = () => {
-    props.toggleDrawer(false);
+    dispatch(setAddCheckOpen(false));
     setFormData(initialData);
   };
 
@@ -33,8 +42,13 @@ export function AddCheck(props: IAddCheckProps) {
     }));
   };
 
+  const onSave = () => {
+    // TODO add logic to save adjustment
+    closeDrawer();
+  };
+
   return (
-    <Drawer open={props.open} onClose={closeDrawer} anchor='right' sx={{ zIndex: 1201 }}>
+    <Drawer open={useAppSelector(getAddCheckOpen)} onClose={closeDrawer} anchor='right' sx={{ zIndex: 1201 }}>
       <Stack p={2} width='45vw'>
         <Typography variant='h6' borderBottom={1}>
           Add a New Check
@@ -44,7 +58,7 @@ export function AddCheck(props: IAddCheckProps) {
             required
             select
             value={formData.vendor}
-            options={props.vendorOptions}
+            options={vendorOptions}
             label='Vendor'
             name='vendor'
             onChange={handleChange}
@@ -105,7 +119,7 @@ export function AddCheck(props: IAddCheckProps) {
           multiline
         />
         <Button
-          onClick={() => props.saveCheck(formData)}
+          onClick={onSave}
           size='large'
           color='success'
           variant='contained'
@@ -117,12 +131,4 @@ export function AddCheck(props: IAddCheckProps) {
       </Stack>
     </Drawer>
   );
-}
-
-interface IAddCheckProps {
-  open: boolean;
-  toggleDrawer: (newOpen: boolean) => void;
-  vendor: string;
-  vendorOptions: string[];
-  saveCheck: (check: ICheckData) => void;
 }

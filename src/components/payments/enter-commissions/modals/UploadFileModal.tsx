@@ -5,9 +5,11 @@ import { parse } from 'csv-parse/browser/esm/sync';
 import { Close, Check } from '@mui/icons-material';
 import { CustomInput } from '../../../shared/CustomInput';
 import { CustomModal } from '../../../shared/CustomModal';
-import { IHeaderMeta } from '../EnterCommissions';
-import { useAppSelector } from '../../../../hooks/ReduxHooks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks/ReduxHooks';
 import { isModeDark } from '../../../../store/slices/themeSlice';
+import { createEnterCommissionsRows } from '../../../../store/thunks/createEnterCommissionsRows';
+import { enterCommissionHeaders, IEnterCommissionsHeader } from '../../../../data/interfaces/IEnterCommissionsHeader';
+import { getUploadFileOpen, setUploadFileOpen } from '../../../../store/slices/enterCommissionsSlice';
 
 interface IEmunHeaders {
   label: string;
@@ -15,7 +17,7 @@ interface IEmunHeaders {
   required: boolean;
 }
 
-function setInitialHeaderValues(headers: IHeaderMeta[]): IEmunHeaders[] {
+function setInitialHeaderValues(headers: IEnterCommissionsHeader[]): IEmunHeaders[] {
   const initialHeaders: IEmunHeaders[] = [];
   headers.forEach((header) => {
     if (header.hide) return;
@@ -28,16 +30,21 @@ function setInitialHeaderValues(headers: IHeaderMeta[]): IEmunHeaders[] {
   return initialHeaders;
 }
 
-export function UploadFileModal(props: IUploadFileModalProps) {
+export function UploadFileModal() {
+  const dispatch = useAppDispatch();
   const [step, setStep] = useState(1);
   const [fileHeaders, setFileHeaders] = useState<string[]>([]);
-  const [emunHeaders, setEmunHeaders] = useState<IEmunHeaders[]>(setInitialHeaderValues(props.emunHeaders));
+  const [emunHeaders, setEmunHeaders] = useState<IEmunHeaders[]>(setInitialHeaderValues(enterCommissionHeaders));
   const headersBeingUsed = emunHeaders.filter((header) => header.value !== '').map((header) => header.value);
   const [fileData, setFileData] = useState<string[][]>();
   const [mappedHeaderIndices, setMappedHeaderIndices] = useState<{
     [key: string]: number | null;
   }>({});
   const buttonDisabled = emunHeaders.some((header) => header.required && header.value === '');
+
+  const closeModal = () => {
+    dispatch(setUploadFileOpen(false));
+  };
 
   const handleUploadFileClicked = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -128,8 +135,8 @@ export function UploadFileModal(props: IUploadFileModalProps) {
       });
       return mappedRow;
     });
-    props.setMappedFileData(mappedFileData);
-    props.onClose();
+    dispatch(createEnterCommissionsRows(mappedFileData || []));
+    closeModal();
   };
 
   const boxShadow = useAppSelector(isModeDark)
@@ -137,7 +144,7 @@ export function UploadFileModal(props: IUploadFileModalProps) {
     : '0px 2px 16px rgba(0, 0, 0, 0.4)';
 
   return (
-    <CustomModal open={props.open} closeModal={props.onClose} header='Upload Invoices File'>
+    <CustomModal open={useAppSelector(getUploadFileOpen)} closeModal={closeModal} header='Upload Invoices File'>
       {step === 1 && (
         <Stack gap={3} pt={3}>
           <Button variant='contained' component='label'>
@@ -247,11 +254,4 @@ export function UploadFileModal(props: IUploadFileModalProps) {
         ))}
     </CustomModal>
   );
-}
-
-interface IUploadFileModalProps {
-  open: boolean;
-  onClose: () => void;
-  setMappedFileData: (data: { [key: string]: any }[] | undefined) => void;
-  emunHeaders: IHeaderMeta[];
 }

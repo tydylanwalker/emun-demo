@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { IOrder, orders } from '../../data/interfaces/IOrder';
+import { IOrder } from '../../data/interfaces/IOrder';
 import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { CustomInput } from '../shared/CustomInput';
 import { OrdersTableRow } from './OrdersTableRow';
 import { CustomTableContainer } from '../shared/CustomTableContainer';
 import { createDirectOrder } from '../../functions/createDirectOrder';
 import { IEnterCommissionsRow } from '../payments/enter-commissions/EnterCommissions';
+import { useAppSelector } from '../../hooks/ReduxHooks';
+import { getOrders } from '../../store/slices/dataSlice';
 
 export interface IOrderHeader {
   label: string;
@@ -65,14 +67,24 @@ const orderHeaders: IOrderHeader[] = [
     type: 'date',
   },
   {
-    label: 'Ship City',
+    label: 'Address',
+    align: 'left',
+    id: 'shipAddress',
+  },
+  {
+    label: 'City',
     align: 'left',
     id: 'shipCity',
   },
   {
-    label: 'Ship State',
+    label: 'State',
     align: 'center',
     id: 'shipState',
+  },
+  {
+    label: 'Zip',
+    align: 'center',
+    id: 'shipZip',
   },
   {
     label: 'Rep',
@@ -83,11 +95,6 @@ const orderHeaders: IOrderHeader[] = [
     label: 'Writing Rep',
     align: 'left',
     id: 'writingRep',
-  },
-  {
-    label: 'Generated From',
-    align: 'center',
-    id: 'generatedFrom',
   },
   {
     label: 'Status',
@@ -102,8 +109,8 @@ export enum EOrderButtons {
 }
 
 export function OrdersTable(props: IOrdersTableProps) {
+  const rows = useAppSelector(getOrders);
   const [searchText, setSearchText] = useState(props.initialSearchText || '');
-  const rows = orders;
   const [filteredRows, setFilteredRows] = useState(rows);
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
 

@@ -45,7 +45,7 @@ export function AppWrapper(props: IAppWrapper) {
 
   useEffect(() => {
     dispatch(initializeData());
-  }, []);
+  }, [dispatch]);
 
   const theme = useMemo(() => getTheme(mode), [mode]);
   return (

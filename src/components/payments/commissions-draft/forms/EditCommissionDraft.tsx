@@ -2,10 +2,10 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import { Box, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
-import dayjs from 'dayjs';
 import { CustomInput } from '../../../shared/CustomInput';
 import { ICommissionDraft } from '../../../../data/mock/commissions';
-import { vendorsMock } from '../../../../data/mock/vendors';
+import { useAppSelector } from '../../../../hooks/ReduxHooks';
+import { getVendors } from '../../../../store/slices/dataSlice';
 
 export function EditCommissionDraft(props: IEditCommissionDraftProps) {
   const initialData = {
@@ -33,7 +33,8 @@ export function EditCommissionDraft(props: IEditCommissionDraftProps) {
   const closeDrawer = () => {
     props.toggleDrawer(false);
   };
-  const vendorOptions = vendorsMock.map((vendor) => vendor.vendorName);
+  const vendors = useAppSelector(getVendors);
+  const vendorOptions = vendors.map((vendor) => vendor.VendorName);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;

@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Head from 'next/head';
 import { Stack, Typography, Box } from '@mui/material';
 import * as React from 'react';
 import { NextPage } from 'next';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import BarChartSet from '../../components/home/BarChartSet';
 import BasicCard from '../../components/home/Card';
 import { BaseLayout } from '../../components/layout/BaseLayout';
 
@@ -41,13 +41,13 @@ const HomePage: NextPage = () => {
     setVendor(value);
   };
   console.log(getMonthsAgo(0));
-  let lastMonthsOrders = []; /*ordersMock.results.filter(
+  const lastMonthsOrders = []; /*ordersMock.results.filter(
     (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(0))
   )*/
-  let lastYearsOrders = []; /*ordersMock.results.filter(
+  const lastYearsOrders = []; /*ordersMock.results.filter(
     (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(12))
   )*/
-  let lastYearsTotal = 0;
+  const lastYearsTotal = 0;
   // ordersMock.results
   // .filter(
   //   (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(12))
@@ -67,9 +67,7 @@ const HomePage: NextPage = () => {
           <BasicCard title='No Data' value='No Data' notes='No Data'></BasicCard>
         </Stack>
         <Card>
-          <CardContent>
-            <BarChartSet></BarChartSet>
-          </CardContent>
+          <CardContent>{/* <BarChartSet></BarChartSet> */}</CardContent>
         </Card>
       </Stack>
     </>

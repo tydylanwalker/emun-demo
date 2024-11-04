@@ -3,6 +3,10 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { CustomInput } from '../../../shared/CustomInput';
 import { CustomModal } from '../../../shared/CustomModal';
+import { useAppDispatch } from '../../../../hooks/ReduxHooks';
+import { addEnterCommissionsRow } from '../../../../store/slices/enterCommissionsSlice';
+import { IOrder } from '../../../../data/interfaces/IOrder';
+import { IEnterCommissionsRow } from '../EnterCommissions';
 
 export interface IInvoiceValues {
   invoiceNumber: string;
@@ -17,6 +21,7 @@ const initialData = {
 };
 
 export function SingleEntryModal(props: ISingleEntryModalProps) {
+  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState<IInvoiceValues>(initialData);
   const disabled = Object.values(formData).some((value) => value === '');
 
@@ -35,7 +40,54 @@ export function SingleEntryModal(props: ISingleEntryModalProps) {
   };
 
   const handleConfirm = () => {
-    props.onConfirmClick(formData);
+    const newInvoice: IEnterCommissionsRow = {
+      poNumber: {
+        value: props.order?.poNumber || '',
+      },
+      invoiceNumber: {
+        value: formData.invoiceNumber || '',
+      },
+      invoiceAmount: {
+        value: Number(formData.invoiceAmount),
+      },
+      invoiceDate: {
+        value: dayjs(formData.invoiceDate).format('MM/DD/YYYY') || dayjs().format('MM/DD/YYYY'),
+      },
+      customerId: {
+        value: props.order?.customerId || '',
+      },
+      customerName: {
+        value: props.order?.customerName || '',
+      },
+      customerAddress: {
+        value: props.order?.shipAddress || '',
+      },
+      customerCity: {
+        value: props.order?.shipCity || '',
+      },
+      customerState: {
+        value: props.order?.shipState || '',
+      },
+      customerZip: {
+        value: props.order?.shipZip || '',
+      },
+      commissionAmount: {
+        value: Number(formData.invoiceAmount) * 0.15,
+      },
+      orderDate: {
+        value: props.order?.orderDate || '',
+      },
+      rep: {
+        value: props.order?.rep || '',
+      },
+      writingRep: {
+        value: props.order?.writingRep || '',
+      },
+      checked: {
+        value: true,
+      },
+    };
+    dispatch(addEnterCommissionsRow(newInvoice));
     closeModal();
   };
 
@@ -81,7 +133,7 @@ export function SingleEntryModal(props: ISingleEntryModalProps) {
 }
 
 interface ISingleEntryModalProps {
+  order: IOrder | null;
   open: boolean;
   onClose: () => void;
-  onConfirmClick: (data: IInvoiceValues) => void;
 }

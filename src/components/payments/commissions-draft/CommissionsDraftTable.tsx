@@ -3,13 +3,14 @@ import { Button, IconButton, Stack, Table, TableBody, TableCell, TableHead, Tabl
 import { CustomInput } from '../../shared/CustomInput';
 import { ICommissionDraft, commissions } from '../../../data/mock/commissions';
 import { CommissionsDraftTableRow } from './CommissionsDraftTableRow';
-import { vendorsMock } from '../../../data/mock/vendors';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
 import { AddRounded, Visibility } from '@mui/icons-material';
 import { CustomTableContainer } from '../../shared/CustomTableContainer';
 import { CommissionsSpeedDial } from '../../shared/CommissionsSpeedDial';
 import { EditCommissionDraft } from './forms/EditCommissionDraft';
+import { useAppSelector } from '../../../hooks/ReduxHooks';
+import { getVendors } from '../../../store/slices/dataSlice';
 
 export interface ICommissionDraftHeader {
   label: string;
@@ -104,7 +105,8 @@ export function CommissionsDraftTable() {
   const [filteredRows, setFilteredRows] = useState(commissions);
 
   const [vendor, setVendor] = useState('');
-  const vendorOptions = vendorsMock.map((vendor) => vendor.vendorName);
+  const vendors = useAppSelector(getVendors);
+  const vendorOptions = vendors.map((vendor) => vendor.VendorName);
 
   const [rep, setRep] = useState('');
   const repNames = commissions.map((commission) => commission.rep);
@@ -129,7 +131,7 @@ export function CommissionsDraftTable() {
     // setCheck(checkToSave.number || '');
 
     if (rows.some((item) => item.invoiceNumber === commission.invoiceNumber)) {
-      let updatedRows = rows.map((item) => (item.invoiceNumber === commission.invoiceNumber ? commission : item));
+      const updatedRows = rows.map((item) => (item.invoiceNumber === commission.invoiceNumber ? commission : item));
       setRows(updatedRows);
     } else {
       setRows([commission, ...rows]);
@@ -209,7 +211,7 @@ export function CommissionsDraftTable() {
               <AddRounded />
             </IconButton>
 
-            <CommissionsSpeedDial show actions={[]} />
+            <CommissionsSpeedDial />
           </Stack>
         </Stack>
         <Stack direction='row' gap={2} height='fit-content'>

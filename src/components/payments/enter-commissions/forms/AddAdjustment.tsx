@@ -5,10 +5,22 @@ import { useState } from 'react';
 import { CustomInput } from '../../../shared/CustomInput';
 import { IAdjustment } from '../../../../data/interfaces/IAdjustment';
 import dayjs from 'dayjs';
+import { useAppDispatch, useAppSelector } from '../../../../hooks/ReduxHooks';
+import {
+  getAddAdjustmentOpen,
+  getVendorSelected,
+  setAddAdjustmentOpen,
+} from '../../../../store/slices/enterCommissionsSlice';
+import { getVendors } from '../../../../store/slices/dataSlice';
 
-export function AddAdjustment(props: IAddAdjustmentProps) {
+export function AddAdjustment() {
+  const dispatch = useAppDispatch();
+  const vendors = useAppSelector(getVendors);
+  const vendorOptions = vendors.map((vendor) => vendor.VendorName);
+  const vendorSelected = useAppSelector(getVendorSelected);
+
   const initialData = {
-    vendor: props.vendor,
+    vendor: vendorSelected,
     adjustmentDate: dayjs(),
     adjustmentAmount: '',
     salesRep: '',
@@ -17,11 +29,10 @@ export function AddAdjustment(props: IAddAdjustmentProps) {
     agencyCommission: '',
     reasonCode: '',
   };
-
   const [formData, setFormData] = useState<IAdjustment>(initialData);
 
   const closeDrawer = () => {
-    props.toggleDrawer(false);
+    dispatch(setAddAdjustmentOpen(false));
     setFormData(initialData);
   };
 
@@ -34,8 +45,13 @@ export function AddAdjustment(props: IAddAdjustmentProps) {
     }));
   };
 
+  const onSave = () => {
+    // TODO add logic to save
+    closeDrawer();
+  };
+
   return (
-    <Drawer open={props.open} onClose={closeDrawer} anchor='right' sx={{ zIndex: 1201 }}>
+    <Drawer open={useAppSelector(getAddAdjustmentOpen)} onClose={closeDrawer} anchor='right' sx={{ zIndex: 1201 }}>
       <Stack p={2} width='45vw'>
         <Typography variant='h6' borderBottom={1}>
           Invoice Adjustment
@@ -44,7 +60,7 @@ export function AddAdjustment(props: IAddAdjustmentProps) {
           required
           select
           value={formData.vendor}
-          options={props.vendorOptions}
+          options={vendorOptions}
           label='Vendor'
           name='vendor'
           onChange={handleChange}
@@ -105,7 +121,7 @@ export function AddAdjustment(props: IAddAdjustmentProps) {
           onChange={handleChange}
         />
         <Button
-          onClick={() => props.saveAdjustment(formData)}
+          onClick={onSave}
           size='large'
           color='success'
           variant='contained'
@@ -117,12 +133,4 @@ export function AddAdjustment(props: IAddAdjustmentProps) {
       </Stack>
     </Drawer>
   );
-}
-
-interface IAddAdjustmentProps {
-  open: boolean;
-  toggleDrawer: (newOpen: boolean) => void;
-  vendor: string;
-  vendorOptions: string[];
-  saveAdjustment: (adjustment: IAdjustment) => void;
 }

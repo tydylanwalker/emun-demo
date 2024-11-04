@@ -4,13 +4,25 @@ import { Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import { CustomInput } from '../../../shared/CustomInput';
 import { IDirectOrder } from '../../../../data/interfaces/IDirectOrder';
+import { useAppDispatch, useAppSelector } from '../../../../hooks/ReduxHooks';
+import { getVendors } from '../../../../store/slices/dataSlice';
+import {
+  getAddDirectOrderOpen,
+  getVendorSelected,
+  setAddDirectOrderOpen,
+} from '../../../../store/slices/enterCommissionsSlice';
 
-export function AddDirectOrder(props: IAddDirectOrderProps) {
+export function AddDirectOrder() {
+  const dispatch = useAppDispatch();
+  const vendors = useAppSelector(getVendors);
+  const vendorOptions = vendors.map((vendor) => vendor.VendorName);
+  const vendorSelected = useAppSelector(getVendorSelected);
+
   const initialData = {
     customer: '',
     shipTo: '',
     poNumber: '',
-    vendor: props.vendor,
+    vendor: vendorSelected,
     invoiceNumber: '',
     invoiceAmount: '',
     invoiceDate: null,
@@ -19,7 +31,7 @@ export function AddDirectOrder(props: IAddDirectOrderProps) {
   const [formData, setFormData] = useState<IDirectOrder>(initialData);
 
   const closeDrawer = () => {
-    props.toggleDrawer(false);
+    dispatch(setAddDirectOrderOpen(false));
     setFormData(initialData);
   };
 
@@ -32,8 +44,13 @@ export function AddDirectOrder(props: IAddDirectOrderProps) {
     }));
   };
 
+  const onSave = () => {
+    // TODO add logic to save
+    closeDrawer();
+  };
+
   return (
-    <Drawer open={props.open} onClose={closeDrawer} anchor='right' sx={{ zIndex: 1201 }}>
+    <Drawer open={useAppSelector(getAddDirectOrderOpen)} onClose={closeDrawer} anchor='right' sx={{ zIndex: 1201 }}>
       <Stack p={2} width='45vw'>
         <Typography variant='h6' borderBottom={1}>
           Create Direct Order
@@ -78,7 +95,7 @@ export function AddDirectOrder(props: IAddDirectOrderProps) {
           required
           select
           value={formData.vendor}
-          options={props.vendorOptions}
+          options={vendorOptions}
           label='Vendor'
           name='vendor'
           onChange={handleChange}
@@ -108,7 +125,7 @@ export function AddDirectOrder(props: IAddDirectOrderProps) {
           onChange={handleChange}
         />
         <Button
-          onClick={() => props.saveDirectOrder(formData)}
+          onClick={onSave}
           size='large'
           color='success'
           variant='contained'
@@ -120,12 +137,4 @@ export function AddDirectOrder(props: IAddDirectOrderProps) {
       </Stack>
     </Drawer>
   );
-}
-
-interface IAddDirectOrderProps {
-  open: boolean;
-  toggleDrawer: (newOpen: boolean) => void;
-  vendor: string;
-  vendorOptions: string[];
-  saveDirectOrder: (directOrder: IDirectOrder) => void;
 }

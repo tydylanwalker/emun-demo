@@ -1,4 +1,4 @@
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import React from 'react';
@@ -6,13 +6,6 @@ import { BaseLayout } from '../../../components/layout/BaseLayout';
 import { OrdersTable } from '../../../components/orders/OrdersTable';
 
 const ViewOrdersPage: NextPage = () => {
-  const [vendor, setVendor] = React.useState('All');
-
-  const vendorSelected = (value: string) => {
-    console.log(value);
-    setVendor(value);
-  };
-
   return (
     <>
       <Head>

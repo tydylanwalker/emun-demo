@@ -1,10 +1,11 @@
-import { TableRow, TableCell, Typography, Stack, FormControlLabel, Checkbox } from '@mui/material';
-import { ErrorEnum } from '../../../../data/mock/ErrorEnum';
-import { IHeaderMeta, IEnterCommissionsRow } from '../EnterCommissions';
-import { useEffect, useState } from 'react';
+import { TableRow, TableCell, Typography, Stack, Checkbox } from '@mui/material';
+import { ErrorEnum } from '../../../../data/enums/ErrorEnum';
+import { IEnterCommissionsRow } from '../EnterCommissions';
+import { useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
 import { IOrder } from '../../../../data/interfaces/IOrder';
 import { ErrorCommissionModal } from '../modals/ErrorCommissionModal';
+import { enterCommissionHeaders } from '../../../../data/interfaces/IEnterCommissionsHeader';
 
 export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) {
   const [orderGridOpen, setOrderGridOpen] = useState(false);
@@ -33,7 +34,7 @@ export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) 
         <TableCell align={'center'} sx={{ cursor: 'default' }}>
           <Checkbox checked={props.row.checked.value} onChange={() => props.toggleChecked?.(props.row)} />
         </TableCell>
-        {props.headers.map((header, index) => {
+        {enterCommissionHeaders.map((header, index) => {
           const error = determineErrorHandling(props.row[header.id].error, props.row);
 
           return (
@@ -61,7 +62,6 @@ export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) 
         open={orderGridOpen}
         handleModalClose={handleModalClose}
         row={props.row}
-        headers={props.headers}
         onConfirmMatch={onConfirmMatch}
         errorValues={errorValues}
       />
@@ -71,7 +71,6 @@ export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) 
 
 interface IEnterCommissionsTableRowProps {
   row: IEnterCommissionsRow;
-  headers: IHeaderMeta[];
   onConfirmMatch?: (order: IOrder, row: IEnterCommissionsRow) => void;
   toggleChecked?: (row: IEnterCommissionsRow) => void;
 }

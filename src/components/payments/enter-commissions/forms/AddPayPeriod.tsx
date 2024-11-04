@@ -4,19 +4,23 @@ import { Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import { CustomInput } from '../../../shared/CustomInput';
 import { EPayPeriodStatus, IPayPeriod } from '../../../../data/interfaces/IPayPeriod';
+import { useAppDispatch, useAppSelector } from '../../../../hooks/ReduxHooks';
+import { getAddPayPeriodOpen, setAddPayPeriodOpen } from '../../../../store/slices/enterCommissionsSlice';
 
-export function AddPayPeriod(props: IAddPayPeriodProps) {
+export function AddPayPeriod() {
+  const dispatch = useAppDispatch();
+
   const initialData = {
     payPeriod: '',
     status: EPayPeriodStatus.open,
-    startDate: null,
-    endDate: null,
+    startDate: '',
+    endDate: '',
   };
 
   const [formData, setFormData] = useState<IPayPeriod>(initialData);
 
   const closeDrawer = () => {
-    props.toggleDrawer(false);
+    dispatch(setAddPayPeriodOpen(false));
     setFormData(initialData);
   };
 
@@ -29,8 +33,13 @@ export function AddPayPeriod(props: IAddPayPeriodProps) {
     }));
   };
 
+  const onSave = () => {
+    // TODO add logic to save adjustment
+    closeDrawer();
+  };
+
   return (
-    <Drawer open={props.open} onClose={closeDrawer} anchor='right' sx={{ zIndex: 1201 }}>
+    <Drawer open={useAppSelector(getAddPayPeriodOpen)} onClose={closeDrawer} anchor='right' sx={{ zIndex: 1201 }}>
       <Stack p={2} width='45vw'>
         <Typography variant='h6' borderBottom={1}>
           Add a New Pay Period
@@ -64,7 +73,7 @@ export function AddPayPeriod(props: IAddPayPeriodProps) {
           onChange={handleChange}
         />
         <Button
-          onClick={() => props.savePayPeriod(formData)}
+          onClick={onSave}
           size='large'
           color='success'
           variant='contained'
@@ -76,10 +85,4 @@ export function AddPayPeriod(props: IAddPayPeriodProps) {
       </Stack>
     </Drawer>
   );
-}
-
-interface IAddPayPeriodProps {
-  open: boolean;
-  toggleDrawer: (newOpen: boolean) => void;
-  savePayPeriod: (payPeriod: IPayPeriod) => void;
 }

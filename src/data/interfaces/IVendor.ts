@@ -1,3 +1,5 @@
 export interface IVendor {
-  vendorName: string;
+  Id: string;
+  VendorName: string;
+  CommissionPercentage: string;
 }

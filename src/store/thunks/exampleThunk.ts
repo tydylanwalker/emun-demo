@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AnyAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { ThunkAction } from 'redux-thunk';

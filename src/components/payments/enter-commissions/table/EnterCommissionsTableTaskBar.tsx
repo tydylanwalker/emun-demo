@@ -1,6 +1,14 @@
 import { Stack, Typography, FormControlLabel, Switch, Button } from '@mui/material';
+import { useAppDispatch } from '../../../../hooks/ReduxHooks';
+import { setEnterCommissionsRows } from '../../../../store/slices/enterCommissionsSlice';
 
 export function EnterCommissionsTableTaskBar(props: IEnterCommissionsTableTaskBarProps) {
+  const dispatch = useAppDispatch();
+
+  const submitRows = () => {
+    // TODO ACTUALLY POST ROWS AND THEN CLEAR
+    dispatch(setEnterCommissionsRows([]));
+  };
   return (
     <Stack direction='row' justifyContent='space-between' p={1.5}>
       <Stack direction='row' gap={3} alignItems='center'>
@@ -32,7 +40,7 @@ export function EnterCommissionsTableTaskBar(props: IEnterCommissionsTableTaskBa
             Create {props.rowsWithErrors} No Detail Orders
           </Button>
         ) : props.rowsWithErrors === 0 ? (
-          <Button variant='contained' onClick={props.submitRows}>
+          <Button variant='contained' onClick={submitRows}>
             Submit {props.totalRows} Entries
           </Button>
         ) : (
@@ -50,5 +58,4 @@ interface IEnterCommissionsTableTaskBarProps {
   rowsWithErrors: number;
   onlyShowErrors: boolean;
   setOnlyShowErrors: (checked: boolean) => void;
-  submitRows: () => void;
 }

@@ -2,18 +2,18 @@ import { Alert, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typogra
 import { OrdersTable } from '../../../orders/OrdersTable';
 import { CustomModal } from '../../../shared/CustomModal';
 import { IEnterCommissionsTableRowError } from '../table/EnterCommissionsTableRow';
-import { IHeaderMeta, IEnterCommissionsRow } from '../EnterCommissions';
+import { IEnterCommissionsRow } from '../EnterCommissions';
 import { IOrder } from '../../../../data/interfaces/IOrder';
 import { useEffect, useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
 import { CustomTableContainer } from '../../../shared/CustomTableContainer';
+import { enterCommissionHeaders } from '../../../../data/interfaces/IEnterCommissionsHeader';
 
 export function ErrorCommissionModal(props: IErrorCommissionModalProps) {
   const [searchText, setSearchText] = useState(props.errorValues?.searchText);
 
   useEffect(() => {
     setSearchText(props.errorValues?.searchText);
-    console.log(props.errorValues?.searchText);
   }, [props.errorValues?.searchText]);
 
   const handleClick = (newSearchText: string) => {
@@ -33,7 +33,7 @@ export function ErrorCommissionModal(props: IErrorCommissionModalProps) {
         <CustomTableContainer header={<Alert color='error'>Error: {props.errorValues?.reason}</Alert>}>
           <Table stickyHeader>
             <TableHead>
-              {props.headers.map((header, index) => (
+              {enterCommissionHeaders.map((header, index) => (
                 <TableCell key={index} align={header.align || 'left'}>
                   {header.label}
                 </TableCell>
@@ -41,7 +41,7 @@ export function ErrorCommissionModal(props: IErrorCommissionModalProps) {
             </TableHead>
             <TableBody>
               <TableRow>
-                {props.headers.map((header, index) => {
+                {enterCommissionHeaders.map((header, index) => {
                   const value = props.row[header.id].value;
 
                   return (
@@ -70,7 +70,6 @@ interface IErrorCommissionModalProps {
   open: boolean;
   handleModalClose: () => void;
   row: IEnterCommissionsRow;
-  headers: IHeaderMeta[];
   errorValues?: IEnterCommissionsTableRowError;
   onConfirmMatch: (order: IOrder) => void;
 }
