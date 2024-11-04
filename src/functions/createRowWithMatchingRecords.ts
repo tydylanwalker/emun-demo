@@ -46,11 +46,12 @@ export function createRowWithMatchingRecords(row: { [key: string]: any }): IEnte
     const order = ordersFound[0];
 
     const customerError = findCustomerError(customerName, customerId, order);
-
+    const poNumberError =
+      order.poNumber === '' ? ErrorEnum.noPo : ordersFound.length > 1 ? ErrorEnum.multiplePo : undefined;
     const newRow: IEnterCommissionsRow = {
       poNumber: {
         value: order.poNumber,
-        error: order.poNumber === '' ? ErrorEnum.noPo : ordersFound.length > 1 ? ErrorEnum.multiplePo : undefined,
+        error: poNumberError,
       },
       invoiceNumber: {
         value: invoiceNumber,
@@ -91,6 +92,9 @@ export function createRowWithMatchingRecords(row: { [key: string]: any }): IEnte
       },
       writingRep: {
         value: order.writingRep,
+      },
+      checked: {
+        value: poNumberError !== undefined && customerError !== undefined,
       },
     };
     return newRow;
@@ -139,6 +143,9 @@ export function createRowWithMatchingRecords(row: { [key: string]: any }): IEnte
     },
     writingRep: {
       value: '',
+    },
+    checked: {
+      value: false,
     },
   };
   return newRow;

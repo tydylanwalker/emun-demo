@@ -95,6 +95,7 @@ export interface IEnterCommissionsRow {
   orderDate: IRowObject<string>;
   rep: IRowObject<string>;
   writingRep: IRowObject<string>;
+  checked: IRowObject<boolean>;
 }
 
 export enum EModes {
@@ -197,6 +198,24 @@ export function EnterCommissions() {
         writingRep: {
           value: order.writingRep,
         },
+        checked: {
+          value: rowToUpdate.checked.value,
+        },
+      };
+      setCommissionRows(updatedRows);
+    }
+  };
+
+  const toggleChecked = (rowToUpdate: IEnterCommissionsRow) => {
+    const index = commissionRows.findIndex((row) => row === rowToUpdate);
+
+    if (index !== -1) {
+      const updatedRows = [...commissionRows];
+      updatedRows[index] = {
+        ...updatedRows[index],
+        checked: {
+          value: !rowToUpdate.checked.value,
+        },
       };
       setCommissionRows(updatedRows);
     }
@@ -249,6 +268,9 @@ export function EnterCommissions() {
       },
       writingRep: {
         value: singleEntryMatchOrder?.writingRep || '',
+      },
+      checked: {
+        value: true,
       },
     };
     setCommissionRows([newInvoice, ...commissionRows]);
@@ -367,6 +389,7 @@ export function EnterCommissions() {
               headers={EnterCommissionsHeadersMeta}
               onConfirmMatch={updateRows}
               submitRows={() => setCommissionRows([])}
+              toggleChecked={toggleChecked}
             />
           ) : (
             <>

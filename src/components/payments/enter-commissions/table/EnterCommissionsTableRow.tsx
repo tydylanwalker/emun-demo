@@ -1,7 +1,7 @@
-import { TableRow, TableCell, Typography, Stack } from '@mui/material';
+import { TableRow, TableCell, Typography, Stack, FormControlLabel, Checkbox } from '@mui/material';
 import { ErrorEnum } from '../../../../data/mock/ErrorEnum';
 import { IHeaderMeta, IEnterCommissionsRow } from '../EnterCommissions';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
 import { IOrder } from '../../../../data/interfaces/IOrder';
 import { ErrorCommissionModal } from '../modals/ErrorCommissionModal';
@@ -30,6 +30,9 @@ export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) 
       <TableRow
         sx={Object.values(props.row).some((field) => field.error) ? { border: 2, borderColor: 'error.main' } : {}}
       >
+        <TableCell align={'center'} sx={{ cursor: 'default' }}>
+          <Checkbox checked={props.row.checked.value} onChange={() => props.toggleChecked?.(props.row)} />
+        </TableCell>
         {props.headers.map((header, index) => {
           const error = determineErrorHandling(props.row[header.id].error, props.row);
 
@@ -70,6 +73,7 @@ interface IEnterCommissionsTableRowProps {
   row: IEnterCommissionsRow;
   headers: IHeaderMeta[];
   onConfirmMatch?: (order: IOrder, row: IEnterCommissionsRow) => void;
+  toggleChecked?: (row: IEnterCommissionsRow) => void;
 }
 
 export interface IEnterCommissionsTableRowError {

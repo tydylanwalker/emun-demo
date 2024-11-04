@@ -1,4 +1,4 @@
-import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { Table, TableHead, TableRow, TableCell, TableBody, Checkbox } from '@mui/material';
 import { IHeaderMeta, IEnterCommissionsRow } from '../EnterCommissions';
 import { EnterCommissionsTableTaskBar } from './EnterCommissionsTableTaskBar';
 import { useEffect, useState } from 'react';
@@ -32,6 +32,9 @@ export function EnterCommissionsTable(props: IEnterCommissionsTableProps) {
       <Table stickyHeader>
         <TableHead>
           <TableRow>
+            <TableCell align={'center'} sx={{ cursor: 'default' }}>
+              <Checkbox checked={true} onChange={() => {}} />
+            </TableCell>
             {props.headers.map((header, index) => (
               <TableCell key={index} align={header.align || 'left'}>
                 {header.label}
@@ -46,6 +49,7 @@ export function EnterCommissionsTable(props: IEnterCommissionsTableProps) {
               row={row}
               headers={props.headers}
               onConfirmMatch={props.onConfirmMatch}
+              toggleChecked={props.toggleChecked}
             />
           ))}
         </TableBody>
@@ -58,5 +62,6 @@ interface IEnterCommissionsTableProps {
   headers: IHeaderMeta[];
   rows: IEnterCommissionsRow[];
   onConfirmMatch?: (order: IOrder, row: IEnterCommissionsRow) => void;
+  toggleChecked?: (row: IEnterCommissionsRow) => void;
   submitRows: () => void;
 }
