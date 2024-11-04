@@ -1,4 +1,4 @@
-import { TableContainer, Paper, Stack, TableContainerProps } from '@mui/material';
+import { TableContainer, Paper, Stack, TableContainerProps, TablePagination } from '@mui/material';
 import { useAppSelector } from '../../hooks/ReduxHooks';
 import { isModeDark } from '../../store/slices/themeSlice';
 
@@ -30,6 +30,19 @@ export function CustomTableContainer(props: ICustomTableContainerProps & TableCo
       >
         {props.children}
       </TableContainer>
+      <Stack>
+        {props.pagination && (
+          <TablePagination
+            rowsPerPageOptions={props.pagination.rowsPerPageOptions || [5, 25, 50, 100]}
+            component='div'
+            count={props.pagination.count}
+            rowsPerPage={props.pagination.rowsPerPage}
+            page={props.pagination.page}
+            onPageChange={props.pagination.onPageChange}
+            onRowsPerPageChange={props.pagination.onRowsPerPageChange}
+          />
+        )}
+      </Stack>
     </Paper>
   );
 }
@@ -39,4 +52,12 @@ interface ICustomTableContainerProps {
   taskBar?: JSX.Element;
   header?: JSX.Element;
   height?: string;
+  pagination?: {
+    rowsPerPageOptions?: number[];
+    count: number;
+    page: number;
+    rowsPerPage: number;
+    onPageChange: (event: unknown, newPage: number) => void;
+    onRowsPerPageChange: (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
+  };
 }

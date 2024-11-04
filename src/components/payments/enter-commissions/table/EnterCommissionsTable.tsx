@@ -15,8 +15,11 @@ export function EnterCommissionsTable() {
   const [rowsWithErrors, setRowsWithErrors] = useState<IEnterCommissionsRow[]>([]);
   const [onlyShowErrors, setOnlyShowErrors] = useState(false);
   const renderedRows = onlyShowErrors ? rowsWithErrors : commissionRows;
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
 
   useEffect(() => {
+    setPage(0);
     const errors = commissionRows.filter((row) => Object.values(row).some((field) => field.error));
     if (errors.length === 0) setOnlyShowErrors(false);
     setRowsWithErrors(errors);
@@ -79,6 +82,15 @@ export function EnterCommissionsTable() {
     }
   };
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <CustomTableContainer
       taskBar={
@@ -89,6 +101,13 @@ export function EnterCommissionsTable() {
           setOnlyShowErrors={setOnlyShowErrors}
         />
       }
+      pagination={{
+        count: renderedRows.length,
+        page,
+        rowsPerPage,
+        onPageChange: handleChangePage,
+        onRowsPerPageChange: handleChangeRowsPerPage,
+      }}
     >
       <Table stickyHeader>
         <TableHead>
@@ -104,7 +123,7 @@ export function EnterCommissionsTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {renderedRows.map((row, index) => (
+          {renderedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
             <EnterCommissionsTableRow key={index} row={row} onConfirmMatch={updateRows} toggleChecked={toggleChecked} />
           ))}
         </TableBody>

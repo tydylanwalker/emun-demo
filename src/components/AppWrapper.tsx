@@ -10,6 +10,12 @@ import { GlobalStyles } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/ReduxHooks';
 import { getMode, setMode } from '../store/slices/themeSlice';
 import { initializeData } from '../store/thunks/initializeData';
+import { AddAdjustment } from './payments/enter-commissions/forms/AddAdjustment';
+import { AddCheck } from './payments/enter-commissions/forms/AddCheck';
+import { AddDirectOrder } from './payments/enter-commissions/forms/AddDirectOrder';
+import { AddPayPeriod } from './payments/enter-commissions/forms/AddPayPeriod';
+import { getDataInitialized } from '../store/slices/dataSlice';
+import { SplashScreen } from './shared/SplashScreen';
 
 dayjs.extend(customParseFormat);
 
@@ -48,6 +54,11 @@ export function AppWrapper(props: IAppWrapper) {
   }, [dispatch]);
 
   const theme = useMemo(() => getTheme(mode), [mode]);
+
+  if (!useAppSelector(getDataInitialized)) {
+    return <SplashScreen />;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalScrollbarStyles />
@@ -58,6 +69,10 @@ export function AppWrapper(props: IAppWrapper) {
         </Head>
         <CssBaseline />
         {props.children}
+        <AddCheck />
+        <AddPayPeriod />
+        <AddDirectOrder />
+        <AddAdjustment />
       </LocalizationProvider>
     </ThemeProvider>
   );

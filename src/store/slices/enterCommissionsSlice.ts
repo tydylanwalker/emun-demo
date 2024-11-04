@@ -81,7 +81,7 @@ export const getAddCheckOpen = (state: RootState) => state.enterCommissions.addC
 export const getAddPayPeriodOpen = (state: RootState) => state.enterCommissions.addPayPeriodOpen;
 export const getAddCreditOpen = (state: RootState) => state.enterCommissions.addCreditOpen;
 export const getAddAdjustmentOpen = (state: RootState) => state.enterCommissions.addAdjustmentOpen;
-export const getAddDirectOrderOpen = (state: RootState) => state.enterCommissions.addCheckOpen;
+export const getAddDirectOrderOpen = (state: RootState) => state.enterCommissions.addDirectOrderOpen;
 export const getAddCustomersOpen = (state: RootState) => state.enterCommissions.addCustomersOpen;
 export const getUploadFileOpen = (state: RootState) => state.enterCommissions.uploadFileOpen;
 

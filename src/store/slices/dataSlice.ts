@@ -14,6 +14,7 @@ interface IDataState {
   payPeriods: IPayPeriod[];
   invoices: IInvoice[];
   customers: ICustomer[];
+  dataInitialized: boolean;
 }
 
 const initialState: IDataState = {
@@ -23,6 +24,7 @@ const initialState: IDataState = {
   payPeriods: [],
   invoices: [],
   customers: [],
+  dataInitialized: false,
 };
 
 const dataSlice = createSlice({
@@ -47,6 +49,27 @@ const dataSlice = createSlice({
     setCustomers: (state, action: PayloadAction<ICustomer[]>) => {
       state.customers = action.payload;
     },
+    addOrder: (state, action: PayloadAction<IOrder>) => {
+      state.orders.unshift(action.payload);
+    },
+    addVendor: (state, action: PayloadAction<IVendor>) => {
+      state.vendors.unshift(action.payload);
+    },
+    addPayPeriod: (state, action: PayloadAction<IPayPeriod>) => {
+      state.payPeriods.unshift(action.payload);
+    },
+    addInvoice: (state, action: PayloadAction<IInvoice>) => {
+      state.invoices.unshift(action.payload);
+    },
+    addCustomer: (state, action: PayloadAction<ICustomer>) => {
+      state.customers.unshift(action.payload);
+    },
+    addCheck: (state, action: PayloadAction<ICheck>) => {
+      state.checks.unshift(action.payload);
+    },
+    dataInitialized: (state) => {
+      state.dataInitialized = true;
+    },
   },
 });
 
@@ -56,7 +79,22 @@ export const getVendors = (state: RootState) => state.data.vendors;
 export const getPayPeriods = (state: RootState) => state.data.payPeriods;
 export const getInvoices = (state: RootState) => state.data.invoices;
 export const getCustomers = (state: RootState) => state.data.customers;
+export const getDataInitialized = (state: RootState) => state.data.dataInitialized;
 
-export const { setOrders, setChecks, setCustomers, setInvoices, setPayPeriods, setVendors } = dataSlice.actions;
+export const {
+  setOrders,
+  setChecks,
+  setCustomers,
+  setInvoices,
+  setPayPeriods,
+  setVendors,
+  addCheck,
+  addCustomer,
+  addInvoice,
+  addOrder,
+  addPayPeriod,
+  addVendor,
+  dataInitialized,
+} = dataSlice.actions;
 
 export const dataReducer = dataSlice.reducer;

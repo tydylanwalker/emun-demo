@@ -17,90 +17,22 @@ export interface IOrderHeader {
 }
 
 const orderHeaders: IOrderHeader[] = [
-  {
-    label: 'Order #',
-    align: 'left',
-    id: 'orderNumber',
-  },
-  {
-    label: 'Customer',
-    align: 'left',
-    id: 'customerName',
-  },
-  {
-    label: 'PO #',
-    align: 'left',
-    id: 'poNumber',
-  },
-  {
-    label: 'Source',
-    align: 'center',
-    id: 'source',
-  },
-  {
-    label: 'Vendor',
-    align: 'left',
-    id: 'vendorName',
-  },
-  {
-    label: 'Amount',
-    align: 'right',
-    id: 'amount',
-    type: 'currency',
-  },
-  {
-    label: 'Balance',
-    align: 'right',
-    id: 'balance',
-    type: 'currency',
-  },
-  {
-    label: 'Order Date',
-    align: 'center',
-    id: 'orderDate',
-    type: 'date',
-  },
-  {
-    label: 'Ship Date',
-    align: 'center',
-    id: 'shipDate',
-    type: 'date',
-  },
-  {
-    label: 'Address',
-    align: 'left',
-    id: 'shipAddress',
-  },
-  {
-    label: 'City',
-    align: 'left',
-    id: 'shipCity',
-  },
-  {
-    label: 'State',
-    align: 'center',
-    id: 'shipState',
-  },
-  {
-    label: 'Zip',
-    align: 'center',
-    id: 'shipZip',
-  },
-  {
-    label: 'Rep',
-    align: 'left',
-    id: 'rep',
-  },
-  {
-    label: 'Writing Rep',
-    align: 'left',
-    id: 'writingRep',
-  },
-  {
-    label: 'Status',
-    align: 'center',
-    id: 'status',
-  },
+  { label: 'Order #', align: 'left', id: 'orderNumber' },
+  { label: 'Customer', align: 'left', id: 'customerName' },
+  { label: 'PO #', align: 'left', id: 'poNumber' },
+  { label: 'Source', align: 'center', id: 'source' },
+  { label: 'Vendor', align: 'left', id: 'vendorName' },
+  { label: 'Amount', align: 'right', id: 'amount', type: 'currency' },
+  { label: 'Balance', align: 'right', id: 'balance', type: 'currency' },
+  { label: 'Order Date', align: 'center', id: 'orderDate', type: 'date' },
+  { label: 'Ship Date', align: 'center', id: 'shipDate', type: 'date' },
+  { label: 'Address', align: 'left', id: 'shipAddress' },
+  { label: 'City', align: 'left', id: 'shipCity' },
+  { label: 'State', align: 'center', id: 'shipState' },
+  { label: 'Zip', align: 'center', id: 'shipZip' },
+  { label: 'Rep', align: 'left', id: 'rep' },
+  { label: 'Writing Rep', align: 'left', id: 'writingRep' },
+  { label: 'Status', align: 'center', id: 'status' },
 ];
 
 export enum EOrderButtons {
@@ -113,16 +45,16 @@ export function OrdersTable(props: IOrdersTableProps) {
   const [searchText, setSearchText] = useState(props.initialSearchText || '');
   const [filteredRows, setFilteredRows] = useState(rows);
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
 
   useEffect(() => {
     setSearchText(props.initialSearchText || '');
   }, [props.initialSearchText]);
 
-  /**
-   * As search text changes we filter the rows
-   */
   useEffect(() => {
     setSelectedRow(null);
+    setPage(0);
     if (searchText === '') {
       setFilteredRows(rows);
     } else {
@@ -153,6 +85,15 @@ export function OrdersTable(props: IOrdersTableProps) {
     }
     setSearchText('');
     setSelectedRow(null);
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   return (
@@ -205,6 +146,13 @@ export function OrdersTable(props: IOrdersTableProps) {
           </Stack>
         </Stack>
       }
+      pagination={{
+        count: filteredRows.length,
+        page,
+        rowsPerPage,
+        onPageChange: handleChangePage,
+        onRowsPerPageChange: handleChangeRowsPerPage,
+      }}
     >
       <Table stickyHeader>
         <TableHead>
@@ -221,7 +169,7 @@ export function OrdersTable(props: IOrdersTableProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {filteredRows.map((row, index) => (
+          {filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
             <OrdersTableRow
               key={index}
               row={row}

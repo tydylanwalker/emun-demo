@@ -126,7 +126,7 @@ export function UploadFileModal() {
   };
 
   // Function to map the data rows based on selected indices
-  const mapFileDataToHeaders = () => {
+  const mapFileDataToHeaders = async () => {
     const mappedFileData = fileData?.map((row) => {
       const mappedRow: { [key: string]: any } = {};
       Object.keys(mappedHeaderIndices).forEach((customHeader) => {
@@ -135,7 +135,7 @@ export function UploadFileModal() {
       });
       return mappedRow;
     });
-    dispatch(createEnterCommissionsRows(mappedFileData || []));
+    await dispatch(await createEnterCommissionsRows(mappedFileData || []));
     closeModal();
   };
 

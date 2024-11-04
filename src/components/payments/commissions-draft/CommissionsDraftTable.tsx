@@ -9,8 +9,14 @@ import { AddRounded, Visibility } from '@mui/icons-material';
 import { CustomTableContainer } from '../../shared/CustomTableContainer';
 import { CommissionsSpeedDial } from '../../shared/CommissionsSpeedDial';
 import { EditCommissionDraft } from './forms/EditCommissionDraft';
-import { useAppSelector } from '../../../hooks/ReduxHooks';
-import { getVendors } from '../../../store/slices/dataSlice';
+import { useAppDispatch, useAppSelector } from '../../../hooks/ReduxHooks';
+import { getPayPeriods, getVendors } from '../../../store/slices/dataSlice';
+import {
+  getPayPeriodSelected,
+  getVendorSelected,
+  setPayPeriodSelected,
+  setVendorSelected,
+} from '../../../store/slices/enterCommissionsSlice';
 
 export interface ICommissionDraftHeader {
   label: string;
@@ -99,26 +105,31 @@ const commissionsHeader: ICommissionDraftHeader[] = [
 ];
 
 export function CommissionsDraftTable() {
+  const dispatch = useAppDispatch();
   const [searchText, setSearchText] = useState('');
 
   const [rows, setRows] = useState(commissions);
   const [filteredRows, setFilteredRows] = useState(commissions);
 
-  const [vendor, setVendor] = useState('');
+  const vendorSelected = useAppSelector(getVendorSelected);
   const vendors = useAppSelector(getVendors);
   const vendorOptions = vendors.map((vendor) => vendor.VendorName);
 
-  const [rep, setRep] = useState('');
+  const [repSelected, setRepSelected] = useState('');
   const repNames = commissions.map((commission) => commission.rep);
   const repOptions = Array.from(new Set(repNames.filter((name) => name.trim() !== '')));
 
-  const payPeriodOptions = ['JUNE2024', 'JULY2024', 'AUG2024', 'SEPT2024', 'OCT2024'];
-  const [payPeriod, setPayPeriod] = useState('');
+  const payPeriods = useAppSelector(getPayPeriods);
+  const payPeriodOptions = payPeriods.map((period) => period.payPeriod);
+  const payPeriodSelected = useAppSelector(getPayPeriodSelected);
 
   const [invoicesTotal, setInvoicesTotal] = useState(0);
   const [commissionAmount, setCommissionAmount] = useState(0);
   const [repAmount, setRepAmount] = useState(0);
   const [addDrawerOpen, setAddDrawerOpen] = useState(false);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
 
   const addCommission = (commission: ICommissionDraft) => {
     setAddDrawerOpen(false);
@@ -139,17 +150,18 @@ export function CommissionsDraftTable() {
   };
 
   useEffect(() => {
+    setPage(0);
     let filteredRows = rows;
-    if (vendor) {
-      filteredRows = filteredRows.filter((commission) => commission.vendor == vendor);
+    if (vendorSelected) {
+      filteredRows = filteredRows.filter((commission) => commission.vendor == vendorSelected);
     }
 
-    if (rep) {
-      filteredRows = filteredRows.filter((commission) => commission.rep == rep);
+    if (repSelected) {
+      filteredRows = filteredRows.filter((commission) => commission.rep == repSelected);
     }
 
-    if (payPeriod) {
-      filteredRows = filteredRows.filter((commission) => commission.payPeriod == payPeriod);
+    if (payPeriodSelected) {
+      filteredRows = filteredRows.filter((commission) => commission.payPeriod == payPeriodSelected);
     }
 
     if (searchText !== '') {
@@ -158,7 +170,7 @@ export function CommissionsDraftTable() {
       );
     }
     setFilteredRows(filteredRows);
-  }, [rows, vendor, rep, payPeriod, searchText]);
+  }, [rows, vendorSelected, repSelected, payPeriodSelected, searchText]);
 
   useEffect(() => {
     setInvoicesTotal(
@@ -192,6 +204,15 @@ export function CommissionsDraftTable() {
     setRows(items.filter((item) => item !== row));
   };
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <>
       <Stack direction='row' justifyContent='space-between' gap={2} mb={2}>
@@ -207,9 +228,9 @@ export function CommissionsDraftTable() {
               Close Draft
             </Button>
 
-            <IconButton color='inherit' onClick={() => setAddDrawerOpen(true)}>
+            {/* <IconButton color='inherit' onClick={() => setAddDrawerOpen(true)}>
               <AddRounded />
-            </IconButton>
+            </IconButton> */}
 
             <CommissionsSpeedDial />
           </Stack>
@@ -228,26 +249,26 @@ export function CommissionsDraftTable() {
               <CustomInput
                 size='small'
                 select
-                value={payPeriod}
+                value={payPeriodSelected}
                 label='Select Pay Period'
                 options={payPeriodOptions}
-                onChange={(event) => setPayPeriod(event.target.value as string)}
+                onChange={(event) => dispatch(setPayPeriodSelected(event.target.value as string))}
               />
               <CustomInput
                 size='small'
                 select
-                value={vendor}
+                value={vendorSelected}
                 label='Select Vendor'
                 options={vendorOptions}
-                onChange={(event) => setVendor(event.target.value as string)}
+                onChange={(event) => dispatch(setVendorSelected(event.target.value as string))}
               />
               <CustomInput
                 size='small'
                 select
-                value={rep}
+                value={repSelected}
                 label='Select Rep'
                 options={repOptions}
-                onChange={(event) => setRep(event.target.value as string)}
+                onChange={(event) => setRepSelected(event.target.value as string)}
               />
             </Stack>
             <CustomInput
@@ -258,6 +279,13 @@ export function CommissionsDraftTable() {
             />
           </Stack>
         }
+        pagination={{
+          count: filteredRows.length,
+          page,
+          rowsPerPage,
+          onPageChange: handleChangePage,
+          onRowsPerPageChange: handleChangeRowsPerPage,
+        }}
       >
         <Table stickyHeader>
           <TableHead>
@@ -271,7 +299,7 @@ export function CommissionsDraftTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredRows.map((row, index) => (
+            {filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
               <CommissionsDraftTableRow
                 key={index}
                 row={row}

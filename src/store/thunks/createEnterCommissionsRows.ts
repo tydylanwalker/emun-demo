@@ -16,7 +16,10 @@ export function createEnterCommissionsRows(
   rows: { [key: string]: any }[]
 ): ThunkAction<void, RootState, unknown, AnyAction> {
   return async (dispatch, getState) => {
-    const orders = getState().data.orders;
+    const state = getState();
+    const vendorSelected = state.enterCommissions.vendorSelected;
+    const orders = state.data.orders.filter((order) => order.vendorName === vendorSelected);
+    console.log(orders);
 
     const commissionsRows = rows.map((row) => {
       // grab row data

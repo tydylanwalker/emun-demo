@@ -5,7 +5,14 @@ import { useState } from 'react';
 import { CustomInput } from '../../../shared/CustomInput';
 import { EPayPeriodStatus, IPayPeriod } from '../../../../data/interfaces/IPayPeriod';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/ReduxHooks';
-import { getAddPayPeriodOpen, setAddPayPeriodOpen } from '../../../../store/slices/enterCommissionsSlice';
+import {
+  getAddPayPeriodOpen,
+  setAddPayPeriodOpen,
+  setPayPeriodSelected,
+} from '../../../../store/slices/enterCommissionsSlice';
+import { addPayPeriod } from '../../../../store/slices/dataSlice';
+import dayjs from 'dayjs';
+import { postPayPeriod } from '../../../../data/requests/payPeriods/postPayPeriod';
 
 export function AddPayPeriod() {
   const dispatch = useAppDispatch();
@@ -34,7 +41,15 @@ export function AddPayPeriod() {
   };
 
   const onSave = () => {
-    // TODO add logic to save adjustment
+    const payload = {
+      payPeriod: formData.payPeriod,
+      status: formData.status,
+      startDate: dayjs(formData.startDate).format('MM/DD/YYYY'),
+      endDate: dayjs(formData.endDate).format('MM/DD/YYYY'),
+    };
+    postPayPeriod(payload);
+    dispatch(addPayPeriod(payload));
+    dispatch(setPayPeriodSelected(payload.payPeriod));
     closeDrawer();
   };
 
@@ -60,18 +75,11 @@ export function AddPayPeriod() {
           date
           value={formData.startDate}
           label='Start Date'
-          datatype='startDate'
+          name='startDate'
           onChange={handleChange}
         />
 
-        <CustomInput
-          required
-          date
-          value={formData.endDate}
-          label='End Date'
-          datatype='endDate'
-          onChange={handleChange}
-        />
+        <CustomInput required date value={formData.endDate} label='End Date' name='endDate' onChange={handleChange} />
         <Button
           onClick={onSave}
           size='large'

@@ -111,7 +111,7 @@ export function EditCommissionDraft(props: IEditCommissionDraftProps) {
             date
             value={formData.payDate}
             label='Pay Date'
-            datatype='payDate'
+            name='payDate'
             onChange={handleChange}
           /> */}
         </Box>

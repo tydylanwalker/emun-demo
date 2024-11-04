@@ -88,7 +88,13 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
       <Stack sx={{ position: 'absolute', top: 0, right: 0 }}>{props.endAction}</Stack>
       {props.value instanceof dayjs || props.date ? (
         <DatePicker
-          value={props.value === '' ? null : (props.value as dayjs.Dayjs)}
+          value={
+            props.value === ''
+              ? null
+              : props.value instanceof dayjs
+                ? (props.value as dayjs.Dayjs)
+                : dayjs(props.value as string) || null
+          }
           onChange={handleDateChange}
           format='MM/DD/YYYY'
           slotProps={{

@@ -7,8 +7,15 @@ import { CustomInput } from '../../../shared/CustomInput';
 import { ECheckStatus } from '../../../../data/enums/ECheckStatus';
 import { ICheck } from '../../../../data/interfaces/ICheck';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/ReduxHooks';
-import { getVendors } from '../../../../store/slices/dataSlice';
-import { getAddCheckOpen, getVendorSelected, setAddCheckOpen } from '../../../../store/slices/enterCommissionsSlice';
+import { addCheck, getVendors } from '../../../../store/slices/dataSlice';
+import {
+  getAddCheckOpen,
+  getVendorSelected,
+  setAddCheckOpen,
+  setCheckSelected,
+} from '../../../../store/slices/enterCommissionsSlice';
+import { postCheck } from '../../../../data/requests/checks/postCheck';
+import { checkDisplayValue } from '../../../../functions/checkDisplayValue';
 
 export function AddCheck() {
   const dispatch = useAppDispatch();
@@ -43,7 +50,19 @@ export function AddCheck() {
   };
 
   const onSave = () => {
-    // TODO add logic to save adjustment
+    const payload = {
+      vendor: formData.vendor,
+      payPeriod: formData.payPeriod,
+      number: formData.number,
+      checkAmount: formData.checkAmount,
+      status: formData.status,
+      additionalDetails: formData.additionalDetails,
+      receivedDate: dayjs(formData.receivedDate).format('MM/DD/YYYY'),
+      payDate: dayjs(formData.payDate).format('MM/DD/YYYY'),
+    };
+    postCheck(payload);
+    dispatch(addCheck(payload));
+    dispatch(setCheckSelected(checkDisplayValue(payload)));
     closeDrawer();
   };
 
@@ -102,14 +121,7 @@ export function AddCheck() {
             name='receivedDate'
             onChange={handleChange}
           />
-          <CustomInput
-            required
-            date
-            value={formData.payDate}
-            label='Pay Date'
-            datatype='payDate'
-            onChange={handleChange}
-          />
+          <CustomInput required date value={formData.payDate} label='Pay Date' name='payDate' onChange={handleChange} />
         </Box>
         <CustomInput
           value={formData.additionalDetails}

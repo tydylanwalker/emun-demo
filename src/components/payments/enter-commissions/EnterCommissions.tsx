@@ -1,18 +1,14 @@
 import { Button, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useState } from 'react';
-import { AddCheck } from './forms/AddCheck';
 import { CustomInput } from '../../shared/CustomInput';
 import { EnterCommissionsTable } from './table/EnterCommissionsTable';
 import { ErrorEnum } from '../../../data/enums/ErrorEnum';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
 import { CommissionsSpeedDial } from '../../shared/CommissionsSpeedDial';
-import { AddDirectOrder } from './forms/AddDirectOrder';
-import { AddAdjustment } from './forms/AddAdjustment';
 import { ModeButtons } from './actions/ModeButtons';
 import { IOrder } from '../../../data/interfaces/IOrder';
 import { OrdersTable } from '../../orders/OrdersTable';
-import { AddPayPeriod } from './forms/AddPayPeriod';
 import { UploadFileModal } from './modals/UploadFileModal';
 import { SingleEntryModal } from './modals/SingleEntryModal';
 import { useAppDispatch, useAppSelector } from '../../../hooks/ReduxHooks';
@@ -29,6 +25,7 @@ import {
   setUploadFileOpen,
   setVendorSelected,
 } from '../../../store/slices/enterCommissionsSlice';
+import { checkDisplayValue } from '../../../functions/checkDisplayValue';
 
 interface IRowObject<T> {
   value: T;
@@ -68,7 +65,7 @@ export function EnterCommissions() {
   const vendorSelected = useAppSelector(getVendorSelected);
 
   const checks = useAppSelector(getChecks);
-  const checkOptions = checks.map((check) => `${check.number} - $${formatCurrency(Number(check.checkAmount))}`);
+  const checkOptions = checks.map(checkDisplayValue);
   const checkSelected = useAppSelector(getCheckSelected);
 
   const payPeriods = useAppSelector(getPayPeriods);
@@ -85,9 +82,7 @@ export function EnterCommissions() {
     (sum, row) => (sum += Object.values(row).some((field) => field.error) ? 0 : row.commissionAmount.value),
     0
   );
-  const checkAmount =
-    checks.find((check) => `${check.number} - $${formatCurrency(Number(check.checkAmount))}` === checkSelected)
-      ?.checkAmount || 0;
+  const checkAmount = checks.find((check) => checkDisplayValue(check) === checkSelected)?.checkAmount || 0;
   const remainingBalance = checkAmount - commissionTotals;
 
   const onSingleEntryModalClose = () => {
@@ -216,11 +211,7 @@ export function EnterCommissions() {
         </>
       )}
 
-      {/* Modals and Drawers */}
-      <AddCheck />
-      <AddPayPeriod />
-      <AddDirectOrder />
-      <AddAdjustment />
+      {/* Modals */}
       <UploadFileModal />
       <SingleEntryModal
         order={singleEntryMatchOrder}
