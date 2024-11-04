@@ -21,12 +21,12 @@ export interface ICommissionDraftHeader {
 const commissionsHeader: ICommissionDraftHeader[] = [
   {
     label: 'Check #',
-    align: 'left',
+    align: 'center',
     id: 'checkNumber',
   },
   {
     label: 'Check Amount',
-    align: 'right',
+    align: 'center',
     id: 'checkAmount',
     type: 'currency',
   },
