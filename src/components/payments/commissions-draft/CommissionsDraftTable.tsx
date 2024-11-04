@@ -1,46 +1,34 @@
 import { useEffect, useState } from 'react';
-import { Button, IconButton, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { CustomInput } from '../../shared/CustomInput';
-import { ICommissionDraft, commissions } from '../../../data/mock/commissions';
 import { CommissionsDraftTableRow } from './CommissionsDraftTableRow';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
-import { AddRounded, Visibility } from '@mui/icons-material';
+import { Visibility } from '@mui/icons-material';
 import { CustomTableContainer } from '../../shared/CustomTableContainer';
 import { CommissionsSpeedDial } from '../../shared/CommissionsSpeedDial';
-import { EditCommissionDraft } from './forms/EditCommissionDraft';
 import { useAppDispatch, useAppSelector } from '../../../hooks/ReduxHooks';
-import { getPayPeriods, getVendors } from '../../../store/slices/dataSlice';
+import { getInvoices, getPayPeriods, getVendors, setInvoices } from '../../../store/slices/dataSlice';
 import {
   getPayPeriodSelected,
   getVendorSelected,
   setPayPeriodSelected,
   setVendorSelected,
 } from '../../../store/slices/enterCommissionsSlice';
+import { IInvoice } from '../../../data/interfaces/IInvoice';
 
 export interface ICommissionDraftHeader {
   label: string;
-  id: keyof ICommissionDraft;
+  id: keyof IInvoice;
   align: 'left' | 'right' | 'center';
   type?: 'currency' | 'date' | 'percentage';
 }
 
 const commissionsHeader: ICommissionDraftHeader[] = [
   {
-    label: 'Check #',
-    align: 'center',
-    id: 'checkNumber',
-  },
-  {
-    label: 'Check Amount',
-    align: 'center',
-    id: 'checkAmount',
-    type: 'currency',
-  },
-  {
-    label: 'Pay Period',
+    label: 'Customer',
     align: 'left',
-    id: 'payPeriod',
+    id: 'customerName',
   },
   {
     label: 'Invoice #',
@@ -53,7 +41,7 @@ const commissionsHeader: ICommissionDraftHeader[] = [
     id: 'invoiceDate',
   },
   {
-    label: 'Invoice Amount',
+    label: 'Invoice $',
     align: 'right',
     id: 'invoiceAmount',
     type: 'currency',
@@ -61,62 +49,69 @@ const commissionsHeader: ICommissionDraftHeader[] = [
   {
     label: 'Vendor',
     align: 'left',
-    id: 'vendor',
+    id: 'vendorName',
   },
   {
-    label: 'Vendor Comm %',
+    label: 'Commission %',
     align: 'center',
-    id: 'vendorCommission',
+    id: 'commissionPercentage',
     type: 'percentage',
   },
   {
-    label: 'Total Comm Amt',
+    label: 'Commission $',
     align: 'right',
     id: 'commissionAmount',
     type: 'currency',
   },
   {
-    label: 'Rep Comm Amt.',
+    label: 'Rep',
+    align: 'left',
+    id: 'rep',
+  },
+  {
+    label: 'Rep %',
+    align: 'center',
+    id: 'repCommissionPercentage',
+    type: 'percentage',
+  },
+  {
+    label: 'Rep $.',
     align: 'right',
     id: 'repCommissionAmount',
     type: 'currency',
   },
   {
-    label: 'Your Comm %',
+    label: 'Check #',
     align: 'center',
-    id: 'repCommissionRate',
-    type: 'percentage',
+    id: 'checkNumber',
   },
+  // {
+  //   label: 'Check $',
+  //   align: 'center',
+  //   id: 'checkAmount',
+  //   type: 'currency',
+  // },
   {
-    label: 'Comments',
+    label: 'Pay Period',
     align: 'left',
-    id: 'comments',
-  },
-  {
-    label: 'strCategory',
-    align: 'left',
-    id: 'strCategory',
-  },
-  {
-    label: 'Account Type',
-    align: 'center',
-    id: 'accountType',
+    id: 'payPeriod',
   },
 ];
 
 export function CommissionsDraftTable() {
   const dispatch = useAppDispatch();
+  const invoices = useAppSelector(getInvoices);
+  const postedInvoices = invoices.filter((invoice) => invoice.posted);
   const [searchText, setSearchText] = useState('');
 
-  const [rows, setRows] = useState(commissions);
-  const [filteredRows, setFilteredRows] = useState(commissions);
+  const [filteredRows, setFilteredRows] = useState(postedInvoices);
 
   const vendorSelected = useAppSelector(getVendorSelected);
   const vendors = useAppSelector(getVendors);
   const vendorOptions = vendors.map((vendor) => vendor.VendorName);
 
   const [repSelected, setRepSelected] = useState('');
-  const repNames = commissions.map((commission) => commission.rep);
+  const repNames = postedInvoices.map((invoice) => invoice.rep);
   const repOptions = Array.from(new Set(repNames.filter((name) => name.trim() !== '')));
 
   const payPeriods = useAppSelector(getPayPeriods);
@@ -126,51 +121,25 @@ export function CommissionsDraftTable() {
   const [invoicesTotal, setInvoicesTotal] = useState(0);
   const [commissionAmount, setCommissionAmount] = useState(0);
   const [repAmount, setRepAmount] = useState(0);
-  const [addDrawerOpen, setAddDrawerOpen] = useState(false);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
 
-  const addCommission = (commission: ICommissionDraft) => {
-    setAddDrawerOpen(false);
-    setRows([commission, ...rows]);
-    // setCheck(checkToSave.number || '');
-  };
-
-  const saveCommission = (commission: ICommissionDraft) => {
-    setAddDrawerOpen(false);
-    // setCheck(checkToSave.number || '');
-
-    if (rows.some((item) => item.invoiceNumber === commission.invoiceNumber)) {
-      const updatedRows = rows.map((item) => (item.invoiceNumber === commission.invoiceNumber ? commission : item));
-      setRows(updatedRows);
-    } else {
-      setRows([commission, ...rows]);
-    }
-  };
-
   useEffect(() => {
     setPage(0);
-    let filteredRows = rows;
-    if (vendorSelected) {
-      filteredRows = filteredRows.filter((commission) => commission.vendor == vendorSelected);
-    }
 
-    if (repSelected) {
-      filteredRows = filteredRows.filter((commission) => commission.rep == repSelected);
-    }
-
-    if (payPeriodSelected) {
-      filteredRows = filteredRows.filter((commission) => commission.payPeriod == payPeriodSelected);
-    }
-
-    if (searchText !== '') {
-      filteredRows = filteredRows.filter((row) =>
-        Object.values(row).some((value) => value.toString().toLowerCase().includes(searchText.toLowerCase()))
+    const filteredRows = postedInvoices.filter((row) => {
+      return (
+        (!vendorSelected || row.vendorName === vendorSelected) &&
+        (!repSelected || row.rep === repSelected) &&
+        (!payPeriodSelected || row.payPeriod === payPeriodSelected) &&
+        (searchText === '' ||
+          Object.values(row).some((value) => value.toString().toLowerCase().includes(searchText.toLowerCase())))
       );
-    }
+    });
+
     setFilteredRows(filteredRows);
-  }, [rows, vendorSelected, repSelected, payPeriodSelected, searchText]);
+  }, [postedInvoices, vendorSelected, repSelected, payPeriodSelected, searchText]);
 
   useEffect(() => {
     setInvoicesTotal(
@@ -198,10 +167,25 @@ export function CommissionsDraftTable() {
     );
   }, [filteredRows]);
 
-  const handleDeleteRow = (row: ICommissionDraft) => {
-    const items = rows;
+  const saveCommission = (updatedInvoice: IInvoice) => {
+    dispatch(
+      setInvoices(
+        invoices.map((invoice) => {
+          if (invoice.invoiceNumber === updatedInvoice.invoiceNumber) return updatedInvoice;
+          return invoice;
+        })
+      )
+    );
+    // TODO MOVE this to row component
+    // TODO update invoice in db
+    // TODO could add error handling if match not found
+  };
 
-    setRows(items.filter((item) => item !== row));
+  const handleDeleteRow = (invoiceToDelete: IInvoice) => {
+    dispatch(setInvoices(invoices.filter((invoice) => invoice !== invoiceToDelete)));
+    // TODO MOVE this to row component
+    // TODO Delete Row from invoices in db
+    // TODO could add error handling if match not found
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -311,11 +295,6 @@ export function CommissionsDraftTable() {
           </TableBody>
         </Table>
       </CustomTableContainer>
-      <EditCommissionDraft
-        open={addDrawerOpen}
-        toggleDrawer={(open: boolean) => setAddDrawerOpen(open)}
-        saveCommission={addCommission}
-      />
     </>
   );
 }

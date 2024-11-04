@@ -13,6 +13,7 @@ export function EnterCommissionsTable() {
   const dispatch = useAppDispatch();
   const commissionRows = useAppSelector(getEnterCommissionsRows);
   const [rowsWithErrors, setRowsWithErrors] = useState<IEnterCommissionsRow[]>([]);
+  const [matchedRows, setMatchedRows] = useState<IEnterCommissionsRow[]>([]);
   const [onlyShowErrors, setOnlyShowErrors] = useState(false);
   const renderedRows = onlyShowErrors ? rowsWithErrors : commissionRows;
   const [page, setPage] = useState(0);
@@ -20,9 +21,21 @@ export function EnterCommissionsTable() {
 
   useEffect(() => {
     setPage(0);
-    const errors = commissionRows.filter((row) => Object.values(row).some((field) => field.error));
-    if (errors.length === 0) setOnlyShowErrors(false);
-    setRowsWithErrors(errors);
+    const rowsWithErrors: IEnterCommissionsRow[] = [];
+    const matchedRows: IEnterCommissionsRow[] = [];
+
+    commissionRows.forEach((row) => {
+      if (Object.values(row).some((field) => field.error)) {
+        rowsWithErrors.push(row);
+      } else {
+        matchedRows.push(row);
+      }
+    });
+
+    if (rowsWithErrors.length === 0) setOnlyShowErrors(false);
+
+    setRowsWithErrors(rowsWithErrors);
+    setMatchedRows(matchedRows);
   }, [commissionRows]);
 
   const updateRows = (order: IOrder, rowToUpdate: IEnterCommissionsRow) => {
@@ -95,8 +108,8 @@ export function EnterCommissionsTable() {
     <CustomTableContainer
       taskBar={
         <EnterCommissionsTableTaskBar
-          totalRows={commissionRows.length}
-          rowsWithErrors={rowsWithErrors.length}
+          matchedRows={matchedRows}
+          rowsWithErrors={rowsWithErrors}
           onlyShowErrors={onlyShowErrors}
           setOnlyShowErrors={setOnlyShowErrors}
         />

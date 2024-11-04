@@ -5,7 +5,7 @@ export function mapVendor(rows: Array<{ [key: string]: any }>): IVendor[] {
     const vendor: IVendor = {
       Id: row.Id || '',
       VendorName: row.VendorName || '',
-      CommissionPercentage: row.CommissionPercentage || '',
+      CommissionPercentage: Number(row.CommissionPercentage) || 15,
     };
     return vendor;
   });

@@ -3,35 +3,44 @@ import Button from '@mui/material/Button';
 import { Box, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import { CustomInput } from '../../../shared/CustomInput';
-import { ICommissionDraft } from '../../../../data/mock/commissions';
 import { useAppSelector } from '../../../../hooks/ReduxHooks';
 import { getVendors } from '../../../../store/slices/dataSlice';
+import { IInvoice } from '../../../../data/interfaces/IInvoice';
 
 export function EditCommissionDraft(props: IEditCommissionDraftProps) {
   const initialData = {
-    checkNumber: 0,
-    checkAmount: 0,
-    invoiceNumber: 0,
-    invoiceDate: '',
-    payPeriod: '',
-    invoiceAmount: 0,
-    vendorCommission: 0,
-    commissionAmount: 0,
-    repCommissionAmount: 0,
-    repCommissionRate: 0,
-    comments: '',
-    strCategory: '',
-    accountType: '',
-    vendor: '',
-    rep: '',
-    orderNumber: '',
     poNumber: '',
+    orderDate: '',
+    invoiceNumber: '',
+    invoiceAmount: 0,
+    invoiceDate: '',
+    customerId: '',
+    customerName: '',
+    customerAddress: '',
+    customerCity: '',
+    customerState: '',
+    customerZip: '',
+    vendorName: '',
+    commissionPercentage: 15,
+    commissionAmount: 0,
+    repCommissionPercentage: 50,
+    repCommissionAmount: 0,
+    rep: '',
+    writingRep: '',
+    matched: true,
+    posted: true,
+    status: '',
+    payPeriod: '',
+    checkNumber: '',
+    checkAmount: 0,
+    split: false,
   };
 
-  const [formData, setFormData] = useState<ICommissionDraft>(props.commission ? props.commission : initialData);
+  const [formData, setFormData] = useState<IInvoice>(props.commission);
 
   const closeDrawer = () => {
     props.toggleDrawer(false);
+    setFormData(initialData);
   };
   const vendors = useAppSelector(getVendors);
   const vendorOptions = vendors.map((vendor) => vendor.VendorName);
@@ -45,17 +54,23 @@ export function EditCommissionDraft(props: IEditCommissionDraftProps) {
     }));
   };
 
+  const onSave = () => {
+    props.saveCommission(formData);
+    closeDrawer();
+    // TODO updateInvoices in state and db
+  };
+
   return (
     <Drawer open={props.open} onClose={closeDrawer} anchor='bottom' sx={{ zIndex: 1201 }}>
       <Stack p={2}>
         <Typography variant='h6' borderBottom={1}>
-          {props.commission ? 'Edit Commission' : 'Add Commission'}
+          Edit Commission Row
         </Typography>
         <Box display='flex' gap={2}>
           <CustomInput
             required
             select
-            value={formData.vendor}
+            value={formData.vendorName}
             options={vendorOptions}
             label='Vendor'
             name='vendor'
@@ -68,17 +83,6 @@ export function EditCommissionDraft(props: IEditCommissionDraftProps) {
             name='payPeriod'
             onChange={handleChange}
           />
-
-          {/* <CustomInput
-            required
-            select
-            value={formData.accountType}
-            label='Account Type'
-            name='status'
-            options={Object.values(ECheckStatus)}
-            onChange={handleChange}
-            maxWidth='10rem'
-          /> */}
         </Box>
         <Box display='flex' gap={2}>
           <CustomInput
@@ -87,15 +91,6 @@ export function EditCommissionDraft(props: IEditCommissionDraftProps) {
             label='Check Number'
             name='checkNumber'
             onChange={handleChange}
-          />
-          <CustomInput
-            required
-            currency
-            value={formData.accountType}
-            label='Account Type'
-            name='accountType'
-            onChange={handleChange}
-            maxWidth='12.5rem'
           />
           <CustomInput
             required
@@ -114,17 +109,16 @@ export function EditCommissionDraft(props: IEditCommissionDraftProps) {
             name='payDate'
             onChange={handleChange}
           /> */}
-        </Box>
-        <CustomInput value={formData.comments} label='Comments' name='comments' onChange={handleChange} multiline />
+        </Box>{' '}
         <Button
-          onClick={() => props.saveCommission(formData)}
+          onClick={onSave}
           size='large'
           color='success'
           variant='contained'
           fullWidth
           sx={{ borderRadius: 10, mt: 3 }}
         >
-          {props.commission ? 'Save Changes' : 'Add New Commission'}
+          Save Changes
         </Button>
       </Stack>
     </Drawer>
@@ -134,6 +128,6 @@ export function EditCommissionDraft(props: IEditCommissionDraftProps) {
 interface IEditCommissionDraftProps {
   open: boolean;
   toggleDrawer: (newOpen: boolean) => void;
-  commission?: ICommissionDraft;
-  saveCommission: (commission: ICommissionDraft) => void;
+  commission: IInvoice;
+  saveCommission: (commission: IInvoice) => void;
 }

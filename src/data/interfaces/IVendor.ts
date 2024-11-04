@@ -1,5 +1,5 @@
 export interface IVendor {
   Id: string;
   VendorName: string;
-  CommissionPercentage: string;
+  CommissionPercentage: number;
 }

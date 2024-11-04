@@ -10,6 +10,7 @@ export interface IInvoice {
   customerCity: string;
   customerState: string;
   customerZip: string;
+  vendorName: string;
   commissionPercentage: number;
   commissionAmount: number;
   repCommissionPercentage: number;

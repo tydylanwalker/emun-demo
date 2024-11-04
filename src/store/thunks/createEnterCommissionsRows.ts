@@ -19,7 +19,6 @@ export function createEnterCommissionsRows(
     const state = getState();
     const vendorSelected = state.enterCommissions.vendorSelected;
     const orders = state.data.orders.filter((order) => order.vendorName === vendorSelected);
-    console.log(orders);
 
     const commissionsRows = rows.map((row) => {
       // grab row data

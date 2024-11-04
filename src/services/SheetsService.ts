@@ -7,7 +7,7 @@ const SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.goo
 
 class SheetsService {
   private doc: GoogleSpreadsheet;
-  private currentSheetId?: number; // Make it optional
+  private currentSheetId?: number;
 
   constructor() {
     const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID as string;

@@ -37,10 +37,8 @@ const HomePage: NextPage = () => {
   const [vendor, setVendor] = React.useState('All');
 
   const vendorSelected = (value: string) => {
-    console.log(value);
     setVendor(value);
   };
-  console.log(getMonthsAgo(0));
   const lastMonthsOrders = []; /*ordersMock.results.filter(
     (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(0))
   )*/

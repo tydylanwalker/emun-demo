@@ -1,17 +1,17 @@
 import { Stack, TableCell, TableRow, Typography, Button, IconButton } from '@mui/material';
 import { formatCellData } from '../../../functions/formatCellData';
-import { ICommissionDraft } from '../../../data/mock/commissions';
 import { ICommissionDraftHeader } from './CommissionsDraftTable';
 import { DeleteOutlineRounded, EditRounded, SafetyDividerRounded } from '@mui/icons-material';
 import { useState } from 'react';
 import { CustomModal } from '../../shared/CustomModal';
 import { EditCommissionDraft } from './forms/EditCommissionDraft';
+import { IInvoice } from '../../../data/interfaces/IInvoice';
 
 export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
 
-  const saveCommission = (commission: ICommissionDraft) => {
+  const saveCommission = (commission: IInvoice) => {
     setEditDrawerOpen(false);
     props.saveCommission(commission);
     // setCommissions([...checkOptions, checkToSave.number]);
@@ -22,16 +22,16 @@ export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) 
   // const [repCommissionAmount, setRepCommissionAmount] = useState(0);
 
   // const commissionTotal = parseFloat(props.row['commissionAmount'].toString()) || 0.0;
-  // const repCommissionRate = parseFloat(props.row['repCommissionRate'].toString()) || 0.0;
+  // const repCommissionPercentage = parseFloat(props.row['repCommissionPercentage'].toString()) || 0.0;
   // const invoiceAmount = parseFloat(props.row['invoiceAmount'].toString()) || 0.0;
   // const vendorCommission = parseFloat(props.row['vendorCommission'].toString()) || 0.0;
 
   // useEffect(() => {
-  //   setRepCommissionAmount((commissionTotal * repCommissionRate) / 100);
+  //   setRepCommissionAmount((commissionTotal * repCommissionPercentage) / 100);
   //   setTotalCommissionAmount((invoiceAmount * vendorCommission) / 100);
-  // }, [commissionTotal, invoiceAmount, props.row, repCommissionRate, vendorCommission]);
+  // }, [commissionTotal, invoiceAmount, props.row, repCommissionPercentage, vendorCommission]);
 
-  const handleDelete = (row: ICommissionDraft) => {
+  const handleDelete = (row: IInvoice) => {
     props.handleDeleteRow(row);
     setIsModalOpen(false);
   };
@@ -60,7 +60,7 @@ export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) 
                   ? formatCellData(header.type, totalCommissionAmount)
                   : formatCellData(header.type, props.row[header.id])} */}
             </Typography>
-            {header.id === 'repCommissionRate' ? (
+            {header.id === 'repCommissionPercentage' ? (
               <SafetyDividerRounded onClick={() => alert('Open Split Commissions Modal')} sx={{ cursor: 'pointer' }} />
             ) : null}
           </Stack>
@@ -91,8 +91,8 @@ export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) 
 
 interface ICommissionsDraftTableRowProps {
   color?: string;
-  row: ICommissionDraft;
+  row: IInvoice;
   headers: ICommissionDraftHeader[];
-  handleDeleteRow: (row: ICommissionDraft) => void;
-  saveCommission: (commission: ICommissionDraft) => void;
+  handleDeleteRow: (row: IInvoice) => void;
+  saveCommission: (row: IInvoice) => void;
 }
