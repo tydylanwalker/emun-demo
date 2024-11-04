@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Button, IconButton, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { CustomInput } from '../../shared/CustomInput';
 import { ICommissionDraft, commissions } from '../../../data/mock/commissions';
 import { CommissionsDraftTableRow } from './CommissionsDraftTableRow';
 import { vendorsMock } from '../../../data/mock/vendors';
 import { HeaderAndValueCard } from '../../shared/HeaderAndValueCard';
 import { formatCurrency } from '../../../functions/formatCurrency';
-import { Visibility } from '@mui/icons-material';
+import { AddRounded, Visibility } from '@mui/icons-material';
 import { CustomTableContainer } from '../../shared/CustomTableContainer';
 import { CommissionsSpeedDial } from '../../shared/CommissionsSpeedDial';
+import { EditCommissionDraft } from './forms/EditCommissionDraft';
 
 export interface ICommissionDraftHeader {
   label: string;
@@ -115,6 +116,25 @@ export function CommissionsDraftTable() {
   const [invoicesTotal, setInvoicesTotal] = useState(0);
   const [commissionAmount, setCommissionAmount] = useState(0);
   const [repAmount, setRepAmount] = useState(0);
+  const [addDrawerOpen, setAddDrawerOpen] = useState(false);
+
+  const addCommission = (commission: ICommissionDraft) => {
+    setAddDrawerOpen(false);
+    setRows([commission, ...rows]);
+    // setCheck(checkToSave.number || '');
+  };
+
+  const saveCommission = (commission: ICommissionDraft) => {
+    setAddDrawerOpen(false);
+    // setCheck(checkToSave.number || '');
+
+    if (rows.some((item) => item.invoiceNumber === commission.invoiceNumber)) {
+      let updatedRows = rows.map((item) => (item.invoiceNumber === commission.invoiceNumber ? commission : item));
+      setRows(updatedRows);
+    } else {
+      setRows([commission, ...rows]);
+    }
+  };
 
   useEffect(() => {
     let filteredRows = rows;
@@ -184,6 +204,11 @@ export function CommissionsDraftTable() {
             <Button color='primary' size='large' variant='outlined'>
               Close Draft
             </Button>
+
+            <IconButton color='inherit' onClick={() => setAddDrawerOpen(true)}>
+              <AddRounded />
+            </IconButton>
+
             <CommissionsSpeedDial show actions={[]} />
           </Stack>
         </Stack>
@@ -250,11 +275,17 @@ export function CommissionsDraftTable() {
                 row={row}
                 headers={commissionsHeader}
                 handleDeleteRow={handleDeleteRow}
+                saveCommission={saveCommission}
               />
             ))}
           </TableBody>
         </Table>
       </CustomTableContainer>
+      <EditCommissionDraft
+        open={addDrawerOpen}
+        toggleDrawer={(open: boolean) => setAddDrawerOpen(open)}
+        saveCommission={addCommission}
+      />
     </>
   );
 }

@@ -30,7 +30,7 @@ export const commissions: ICommissionDraft[] = [
     commissionAmount: 368.7,
     repCommissionAmount: 184.35,
     repCommissionRate: 50,
-    comments: '',
+    comments: 'Test Comment',
     strCategory: '',
     accountType: '',
     vendor: 'Green Earth Products',

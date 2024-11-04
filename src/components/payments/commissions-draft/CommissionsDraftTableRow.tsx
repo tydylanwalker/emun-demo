@@ -5,11 +5,18 @@ import { ICommissionDraftHeader } from './CommissionsDraftTable';
 import { DeleteOutlineRounded, EditRounded, SafetyDividerRounded } from '@mui/icons-material';
 import { useState } from 'react';
 import { CustomModal } from '../../shared/CustomModal';
+import { EditCommissionDraft } from './forms/EditCommissionDraft';
 
 export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [, setEditDrawerOpen] = useState(false);
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
 
+  const saveCommission = (commission: ICommissionDraft) => {
+    setEditDrawerOpen(false);
+    props.saveCommission(commission);
+    // setCommissions([...checkOptions, checkToSave.number]);
+    // setCheck(checkToSave.number || '');
+  };
   // ! LT Im confused what your doing here
   // const [totalCommissionAmount, setTotalCommissionAmount] = useState(0);
   // const [repCommissionAmount, setRepCommissionAmount] = useState(0);
@@ -72,6 +79,12 @@ export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) 
           </Stack>
         </Stack>
       </CustomModal>
+      <EditCommissionDraft
+        open={editDrawerOpen}
+        toggleDrawer={(open: boolean) => setEditDrawerOpen(open)}
+        commission={props.row}
+        saveCommission={saveCommission}
+      />
     </TableRow>
   );
 }
@@ -81,4 +94,5 @@ interface ICommissionsDraftTableRowProps {
   row: ICommissionDraft;
   headers: ICommissionDraftHeader[];
   handleDeleteRow: (row: ICommissionDraft) => void;
+  saveCommission: (commission: ICommissionDraft) => void;
 }
