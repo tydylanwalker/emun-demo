@@ -127,16 +127,14 @@ export function CommissionsDraftTable() {
 
   useEffect(() => {
     setPage(0);
-
-    const filteredRows = postedInvoices.filter((row) => {
-      return (
-        (!vendorSelected || row.vendorName === vendorSelected) &&
-        (!repSelected || row.rep === repSelected) &&
-        (!payPeriodSelected || row.payPeriod === payPeriodSelected) &&
-        (searchText === '' ||
-          Object.values(row).some((value) => value.toString().toLowerCase().includes(searchText.toLowerCase())))
+    let filteredRows = postedInvoices;
+    if (vendorSelected) filteredRows = filteredRows.filter((row) => row.vendorName == vendorSelected);
+    if (repSelected) filteredRows = filteredRows.filter((row) => row.rep == repSelected);
+    if (payPeriodSelected) filteredRows = filteredRows.filter((row) => row.payPeriod == payPeriodSelected);
+    if (searchText !== '')
+      filteredRows = filteredRows.filter((row) =>
+        Object.values(row).some((value) => value.toString().toLowerCase().includes(searchText.toLowerCase()))
       );
-    });
 
     setFilteredRows(filteredRows);
   }, [postedInvoices, vendorSelected, repSelected, payPeriodSelected, searchText]);
