@@ -126,18 +126,18 @@ export function CommissionsDraftTable() {
   const [rowsPerPage, setRowsPerPage] = useState(100);
 
   useEffect(() => {
-    setPage(0);
+    console.log(1);
     let filteredRows = postedInvoices;
-    if (vendorSelected) filteredRows = filteredRows.filter((row) => row.vendorName == vendorSelected);
-    if (repSelected) filteredRows = filteredRows.filter((row) => row.rep == repSelected);
-    if (payPeriodSelected) filteredRows = filteredRows.filter((row) => row.payPeriod == payPeriodSelected);
+    if (vendorSelected) filteredRows = filteredRows.filter((row) => row.vendorName === vendorSelected);
+    if (repSelected) filteredRows = filteredRows.filter((row) => row.rep === repSelected);
+    if (payPeriodSelected) filteredRows = filteredRows.filter((row) => row.payPeriod === payPeriodSelected);
     if (searchText !== '')
       filteredRows = filteredRows.filter((row) =>
         Object.values(row).some((value) => value.toString().toLowerCase().includes(searchText.toLowerCase()))
       );
 
     setFilteredRows(filteredRows);
-  }, [postedInvoices, vendorSelected, repSelected, payPeriodSelected, searchText]);
+  }, [vendorSelected, repSelected, payPeriodSelected, searchText]);
 
   useEffect(() => {
     setInvoicesTotal(
