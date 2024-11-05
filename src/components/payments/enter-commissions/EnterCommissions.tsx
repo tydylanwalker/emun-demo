@@ -1,5 +1,5 @@
 import { Button, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CustomInput } from '../../shared/CustomInput';
 import { EnterCommissionsTable } from './table/EnterCommissionsTable';
 import { ErrorEnum } from '../../../data/enums/ErrorEnum';
@@ -12,7 +12,7 @@ import { OrdersTable } from '../../orders/OrdersTable';
 import { UploadFileModal } from './modals/UploadFileModal';
 import { SingleEntryModal } from './modals/SingleEntryModal';
 import { useAppDispatch, useAppSelector } from '../../../hooks/ReduxHooks';
-import { getChecks, getPayPeriods, getVendors } from '../../../store/slices/dataSlice';
+import { getChecks, getInvoices, getPayPeriods, getVendors } from '../../../store/slices/dataSlice';
 import {
   getCheckSelected,
   getEnterCommissionsRows,
@@ -26,7 +26,9 @@ import {
   setVendorSelected,
 } from '../../../store/slices/enterCommissionsSlice';
 import { checkDisplayValue } from '../../../functions/checkDisplayValue';
-
+import { createEnterCommissionsRowsFromValues } from '../../../store/thunks/createEnterCommissionRowsFromInvoice';
+import { batchUpdateInvoices } from '../../../data/requests/invoices/batchUpdateInvoices';
+import { updateInvoice } from '../../../data/requests/invoices/updateInvoice';
 interface IRowObject<T> {
   value: T;
   error?: ErrorEnum;
@@ -57,6 +59,7 @@ export enum EEnterCommissionModes {
 
 export function EnterCommissions() {
   const dispatch = useAppDispatch();
+  const invoices = useAppSelector(getInvoices);
 
   const commissionRows = useAppSelector(getEnterCommissionsRows);
 
@@ -95,6 +98,21 @@ export function EnterCommissions() {
   };
 
   const showTransition = (show: boolean) => ({ opacity: show ? 1 : 0, transition: 'opacity 1s ease-in' });
+
+  // /**
+  //  * Whenever all 3 dropdown values are selected and or changed we find any existing (not posted) commission rows and then populate the table if there are any
+  //  */
+  // useEffect(() => {
+  //   if (vendorSelected && checkSelected && payPeriodSelected) {
+  //     const existingCommissionRows = invoices.filter(
+  //       (invoice) => vendorSelected === invoice.vendorName && payPeriodSelected === invoice.payPeriod && !invoice.posted
+  //     );
+  //     if (existingCommissionRows.length > 0) {
+  //       dispatch(createEnterCommissionsRowsFromValues(existingCommissionRows));
+  //       setMode(EEnterCommissionModes.view);
+  //     }
+  //   }
+  // }, [checkSelected, dispatch, invoices, payPeriodSelected, vendorSelected]);
 
   return (
     <Stack height={1}>

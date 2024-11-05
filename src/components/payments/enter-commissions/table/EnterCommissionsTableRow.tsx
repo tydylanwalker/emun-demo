@@ -10,6 +10,7 @@ import { enterCommissionHeaders } from '../../../../data/interfaces/IEnterCommis
 export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) {
   const [orderGridOpen, setOrderGridOpen] = useState(false);
   const [errorValues, setErrorValues] = useState<IEnterCommissionsTableRowError | undefined>(undefined);
+  const hasError = Object.values(props.row).some((field) => field.error);
 
   const handleModalOpen = (error: IEnterCommissionsTableRowError) => {
     setOrderGridOpen(true);
@@ -28,11 +29,13 @@ export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) 
 
   return (
     <>
-      <TableRow
-        sx={Object.values(props.row).some((field) => field.error) ? { border: 2, borderColor: 'error.main' } : {}}
-      >
+      <TableRow sx={hasError ? { border: 2, borderColor: 'error.main' } : {}}>
         <TableCell align={'center'} sx={{ cursor: 'default' }}>
-          <Checkbox checked={props.row.checked.value} onChange={() => props.toggleChecked?.(props.row)} />
+          <Checkbox
+            checked={props.row.checked.value}
+            onChange={() => props.toggleChecked?.(props.row)}
+            disabled={hasError}
+          />
         </TableCell>
         {enterCommissionHeaders.map((header, index) => {
           const error = determineErrorHandling(props.row[header.id].error, props.row);

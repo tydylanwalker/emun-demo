@@ -4,6 +4,7 @@ export enum EPayPeriodStatus {
 }
 
 export interface IPayPeriod {
+  guid?: string;
   payPeriod: string;
   status: string;
   startDate: string;

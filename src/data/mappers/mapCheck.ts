@@ -3,6 +3,7 @@ import { ICheck } from '../interfaces/ICheck';
 export function mapCheck(rows: Array<{ [key: string]: any }>): ICheck[] {
   return rows.map((row) => {
     const check: ICheck = {
+      guid: row.guid || '',
       vendor: row.vendor || '',
       payPeriod: row.payPeriod || '',
       number: row.number || '',

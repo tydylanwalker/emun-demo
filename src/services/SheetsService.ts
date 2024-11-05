@@ -1,5 +1,6 @@
 // services/GoogleSheetsService.ts
-import { GoogleSpreadsheet } from 'google-spreadsheet';
+import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
+import { google, sheets_v4 } from 'googleapis';
 import { JWT } from 'google-auth-library';
 import { ESheets } from '../data/enums/ESheets';
 
@@ -7,10 +8,14 @@ const SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.goo
 
 class SheetsService {
   private doc: GoogleSpreadsheet;
+  private sheetsApi: sheets_v4.Sheets;
+  private spreadsheetId: string;
   private currentSheetId?: number;
+  private sheetCache?: GoogleSpreadsheetWorksheet;
 
+  // * CONSTRUCTOR
   constructor() {
-    const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID as string;
+    this.spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID as string;
     const email = process.env.GOOGLE_CLIENT_EMAIL as string;
     const key = process.env.GOOGLE_SERVICE_PRIVATE_KEY as string;
 
@@ -20,25 +25,39 @@ class SheetsService {
       scopes: SCOPES,
     });
 
-    this.doc = new GoogleSpreadsheet(spreadsheetId, jwt);
+    this.doc = new GoogleSpreadsheet(this.spreadsheetId, jwt);
+    this.sheetsApi = google.sheets({ version: 'v4', auth: jwt });
   }
 
+  // * SETTERS
+
   setSheet(sheetId: ESheets) {
-    this.currentSheetId = sheetId;
+    if (this.currentSheetId !== sheetId) {
+      this.currentSheetId = sheetId;
+      this.sheetCache = undefined;
+    }
     return this;
   }
 
-  private validateSheetId() {
-    if (this.currentSheetId === undefined) {
+  // * GETTERS
+
+  private async getSheet() {
+    if (!this.currentSheetId) {
       throw new Error('Sheet ID must be set using setSheet() before calling this method.');
     }
+    if (!this.sheetCache) {
+      await this.doc.loadInfo();
+      this.sheetCache = this.doc.sheetsById[this.currentSheetId];
+    }
+    return this.sheetCache;
   }
 
-  async getAll() {
-    this.validateSheetId();
-    await this.doc.loadInfo();
+  // * PRIVATE HELPER FUNCTIONS
 
-    const sheet = this.doc.sheetsById[this.currentSheetId as number];
+  // * REQUESTS
+
+  async getAll() {
+    const sheet = await this.getSheet();
     await sheet.loadHeaderRow();
     const headerValues = sheet.headerValues;
     const rows = await sheet.getRows();
@@ -53,11 +72,114 @@ class SheetsService {
   }
 
   async post(data: { [key: string]: any }) {
-    this.validateSheetId();
-    await this.doc.loadInfo();
-
-    const sheet = this.doc.sheetsById[this.currentSheetId as number];
+    const sheet = await this.getSheet();
     await sheet.addRow(data);
+  }
+
+  async batchPost(rows: any[]) {
+    const sheet = await this.getSheet();
+    const sheetTitle = sheet.title;
+
+    const existingRows = await sheet.getRows();
+    const startRow = existingRows.length + 2;
+
+    const data = rows.map((row, index) => ({
+      range: `${sheetTitle}!A${startRow + index}`,
+      values: [Object.values(row)],
+    }));
+
+    const resource = {
+      data,
+      valueInputOption: 'RAW',
+    };
+
+    try {
+      await this.sheetsApi.spreadsheets.values.batchUpdate({
+        spreadsheetId: this.spreadsheetId,
+        requestBody: resource,
+      });
+    } catch (error) {
+      console.error('Error in batchPost:', error);
+      throw error;
+    }
+  }
+
+  async update(index: number, row: { [key: string]: any }) {
+    const sheet = await this.getSheet();
+    await sheet.loadHeaderRow();
+    const headers = sheet.headerValues;
+
+    const values = headers.map((header) => row[header] ?? '');
+
+    const range = `${sheet.title}!A${index + 2}`;
+
+    const resource = {
+      range,
+      values: [values],
+    };
+
+    try {
+      await this.sheetsApi.spreadsheets.values.update({
+        spreadsheetId: this.spreadsheetId,
+        range: resource.range,
+        valueInputOption: 'RAW',
+        requestBody: { values: resource.values },
+      });
+    } catch (error) {
+      console.error('Error in updateRow:', error);
+      throw error;
+    }
+  }
+
+  async batchUpdate(updateRows: { [key: string]: any }[]) {
+    const sheet = await this.getSheet();
+    await sheet.loadHeaderRow();
+    const headerValues = sheet.headerValues;
+    const sheetTitle = sheet.title;
+
+    const existingRows = await this.getAll();
+
+    const body: { index: number; row: { [key: string]: any } }[] = [];
+    const notFound: { [key: string]: any }[] = [];
+
+    updateRows.forEach((row) => {
+      const index = existingRows.findIndex((existingRow) => existingRow.guid === row.guid);
+
+      if (index === -1) {
+        notFound.push(row);
+      } else {
+        body.push({
+          index,
+          row: {
+            ...existingRows[index],
+            ...row,
+          },
+        });
+      }
+    });
+
+    console.log('Not found: ', notFound);
+
+    const data = body.map(({ index, row }) => {
+      const values = headerValues.map((header) => row[header] ?? '');
+      const range = `${sheetTitle}!A${index + 2}`;
+      return { range, values: [values] };
+    });
+
+    const resource = {
+      data,
+      valueInputOption: 'RAW',
+    };
+
+    try {
+      await this.sheetsApi.spreadsheets.values.batchUpdate({
+        spreadsheetId: this.spreadsheetId,
+        requestBody: resource,
+      });
+    } catch (error) {
+      console.error('Error in batchUpdateRows:', error);
+      throw error;
+    }
   }
 }
 

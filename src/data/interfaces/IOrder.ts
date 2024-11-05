@@ -1,4 +1,5 @@
 export interface IOrder {
+  guid?: string;
   orderNumber: string;
   customerName: string;
   customerNumber: string;

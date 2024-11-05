@@ -1,4 +1,5 @@
 export interface IInvoice {
+  guid?: string;
   poNumber: string;
   orderDate: string;
   invoiceNumber: string;

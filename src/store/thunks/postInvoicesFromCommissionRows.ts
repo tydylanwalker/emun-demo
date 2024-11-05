@@ -5,6 +5,7 @@ import { IEnterCommissionsRow } from '../../components/payments/enter-commission
 import { IInvoice } from '../../data/interfaces/IInvoice';
 import { checkDisplayValue } from '../../functions/checkDisplayValue';
 import { postInvoice } from '../../data/requests/invoices/postInvoice';
+import { batchPostInvoices } from '../../data/requests/invoices/batchPostInvoices';
 
 /**
  * Creates our enter commissions rows based on the file data we read in
@@ -29,7 +30,7 @@ export function postInvoicesFromCommissions(
 
     if (!(foundVendor && foundCheck && foundPayPeriod)) return false;
 
-    rows.forEach((row) => {
+    const invoices = rows.map((row) => {
       const invoice: IInvoice = {
         poNumber: row.poNumber.value,
         orderDate: row.orderDate.value,
@@ -58,8 +59,10 @@ export function postInvoicesFromCommissions(
         split: false,
       };
 
-      postInvoice(invoice);
+      return invoice;
     });
+
+    batchPostInvoices(invoices);
     return true;
   };
 }

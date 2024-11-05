@@ -1,4 +1,5 @@
 export interface ICheck {
+  guid?: string;
   vendor: string;
   payPeriod: string;
   number: string;

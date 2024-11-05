@@ -7,7 +7,7 @@ import { CustomInput } from '../../../shared/CustomInput';
 import { CustomModal } from '../../../shared/CustomModal';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/ReduxHooks';
 import { isModeDark } from '../../../../store/slices/themeSlice';
-import { createEnterCommissionsRows } from '../../../../store/thunks/createEnterCommissionsRows';
+import { createEnterCommissionsRowsFromFileUpload } from '../../../../store/thunks/createEnterCommissionsRowsFromFileUpload';
 import { enterCommissionHeaders, IEnterCommissionsHeader } from '../../../../data/interfaces/IEnterCommissionsHeader';
 import { getUploadFileOpen, setUploadFileOpen } from '../../../../store/slices/enterCommissionsSlice';
 
@@ -135,7 +135,7 @@ export function UploadFileModal() {
       });
       return mappedRow;
     });
-    await dispatch(await createEnterCommissionsRows(mappedFileData || []));
+    await dispatch(await createEnterCommissionsRowsFromFileUpload(mappedFileData || []));
     closeModal();
   };
 

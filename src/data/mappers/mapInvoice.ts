@@ -3,6 +3,7 @@ import { IInvoice } from '../interfaces/IInvoice';
 export function mapInvoice(rows: Array<{ [key: string]: any }>): IInvoice[] {
   return rows.map((row) => {
     const invoice: IInvoice = {
+      guid: row.guid || '',
       poNumber: row.poNumber || '',
       orderDate: row.orderDate || '',
       invoiceNumber: row.invoiceNumber || '',

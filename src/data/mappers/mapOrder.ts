@@ -3,6 +3,7 @@ import { IOrder } from '../interfaces/IOrder';
 export function mapOrder(rows: Array<{ [key: string]: any }>): IOrder[] {
   return rows.map((row) => {
     const order: IOrder = {
+      guid: row.guid || '',
       orderNumber: row.orderNumber || '',
       customerName: row.customerName || '',
       customerNumber: row.customerNumber || '',
