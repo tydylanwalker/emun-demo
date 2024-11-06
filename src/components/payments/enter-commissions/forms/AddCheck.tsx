@@ -7,15 +7,16 @@ import { CustomInput } from '../../../shared/CustomInput';
 import { ECheckStatus } from '../../../../data/enums/ECheckStatus';
 import { ICheck } from '../../../../data/interfaces/ICheck';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/ReduxHooks';
-import { addCheck, getVendors } from '../../../../store/slices/dataSlice';
+import { getVendors } from '../../../../store/slices/dataSlice';
 import {
   getAddCheckOpen,
   getVendorSelected,
   setAddCheckOpen,
   setCheckSelected,
 } from '../../../../store/slices/enterCommissionsSlice';
-import { postCheck } from '../../../../data/requests/checks/postCheck';
 import { checkDisplayValue } from '../../../../functions/checkDisplayValue';
+import { postThunk } from '../../../../store/thunks/requests/postThunk';
+import { ESheets } from '../../../../data/enums/ESheets';
 
 export function AddCheck() {
   const dispatch = useAppDispatch();
@@ -49,7 +50,7 @@ export function AddCheck() {
     }));
   };
 
-  const onSave = () => {
+  const onSave = async () => {
     const payload = {
       vendor: formData.vendor,
       payPeriod: formData.payPeriod,
@@ -60,8 +61,7 @@ export function AddCheck() {
       receivedDate: dayjs(formData.receivedDate).format('MM/DD/YYYY'),
       payDate: dayjs(formData.payDate).format('MM/DD/YYYY'),
     };
-    postCheck(payload);
-    dispatch(addCheck(payload));
+    await dispatch(postThunk(payload, ESheets.Checks));
     dispatch(setCheckSelected(checkDisplayValue(payload)));
     closeDrawer();
   };

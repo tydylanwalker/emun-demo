@@ -8,15 +8,7 @@ import { Visibility } from '@mui/icons-material';
 import { CustomTableContainer } from '../../shared/CustomTableContainer';
 import { CommissionsSpeedDial } from '../../shared/CommissionsSpeedDial';
 import { useAppDispatch, useAppSelector } from '../../../hooks/ReduxHooks';
-import {
-  getChecks,
-  getDraftInvoices,
-  getPayPeriods,
-  getVendors,
-  stateBatchUpdateInvoices,
-  stateDeleteInvoice,
-  stateUpdateInvoice,
-} from '../../../store/slices/dataSlice';
+import { getChecks, getDraftInvoices, getPayPeriods, getVendors } from '../../../store/slices/dataSlice';
 import {
   getCheckSelected,
   getPayPeriodSelected,
@@ -28,9 +20,9 @@ import {
 import { IInvoice } from '../../../data/interfaces/IInvoice';
 import { CustomModal } from '../../shared/CustomModal';
 import { checkDisplayValue } from '../../../functions/checkDisplayValue';
-import { updateInvoice } from '../../../data/requests/invoices/updateInvoice';
-import { deleteInvoice } from '../../../data/requests/invoices/deleteInvoice';
-import { batchUpdateInvoices } from '../../../data/requests/invoices/batchUpdateInvoices';
+import { ESheets } from '../../../data/enums/ESheets';
+import { updateThunk } from '../../../store/thunks/requests/updateThunk';
+import { deleteThunk } from '../../../store/thunks/requests/deleteThunk';
 
 export interface ICommissionDraftHeader {
   label: string;
@@ -186,25 +178,22 @@ export function CommissionsDraftTable() {
     );
   }, [filteredRows]);
 
-  const saveCommission = (updatedInvoice: IInvoice) => {
-    dispatch(stateUpdateInvoice(updatedInvoice));
-    updateInvoice(updatedInvoice);
+  const saveCommission = async (invoiceToUpdate: IInvoice) => {
+    await dispatch(updateThunk(invoiceToUpdate, ESheets.Invoices));
   };
 
-  const handleDeleteRow = (invoiceToDelete: IInvoice) => {
-    dispatch(stateDeleteInvoice(invoiceToDelete));
-    deleteInvoice(invoiceToDelete);
+  const handleDeleteRow = async (invoiceToDelete: IInvoice) => {
+    await dispatch(deleteThunk(invoiceToDelete, ESheets.Invoices));
   };
 
-  const handleConfirmCloseDraft = () => {
-    setCloseDraftModal(false);
+  const handleConfirmCloseDraft = async () => {
     const updatedInvoices = draftInvoices
       .filter((invoice) => invoice.payPeriod === payPeriodSelected)
       .map((invoice) => {
         return { ...invoice, status: 'Closed' };
       });
-    dispatch(stateBatchUpdateInvoices(updatedInvoices));
-    batchUpdateInvoices(updatedInvoices);
+    await dispatch(updateThunk(updatedInvoices, ESheets.Invoices));
+    setCloseDraftModal(false);
   };
 
   return (

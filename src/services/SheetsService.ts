@@ -31,7 +31,6 @@ class SheetsService {
   }
 
   // * SETTERS
-
   setSheet(sheetId: ESheets) {
     if (this.currentSheetId !== sheetId) {
       this.currentSheetId = sheetId;
@@ -41,7 +40,6 @@ class SheetsService {
   }
 
   // * GETTERS
-
   private async getSheet() {
     if (!this.currentSheetId) {
       throw new Error('Sheet ID must be set using setSheet() before calling this method.');
@@ -53,11 +51,8 @@ class SheetsService {
     return this.sheetCache;
   }
 
-  // * PRIVATE HELPER FUNCTIONS
-
   // * REQUESTS
-
-  async getAll() {
+  async get() {
     const sheet = await this.getSheet();
     await sheet.loadHeaderRow();
     const headerValues = sheet.headerValues;
@@ -72,45 +67,27 @@ class SheetsService {
     });
   }
 
-  async post(data: { [key: string]: any }) {
+  async post(rows: any[]) {
     const sheet = await this.getSheet();
     await sheet.loadHeaderRow();
     const headers = sheet.headerValues;
 
-    data.guid = data.guid || uuidv4();
-    const rowData = headers.map((header) => data[header] ?? '');
-
-    await sheet.addRow(rowData);
-  }
-
-  // In the batchPost function
-  async batchPost(rows: any[]) {
-    const sheet = await this.getSheet();
-    await sheet.loadHeaderRow();
-    const headers = sheet.headerValues;
-    const sheetTitle = sheet.title;
-
-    const existingRows = await sheet.getRows();
-    const startRow = existingRows.length + 2;
-
-    const data = rows.map((row, index) => {
+    // Add a guid for each row we are going to post (sheets api cannot handle this so we have to do it here)
+    const values = rows.map((row) => {
       row.guid = row.guid || uuidv4();
-      const orderedRow = headers.map((header) => row[header] ?? '');
-
-      return {
-        range: `${sheetTitle}!A${startRow + index}`,
-        values: [orderedRow],
-      };
+      return headers.map((header) => row[header] ?? '');
     });
 
     const resource = {
-      data,
-      valueInputOption: 'RAW',
+      values: values,
     };
 
     try {
-      await this.sheetsApi.spreadsheets.values.batchUpdate({
+      await this.sheetsApi.spreadsheets.values.append({
         spreadsheetId: this.spreadsheetId,
+        range: sheet.title,
+        valueInputOption: 'RAW',
+        insertDataOption: 'INSERT_ROWS',
         requestBody: resource,
       });
     } catch (error) {
@@ -119,56 +96,23 @@ class SheetsService {
     }
   }
 
-  async update(row: { [key: string]: any }) {
-    const sheet = await this.getSheet();
-    await sheet.loadHeaderRow();
-    const headers = sheet.headerValues;
-    const sheetTitle = sheet.title;
-
-    const existingRows = await this.getAll();
-
-    // Find index and update row values
-    const index = existingRows.findIndex((existingRow) => existingRow.guid === row.guid);
-    const updatedRow = { ...existingRows[index], ...row };
-
-    const values = headers.map((header) => updatedRow[header] ?? '');
-
-    const range = `${sheetTitle}!A${index + 2}`;
-
-    const resource = {
-      range,
-      values: [values],
-    };
-
-    try {
-      await this.sheetsApi.spreadsheets.values.update({
-        spreadsheetId: this.spreadsheetId,
-        range: resource.range,
-        valueInputOption: 'RAW',
-        requestBody: { values: resource.values },
-      });
-    } catch (error) {
-      console.error('Error in updateRow:', error);
-      throw error;
-    }
-  }
-
-  async batchUpdate(updateRows: { [key: string]: any }[]) {
+  async patch(rows: { [key: string]: any }[]) {
     const sheet = await this.getSheet();
     await sheet.loadHeaderRow();
     const headerValues = sheet.headerValues;
     const sheetTitle = sheet.title;
 
-    const existingRows = await this.getAll();
+    const existingRows = await this.get();
 
     const body: { index: number; row: { [key: string]: any } }[] = [];
-    const notFound: { [key: string]: any }[] = [];
+    const errors: { [key: string]: any }[] = [];
 
-    updateRows.forEach((row) => {
+    rows.forEach((row) => {
       const index = existingRows.findIndex((existingRow) => existingRow.guid === row.guid);
 
-      if (index === -1) {
-        notFound.push(row);
+      // Check if index not found or found multiple
+      if (index === -1 || index === 0) {
+        errors.push(row);
       } else {
         body.push({
           index,
@@ -180,7 +124,8 @@ class SheetsService {
       }
     });
 
-    console.log('Not found: ', notFound);
+    // This should always be empty, if not something is wrong
+    if (errors.length > 0) console.error('ERROR ROWS: ', errors);
 
     const data = body.map(({ index, row }) => {
       const values = headerValues.map((header) => row[header] ?? '');
@@ -204,37 +149,38 @@ class SheetsService {
     }
   }
 
-  async delete(row: { [key: string]: any }) {
+  async delete(rows: Array<{ [key: string]: any }>) {
     const sheet = await this.getSheet();
+    const existingRows = await this.get();
 
-    const existingRows = await this.getAll();
+    const deleteRequests = rows.map((row) => {
+      const index = existingRows.findIndex((existingRow) => existingRow.guid === row.guid);
 
-    // Find index of row to delete
-    const index = existingRows.findIndex((existingRow) => existingRow.guid === row.guid);
-    const startIndex = index + 1;
-    const endIndex = startIndex + 1;
+      if (index === -1) {
+        throw new Error(`Row with guid ${row.guid} not found`);
+      }
+
+      return {
+        deleteDimension: {
+          range: {
+            sheetId: sheet.sheetId,
+            dimension: 'ROWS',
+            startIndex: index + 1,
+            endIndex: index + 2,
+          },
+        },
+      };
+    });
 
     try {
-      // Use batchUpdate to delete the row entirely
       await this.sheetsApi.spreadsheets.batchUpdate({
         spreadsheetId: this.spreadsheetId,
         requestBody: {
-          requests: [
-            {
-              deleteDimension: {
-                range: {
-                  sheetId: sheet.sheetId,
-                  dimension: 'ROWS',
-                  startIndex: startIndex,
-                  endIndex: endIndex,
-                },
-              },
-            },
-          ],
+          requests: deleteRequests,
         },
       });
     } catch (error) {
-      console.error('Error in deleteRow:', error);
+      console.error('Error in deleteRows:', error);
       throw error;
     }
   }

@@ -4,8 +4,8 @@ import { ThunkAction } from 'redux-thunk';
 import { IEnterCommissionsRow } from '../../components/payments/enter-commissions/EnterCommissions';
 import { IInvoice } from '../../data/interfaces/IInvoice';
 import { checkDisplayValue } from '../../functions/checkDisplayValue';
-import { postInvoice } from '../../data/requests/invoices/postInvoice';
-import { batchPostInvoices } from '../../data/requests/invoices/batchPostInvoices';
+import { postThunk } from './requests/postThunk';
+import { ESheets } from '../../data/enums/ESheets';
 
 /**
  * Creates our enter commissions rows based on the file data we read in
@@ -62,7 +62,7 @@ export function postInvoicesFromCommissions(
       return invoice;
     });
 
-    batchPostInvoices(invoices);
+    await dispatch(postThunk(invoices, ESheets.Invoices));
     return true;
   };
 }

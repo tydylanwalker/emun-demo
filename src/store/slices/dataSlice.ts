@@ -78,17 +78,6 @@ const dataSlice = createSlice({
     stateDeleteInvoice: (state, action: PayloadAction<IInvoice>) => {
       state.invoices = state.invoices.filter((invoice) => invoice.guid !== action.payload.guid);
     },
-    stateBatchUpdateInvoices: (state, action: PayloadAction<IInvoice[]>) => {
-      state.invoices = state.invoices.map((invoice) => {
-        const foundInvoice = action.payload.find((payload) => invoice.guid === payload.guid);
-        return foundInvoice || invoice;
-      });
-      // action.payload.forEach((updatedInvoice) => {
-      //   const indexToUpdate = state.invoices.findIndex((invoice) => invoice.guid === updatedInvoice.guid);
-      //   if (indexToUpdate !== -1)
-      //     state.invoices[indexToUpdate] = { ...state.invoices[indexToUpdate], ...updatedInvoice };
-      // });
-    },
     dataInitialized: (state) => {
       state.dataInitialized = true;
     },
@@ -110,7 +99,6 @@ export const {
   setInvoices,
   stateUpdateInvoice,
   stateDeleteInvoice,
-  stateBatchUpdateInvoices,
   setPayPeriods,
   setVendors,
   stateAddCheck,

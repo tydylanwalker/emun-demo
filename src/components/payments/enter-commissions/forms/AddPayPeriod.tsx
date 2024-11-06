@@ -10,9 +10,9 @@ import {
   setAddPayPeriodOpen,
   setPayPeriodSelected,
 } from '../../../../store/slices/enterCommissionsSlice';
-import { addPayPeriod } from '../../../../store/slices/dataSlice';
 import dayjs from 'dayjs';
-import { postPayPeriod } from '../../../../data/requests/payPeriods/postPayPeriod';
+import { postThunk } from '../../../../store/thunks/requests/postThunk';
+import { ESheets } from '../../../../data/enums/ESheets';
 
 export function AddPayPeriod() {
   const dispatch = useAppDispatch();
@@ -40,15 +40,14 @@ export function AddPayPeriod() {
     }));
   };
 
-  const onSave = () => {
+  const onSave = async () => {
     const payload = {
       payPeriod: formData.payPeriod,
       status: formData.status,
       startDate: dayjs(formData.startDate).format('MM/DD/YYYY'),
       endDate: dayjs(formData.endDate).format('MM/DD/YYYY'),
     };
-    postPayPeriod(payload);
-    dispatch(addPayPeriod(payload));
+    await dispatch(postThunk(payload, ESheets.PayPeriods));
     dispatch(setPayPeriodSelected(payload.payPeriod));
     closeDrawer();
   };
