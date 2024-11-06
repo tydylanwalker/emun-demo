@@ -29,54 +29,20 @@ const dataSlice = createSlice({
   name: 'data',
   initialState,
   reducers: {
-    // * ORDER SETTERS
     setOrders: (state, action: PayloadAction<IOrder[]>) => {
       state.orders = action.payload;
     },
-    stateAddOrder: (state, action: PayloadAction<IOrder>) => {
-      state.orders.unshift(action.payload);
-    },
-
-    // * CHECK SETTERS
     setChecks: (state, action: PayloadAction<ICheck[]>) => {
       state.checks = action.payload;
     },
-    stateAddCheck: (state, action: PayloadAction<ICheck>) => {
-      state.checks.unshift(action.payload);
-    },
-
-    // * VENDOR SETTERS
     setVendors: (state, action: PayloadAction<IVendor[]>) => {
       state.vendors = action.payload;
     },
-    stateAddVendor: (state, action: PayloadAction<IVendor>) => {
-      state.vendors.unshift(action.payload);
-    },
-
-    // * PAY PERIOD SETTERS
     setPayPeriods: (state, action: PayloadAction<IPayPeriod[]>) => {
       state.payPeriods = action.payload;
     },
-    stateAddPayPeriod: (state, action: PayloadAction<IPayPeriod>) => {
-      state.payPeriods.unshift(action.payload);
-    },
-
-    // * INVOICE SETTERS
     setInvoices: (state, action: PayloadAction<IInvoice[]>) => {
       state.invoices = action.payload;
-    },
-    stateUpdateInvoice: (state, action: PayloadAction<IInvoice>) => {
-      const updated = state.invoices.map((invoice) => {
-        if (invoice.invoiceNumber === action.payload.invoiceNumber) return action.payload;
-        return invoice;
-      });
-      state.invoices = updated;
-    },
-    stateAddInvoice: (state, action: PayloadAction<IInvoice>) => {
-      state.invoices.unshift(action.payload);
-    },
-    stateDeleteInvoice: (state, action: PayloadAction<IInvoice>) => {
-      state.invoices = state.invoices.filter((invoice) => invoice.guid !== action.payload.guid);
     },
     dataInitialized: (state) => {
       state.dataInitialized = true;
@@ -93,19 +59,6 @@ export const getDraftInvoices = (state: RootState) =>
   state.data.invoices.filter((invoice) => invoice.posted && invoice.status.toLowerCase() !== 'closed');
 export const getDataInitialized = (state: RootState) => state.data.dataInitialized;
 
-export const {
-  setOrders,
-  setChecks,
-  setInvoices,
-  stateUpdateInvoice,
-  stateDeleteInvoice,
-  setPayPeriods,
-  setVendors,
-  stateAddCheck,
-  stateAddOrder,
-  stateAddPayPeriod,
-  stateAddVendor,
-  dataInitialized,
-} = dataSlice.actions;
+export const { setOrders, setChecks, setInvoices, setPayPeriods, setVendors, dataInitialized } = dataSlice.actions;
 
 export const dataReducer = dataSlice.reducer;
