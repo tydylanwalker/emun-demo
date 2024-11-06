@@ -1,5 +1,5 @@
 import { Alert, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
-import { OrdersTable } from '../../../orders/OrdersTable';
+import { EOrderButtons, OrdersTable } from '../../../orders/OrdersTable';
 import { CustomModal } from '../../../shared/CustomModal';
 import { IEnterCommissionsTableRowError } from '../table/EnterCommissionsTableRow';
 import { IEnterCommissionsRow } from '../EnterCommissions';
@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { formatCellData } from '../../../../functions/formatCellData';
 import { CustomTableContainer } from '../../../shared/CustomTableContainer';
 import { enterCommissionHeaders } from '../../../../data/interfaces/IEnterCommissionsHeader';
+import { createDirectOrder } from '../../../../functions/createDirectOrder';
 
 export function ErrorCommissionModal(props: IErrorCommissionModalProps) {
   const [searchText, setSearchText] = useState(props.errorValues?.searchText);
@@ -18,6 +19,13 @@ export function ErrorCommissionModal(props: IErrorCommissionModalProps) {
 
   const handleClick = (newSearchText: string) => {
     setSearchText(newSearchText);
+  };
+
+  const handleConfirm = (order?: IOrder, type?: EOrderButtons) => {
+    // TODO this is so wrong but it works for now
+    // If order is undefined that means we clicked direct order or new customer so update the order if so
+    if (order === undefined) order = createDirectOrder(props.row, type === EOrderButtons.newCustomer);
+    props.onConfirmMatch(order);
   };
 
   return (
@@ -61,7 +69,7 @@ export function ErrorCommissionModal(props: IErrorCommissionModalProps) {
         </CustomTableContainer>
         <Typography variant='caption'>Note: Click on values to populate search bar</Typography>
       </Stack>
-      <OrdersTable initialSearchText={searchText} clickable onConfirmMatch={props.onConfirmMatch} />
+      <OrdersTable initialSearchText={searchText} clickable onConfirmMatch={handleConfirm} />
     </CustomModal>
   );
 }

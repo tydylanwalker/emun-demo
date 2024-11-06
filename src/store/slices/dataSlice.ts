@@ -59,7 +59,6 @@ const dataSlice = createSlice({
     stateDeleteInvoice: (state, action: PayloadAction<IInvoice>) => {
       state.invoices = state.invoices.filter((invoice) => invoice.guid !== action.payload.guid);
     },
-
     // stateUpdateMultipleInvoices: (state, action: PayloadAction<IInvoice[]>) => {
     //   const updated = state.invoices.map((invoice) => {
     //     if (invoice.invoiceNumber === action.payload.invoiceNumber) return action.payload;

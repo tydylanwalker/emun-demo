@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { formatCurrency } from './formatCurrency';
 
-export function formatCellData(type: string | undefined, value: string | number | boolean) {
+export function formatCellData(type: string | undefined, value: string | number | boolean | undefined) {
   if (value === undefined) return value;
   switch (type) {
     case 'currency':

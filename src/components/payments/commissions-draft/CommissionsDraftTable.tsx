@@ -288,6 +288,7 @@ export function CommissionsDraftTable() {
                 headers={commissionsHeader}
                 handleDeleteRow={handleDeleteRow}
                 saveCommission={saveCommission}
+                repOptions={repOptions}
               />
             ))}
             {/* {filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (

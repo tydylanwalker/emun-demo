@@ -81,9 +81,10 @@ export function CommissionsDraftTableRow(props: ICommissionsDraftTableRowProps) 
       </CustomModal>
       <EditCommissionDraft
         open={editDrawerOpen}
-        toggleDrawer={(open: boolean) => setEditDrawerOpen(open)}
+        closeModal={(open: boolean) => setEditDrawerOpen(open)}
         commission={props.row}
         saveCommission={saveCommission}
+        repOptions={props.repOptions}
       />
     </TableRow>
   );
@@ -95,4 +96,5 @@ interface ICommissionsDraftTableRowProps {
   headers: ICommissionDraftHeader[];
   handleDeleteRow: (row: IInvoice) => void;
   saveCommission: (row: IInvoice) => void;
+  repOptions: string[];
 }

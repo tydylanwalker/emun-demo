@@ -6,44 +6,14 @@ import { CustomInput } from '../../../shared/CustomInput';
 import { useAppSelector } from '../../../../hooks/ReduxHooks';
 import { getVendors } from '../../../../store/slices/dataSlice';
 import { IInvoice } from '../../../../data/interfaces/IInvoice';
+import { CustomModal } from '../../../shared/CustomModal';
 
 export function EditCommissionDraft(props: IEditCommissionDraftProps) {
-  const initialData = {
-    poNumber: '',
-    orderDate: '',
-    invoiceNumber: '',
-    invoiceAmount: 0,
-    invoiceDate: '',
-    customerId: '',
-    customerName: '',
-    customerAddress: '',
-    customerCity: '',
-    customerState: '',
-    customerZip: '',
-    vendorName: '',
-    commissionPercentage: 15,
-    commissionAmount: 0,
-    repCommissionPercentage: 50,
-    repCommissionAmount: 0,
-    rep: '',
-    writingRep: '',
-    matched: true,
-    posted: true,
-    status: '',
-    payPeriod: '',
-    checkNumber: '',
-    checkAmount: 0,
-    split: false,
-  };
-
   const [formData, setFormData] = useState<IInvoice>(props.commission);
 
-  const closeDrawer = () => {
-    props.toggleDrawer(false);
-    setFormData(initialData);
+  const closeModal = () => {
+    props.closeModal(false);
   };
-  const vendors = useAppSelector(getVendors);
-  const vendorOptions = vendors.map((vendor) => vendor.VendorName);
 
   const handleChange = (event: any) => {
     const { name, value } = event.target;
@@ -56,78 +26,63 @@ export function EditCommissionDraft(props: IEditCommissionDraftProps) {
 
   const onSave = () => {
     props.saveCommission(formData);
-    closeDrawer();
+    closeModal();
     // TODO updateInvoices in state and db
   };
 
   return (
-    <Drawer open={props.open} onClose={closeDrawer} anchor='bottom' sx={{ zIndex: 1201 }}>
-      <Stack p={2}>
-        <Typography variant='h6' borderBottom={1}>
-          Edit Commission Row
-        </Typography>
-        <Box display='flex' gap={2}>
+    <CustomModal open={props.open} closeModal={closeModal} header='Edit Invoice'>
+      <Stack
+        gap={2}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') onSave();
+        }}
+      >
+        <Stack direction='row' gap={2} py={2}>
           <CustomInput
             required
-            select
-            value={formData.vendorName}
-            options={vendorOptions}
-            label='Vendor'
-            name='vendor'
-            onChange={handleChange}
+            value={formData.repCommissionPercentage}
+            label='Rep Commission Percentage'
+            name='repCommissionPercentage'
+            onChange={(e) => {
+              handleChange(e);
+              setFormData((prev) => ({
+                ...prev,
+                repCommissionAmount: (prev.commissionAmount * Number(e.target.value)) / 100,
+              }));
+            }}
           />
           <CustomInput
             required
-            value={formData.payPeriod}
-            label='Pay Period'
-            name='payPeriod'
-            onChange={handleChange}
-          />
-        </Box>
-        <Box display='flex' gap={2}>
-          <CustomInput
-            required
-            value={formData.checkNumber}
-            label='Check Number'
-            name='checkNumber'
-            onChange={handleChange}
-          />
-          <CustomInput
-            required
+            value={formData.repCommissionAmount}
+            label='Commission Amount'
+            name='repCommissionsAmount'
+            // onChange={handleChange}
             currency
-            value={formData.checkAmount}
-            label='Check Amount'
-            name='checkAmount'
-            onChange={handleChange}
-            maxWidth='12.5rem'
+            disabled
           />
-          {/* <CustomInput
+          <CustomInput
+            select
+            options={props.repOptions}
             required
-            date
-            value={formData.payDate}
-            label='Pay Date'
-            name='payDate'
+            value={formData.rep}
+            label='Rep'
+            name='rep'
             onChange={handleChange}
-          /> */}
-        </Box>{' '}
-        <Button
-          onClick={onSave}
-          size='large'
-          color='success'
-          variant='contained'
-          fullWidth
-          sx={{ borderRadius: 10, mt: 3 }}
-        >
-          Save Changes
+          />
+        </Stack>
+        <Button onClick={onSave} variant='contained'>
+          Confirm
         </Button>
       </Stack>
-    </Drawer>
+    </CustomModal>
   );
 }
 
 interface IEditCommissionDraftProps {
   open: boolean;
-  toggleDrawer: (newOpen: boolean) => void;
+  closeModal: (newOpen: boolean) => void;
   commission: IInvoice;
   saveCommission: (commission: IInvoice) => void;
+  repOptions: string[];
 }

@@ -3,6 +3,7 @@ import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from 'google-spreadshee
 import { google, sheets_v4 } from 'googleapis';
 import { JWT } from 'google-auth-library';
 import { ESheets } from '../data/enums/ESheets';
+import { v4 as uuidv4 } from 'uuid';
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive.file'];
 
@@ -73,20 +74,34 @@ class SheetsService {
 
   async post(data: { [key: string]: any }) {
     const sheet = await this.getSheet();
-    await sheet.addRow(data);
+    await sheet.loadHeaderRow();
+    const headers = sheet.headerValues;
+
+    data.guid = data.guid || uuidv4();
+    const rowData = headers.map((header) => data[header] ?? '');
+
+    await sheet.addRow(rowData);
   }
 
+  // In the batchPost function
   async batchPost(rows: any[]) {
     const sheet = await this.getSheet();
+    await sheet.loadHeaderRow();
+    const headers = sheet.headerValues;
     const sheetTitle = sheet.title;
 
     const existingRows = await sheet.getRows();
     const startRow = existingRows.length + 2;
 
-    const data = rows.map((row, index) => ({
-      range: `${sheetTitle}!B${startRow + index}`,
-      values: [Object.values(row)],
-    }));
+    const data = rows.map((row, index) => {
+      row.guid = row.guid || uuidv4();
+      const orderedRow = headers.map((header) => row[header] ?? '');
+
+      return {
+        range: `${sheetTitle}!A${startRow + index}`,
+        values: [orderedRow],
+      };
+    });
 
     const resource = {
       data,

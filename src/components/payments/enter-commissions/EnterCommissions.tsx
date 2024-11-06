@@ -67,13 +67,16 @@ export function EnterCommissions() {
   const vendorOptions = vendors.map((vendor) => vendor.VendorName);
   const vendorSelected = useAppSelector(getVendorSelected);
 
-  const checks = useAppSelector(getChecks);
-  const checkOptions = checks.map(checkDisplayValue);
-  const checkSelected = useAppSelector(getCheckSelected);
-
   const payPeriods = useAppSelector(getPayPeriods);
-  const payPeriodOptions = payPeriods.map((period) => period.payPeriod);
+  const payPeriodOptions = payPeriods.map((period) => period.payPeriod).reverse();
   const payPeriodSelected = useAppSelector(getPayPeriodSelected);
+
+  const checks = useAppSelector(getChecks);
+  const checkOptions = checks
+    .filter((check) => check.payPeriod === payPeriodSelected && check.vendor === vendorSelected)
+    .map(checkDisplayValue)
+    .reverse();
+  const checkSelected = useAppSelector(getCheckSelected);
 
   const [singleEntryMatchOrder, setSingleEntryMatchOrder] = useState<IOrder | null>(null);
   const [successfulEntry, setSuccessfulEntry] = useState(false);

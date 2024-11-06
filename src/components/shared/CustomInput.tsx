@@ -104,6 +104,7 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
               error: props.error,
               size: props.size,
               sx: inputStyles,
+              disabled: props.disabled,
             },
           }}
         />
@@ -122,6 +123,7 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
           placeholder={props.placeholder}
           multiline={props.multiline}
           rows={props.rows || 3}
+          disabled={props.disabled}
           sx={inputStyles}
           slotProps={{
             input: {
@@ -129,11 +131,15 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
             },
           }}
         >
-          {props.options?.map((option, index) => (
-            <MenuItem key={index} value={option}>
-              {option}
-            </MenuItem>
-          ))}
+          {props.options && props.options.length > 0 ? (
+            props.options.map((option, index) => (
+              <MenuItem key={index} value={option}>
+                {option}
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem disabled>No Options Available</MenuItem>
+          )}
         </TextField>
       )}
     </FormControl>

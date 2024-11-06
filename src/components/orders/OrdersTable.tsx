@@ -4,7 +4,6 @@ import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typogr
 import { CustomInput } from '../shared/CustomInput';
 import { OrdersTableRow } from './OrdersTableRow';
 import { CustomTableContainer } from '../shared/CustomTableContainer';
-import { createDirectOrder } from '../../functions/createDirectOrder';
 import { IEnterCommissionsRow } from '../payments/enter-commissions/EnterCommissions';
 import { useAppSelector } from '../../hooks/ReduxHooks';
 import { getOrders } from '../../store/slices/dataSlice';
@@ -69,10 +68,10 @@ export function OrdersTable(props: IOrdersTableProps) {
   const confirmMatch = (type?: EOrderButtons) => {
     switch (type) {
       case EOrderButtons.directOrder:
-        props.onConfirmMatch?.(createDirectOrder(props.commissionRow));
+        props.onConfirmMatch?.(undefined, type);
         break;
       case EOrderButtons.newCustomer:
-        props.onConfirmMatch?.(createDirectOrder(props.commissionRow, true));
+        props.onConfirmMatch?.(undefined, type);
         break;
       default:
         if (selectedRow === null) {
@@ -105,7 +104,7 @@ export function OrdersTable(props: IOrdersTableProps) {
             {props.header || 'View Orders'}
           </Typography>
           {selectedRow !== null && (
-            <Button variant='outlined' sx={{ my: 2 }} onClick={() => props.onConfirmMatch?.(filteredRows[selectedRow])}>
+            <Button variant='outlined' sx={{ my: 2 }} onClick={() => confirmMatch()}>
               Confirm Match
             </Button>
           )}
@@ -199,7 +198,7 @@ export function OrdersTable(props: IOrdersTableProps) {
 interface IOrdersTableProps {
   initialSearchText?: string;
   clickable?: boolean;
-  onConfirmMatch?: (order: IOrder) => void;
+  onConfirmMatch?: (order?: IOrder, type?: EOrderButtons) => void;
   header?: string;
   commissionRow?: IEnterCommissionsRow;
 }
