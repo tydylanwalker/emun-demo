@@ -9,24 +9,25 @@ import { CustomTableContainer } from '../../shared/CustomTableContainer';
 import { CommissionsSpeedDial } from '../../shared/CommissionsSpeedDial';
 import { useAppDispatch, useAppSelector } from '../../../hooks/ReduxHooks';
 import {
+  getChecks,
   getDraftInvoices,
-  getInvoices,
   getPayPeriods,
   getVendors,
-  setInvoices,
   stateBatchUpdateInvoices,
   stateDeleteInvoice,
   stateUpdateInvoice,
 } from '../../../store/slices/dataSlice';
 import {
+  getCheckSelected,
   getPayPeriodSelected,
   getVendorSelected,
+  setCheckSelected,
   setPayPeriodSelected,
   setVendorSelected,
 } from '../../../store/slices/enterCommissionsSlice';
 import { IInvoice } from '../../../data/interfaces/IInvoice';
-import updateInvoice from '../../../pages/api/updateInvoice';
 import { CustomModal } from '../../shared/CustomModal';
+import { checkDisplayValue } from '../../../functions/checkDisplayValue';
 
 export interface ICommissionDraftHeader {
   label: string;
@@ -120,13 +121,20 @@ export function CommissionsDraftTable() {
   const vendors = useAppSelector(getVendors);
   const vendorOptions = vendors.map((vendor) => vendor.VendorName);
 
-  const [repSelected, setRepSelected] = useState('');
-  const repNames = draftInvoices.map((invoice) => invoice.rep);
-  const repOptions = Array.from(new Set(repNames.filter((name) => name.trim() !== '')));
-
   const payPeriods = useAppSelector(getPayPeriods);
   const payPeriodOptions = payPeriods.map((period) => period.payPeriod);
   const payPeriodSelected = useAppSelector(getPayPeriodSelected);
+
+  const checks = useAppSelector(getChecks);
+  const checkOptions = checks
+    .filter((check) =>
+      check.payPeriod === payPeriodSelected && !vendorSelected ? true : check.vendor === vendorSelected
+    )
+    .map(checkDisplayValue);
+  const checkSelected = useAppSelector(getCheckSelected);
+
+  const [repSelected, setRepSelected] = useState('');
+  const repOptions = [...new Set(filteredRows.map((invoice) => invoice.rep).filter(Boolean))];
 
   const [invoicesTotal, setInvoicesTotal] = useState(0);
   const [commissionAmount, setCommissionAmount] = useState(0);
@@ -139,13 +147,15 @@ export function CommissionsDraftTable() {
     if (vendorSelected) filteredRows = filteredRows.filter((row) => row.vendorName === vendorSelected);
     if (repSelected) filteredRows = filteredRows.filter((row) => row.rep === repSelected);
     if (payPeriodSelected) filteredRows = filteredRows.filter((row) => row.payPeriod === payPeriodSelected);
+    if (checkSelected)
+      filteredRows = filteredRows.filter((row) => `${row.checkNumber} - ${row.checkAmount}` === checkSelected);
     if (searchText !== '')
       filteredRows = filteredRows.filter((row) =>
         Object.values(row).some((value) => value.toString().toLowerCase().includes(searchText.toLowerCase()))
       );
 
     setFilteredRows(filteredRows);
-  }, [draftInvoices, vendorSelected, repSelected, payPeriodSelected, searchText]);
+  }, [draftInvoices, vendorSelected, repSelected, payPeriodSelected, checkSelected, searchText]);
 
   useEffect(() => {
     setInvoicesTotal(
@@ -249,6 +259,14 @@ export function CommissionsDraftTable() {
                 label='Select Vendor'
                 options={vendorOptions}
                 onChange={(event) => dispatch(setVendorSelected(event.target.value as string))}
+              />
+              <CustomInput
+                size='small'
+                select
+                value={checkSelected}
+                label='Select Check'
+                options={checkOptions}
+                onChange={(event) => dispatch(setCheckSelected(event.target.value as string))}
               />
               <CustomInput
                 size='small'

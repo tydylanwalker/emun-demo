@@ -1,5 +1,5 @@
 import { Button, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CustomInput } from '../../shared/CustomInput';
 import { EnterCommissionsTable } from './table/EnterCommissionsTable';
 import { ErrorEnum } from '../../../data/enums/ErrorEnum';
@@ -26,9 +26,6 @@ import {
   setVendorSelected,
 } from '../../../store/slices/enterCommissionsSlice';
 import { checkDisplayValue } from '../../../functions/checkDisplayValue';
-import { createEnterCommissionsRowsFromValues } from '../../../store/thunks/createEnterCommissionRowsFromInvoice';
-import { batchUpdateInvoices } from '../../../data/requests/invoices/batchUpdateInvoices';
-import { updateInvoice } from '../../../data/requests/invoices/updateInvoice';
 interface IRowObject<T> {
   value: T;
   error?: ErrorEnum;
@@ -59,7 +56,6 @@ export enum EEnterCommissionModes {
 
 export function EnterCommissions() {
   const dispatch = useAppDispatch();
-  const invoices = useAppSelector(getInvoices);
 
   const commissionRows = useAppSelector(getEnterCommissionsRows);
 
@@ -220,7 +216,11 @@ export function EnterCommissions() {
             <EnterCommissionsTable />
           ) : (
             <>
-              <OrdersTable clickable onConfirmMatch={(order) => setSingleEntryMatchOrder(order)} header='Find Order' />
+              <OrdersTable
+                clickable
+                onConfirmMatch={(order) => setSingleEntryMatchOrder(order || null)}
+                header='Find Order'
+              />
               <Stack direction='row' gap={5} my={1}>
                 <Typography fontWeight='bolder'>{commissionRows.length} Current Entries</Typography>
                 <Typography fontWeight='bolder' color='success' sx={showTransition(successfulEntry)}>
