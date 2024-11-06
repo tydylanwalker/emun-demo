@@ -1,72 +1,53 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Head from 'next/head';
-import { Stack, Typography, Box } from '@mui/material';
+import { Stack, Typography, Box, LinearProgress, Divider } from '@mui/material';
 import * as React from 'react';
 import { NextPage } from 'next';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import BasicCard from '../../components/home/Card';
 import { BaseLayout } from '../../components/layout/BaseLayout';
+import { useAppSelector } from '../../hooks/ReduxHooks';
+import { getInvoices, getOrders } from '../../store/slices/dataSlice';
 
-interface CurrencyProps {
-  amount: number;
-}
-
-const CurrencyFormatter: React.FC<CurrencyProps> = ({ amount }) => {
-  const formattedAmount = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount);
-
-  return <span>{formattedAmount}</span>;
-};
-
-function getMonthsAgo(months: number): Date {
-  const today = new Date();
-  const lastMonth = new Date(today);
-
-  // Subtract one month
-  lastMonth.setMonth(today.getMonth() - months);
-
-  return lastMonth;
-}
+import MonthlyInvoiceOverview from '../../components/home/MonthlyInvoiceOverview';
+import MonthlyOrdersOverview from '../../components/home/MonthlyOrdersOverview';
 
 const HomePage: NextPage = () => {
-  const [vendor, setVendor] = React.useState('All');
+  const orders = useAppSelector(getOrders);
+  const invoices = useAppSelector(getInvoices);
 
-  const vendorSelected = (value: string) => {
-    setVendor(value);
-  };
-  const lastMonthsOrders = []; /*ordersMock.results.filter(
-    (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(0))
-  )*/
-  const lastYearsOrders = []; /*ordersMock.results.filter(
-    (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(12))
-  )*/
-  const lastYearsTotal = 0;
-  // ordersMock.results
-  // .filter(
-  //   (order) => new Date(order.orderedOn ?? "") > new Date(getMonthsAgo(12))
-  // )
-  // .reduce((sum, order) => sum + (order.grandTotal ?? 0.0), 0);
   return (
     <>
-      <Stack spacing={{ xs: 1, sm: 2 }} direction='column' useFlexGap sx={{ flexWrap: 'wrap' }}>
-        <Stack spacing={{ xs: 1, sm: 2 }} direction='row' useFlexGap sx={{ flexWrap: 'wrap' }}>
-          <BasicCard title='Total Orders' value={lastMonthsOrders.length.toString()} notes='Last Month'></BasicCard>
-          <BasicCard title='Total Orders' value={lastYearsOrders.length.toString()} notes='Last 12 Months'></BasicCard>
-          <BasicCard
-            title='Order Total'
-            value={'$' + lastYearsTotal.toFixed(2).toString()}
-            notes='Last 12 Months'
-          ></BasicCard>
-          <BasicCard title='No Data' value='No Data' notes='No Data'></BasicCard>
+      <Stack spacing={{ xs: 1, sm: 2 }}>
+        <Typography fontSize={30} fontWeight={200} color='text.secondary'>
+          Commissions
+        </Typography>
+        <Divider></Divider>
+        <Stack
+          spacing={{ xs: 1, sm: 2 }}
+          direction='row'
+          sx={{
+            display: 'flex', // Enable Flexbox
+            width: '100%', // Make sure the container spans full width
+          }}
+        >
+          <MonthlyInvoiceOverview monthsAgoItr={0} invoices={invoices}></MonthlyInvoiceOverview>
+          <MonthlyInvoiceOverview monthsAgoItr={1} invoices={invoices}></MonthlyInvoiceOverview>
         </Stack>
-        <Card>
-          <CardContent>{/* <BarChartSet></BarChartSet> */}</CardContent>
-        </Card>
+        <Typography fontSize={30} fontWeight={200} color='text.secondary'>
+          Orders
+        </Typography>
+        <Divider></Divider>
+        <Stack
+          spacing={{ xs: 1, sm: 2 }}
+          direction='row'
+          sx={{
+            display: 'flex', // Enable Flexbox
+            width: '100%', // Make sure the container spans full width
+          }}
+        >
+          <MonthlyOrdersOverview monthsAgoItr={0} orders={orders}></MonthlyOrdersOverview>
+          <MonthlyOrdersOverview monthsAgoItr={1} orders={orders}></MonthlyOrdersOverview>
+          <MonthlyOrdersOverview monthsAgoItr={12} orders={orders} yearly={true}></MonthlyOrdersOverview>
+        </Stack>
       </Stack>
     </>
   );
