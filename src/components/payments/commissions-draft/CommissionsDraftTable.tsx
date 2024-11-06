@@ -23,7 +23,6 @@ import { checkDisplayValue } from '../../../functions/checkDisplayValue';
 import { ESheets } from '../../../data/enums/ESheets';
 import { updateThunk } from '../../../store/thunks/requests/updateThunk';
 import { deleteThunk } from '../../../store/thunks/requests/deleteThunk';
-import { ICheck } from '../../../data/interfaces/ICheck';
 
 export interface ICommissionDraftHeader {
   label: string;
@@ -124,10 +123,33 @@ export function CommissionsDraftTable() {
   const checks = useAppSelector(getChecks);
   const checkOptions = checks
     .filter((check) =>
-      check.payPeriod === payPeriodSelected && !vendorSelected ? true : check.vendor === vendorSelected
+      check.status === 'Open' && check.payPeriod === payPeriodSelected && !vendorSelected
+        ? true
+        : check.vendor === vendorSelected
     )
     .map(checkDisplayValue);
   const checkSelected = useAppSelector(getCheckSelected);
+
+  const checkBalances = checks
+    .filter((check) => check.payPeriod === payPeriodSelected && check.status !== 'Closed')
+    .map((check) => {
+      const invoiceSum = draftInvoices.reduce((sum, invoice) => {
+        const amount =
+          invoice.payPeriod === check.payPeriod &&
+          invoice.checkAmount === check.checkAmount &&
+          invoice.checkNumber === check.number
+            ? invoice.commissionAmount
+            : 0;
+        return sum + amount;
+      }, 0);
+      return {
+        checkNumber: check.number,
+        checkAmount: check.checkAmount,
+        checkBalance: check.checkAmount - invoiceSum,
+      };
+    });
+
+  const unbalancedChecks = checkBalances.filter((check) => check.checkBalance !== 0);
 
   const [repSelected, setRepSelected] = useState('');
   const repOptions = [...new Set(filteredRows.map((invoice) => invoice.rep).filter(Boolean))];
@@ -206,10 +228,19 @@ export function CommissionsDraftTable() {
     <>
       <Stack direction='row' justifyContent='space-between' gap={2} mb={2}>
         <Stack>
-          <Typography variant='h4' fontWeight='bold' p={2}>
+          <Typography variant='h4' fontWeight='bold'>
             Commissions Draft
           </Typography>
-          <Stack direction='row' gap={3} alignItems='center'>
+          <Stack height='1rem'>
+            {checkBalances.length > 0 ? (
+              unbalancedChecks.length > 0 ? (
+                <Typography color='error'>{`You have ${unbalancedChecks.length} unbalanced check(s)`}</Typography>
+              ) : (
+                <Typography color='success'>All checks are balanced!</Typography>
+              )
+            ) : null}
+          </Stack>
+          <Stack direction='row' gap={3} alignItems='center' mt={1}>
             <Button size='large' variant='contained' disabled={!payPeriodSelected}>
               <Visibility /> View Statement
             </Button>
