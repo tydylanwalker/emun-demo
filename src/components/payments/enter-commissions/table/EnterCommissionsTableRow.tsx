@@ -1,4 +1,4 @@
-import { TableRow, TableCell, Typography, Stack, Checkbox } from '@mui/material';
+import { TableRow, TableCell, Typography, Stack } from '@mui/material';
 import { ErrorEnum } from '../../../../data/enums/ErrorEnum';
 import { IEnterCommissionsRow } from '../EnterCommissions';
 import { useState } from 'react';

@@ -12,7 +12,7 @@ import { OrdersTable } from '../../orders/OrdersTable';
 import { UploadFileModal } from './modals/UploadFileModal';
 import { SingleEntryModal } from './modals/SingleEntryModal';
 import { useAppDispatch, useAppSelector } from '../../../hooks/ReduxHooks';
-import { getChecks, getInvoices, getPayPeriods, getVendors } from '../../../store/slices/dataSlice';
+import { getChecks, getPayPeriods, getVendors } from '../../../store/slices/dataSlice';
 import {
   getCheckSelected,
   getEnterCommissionsRows,

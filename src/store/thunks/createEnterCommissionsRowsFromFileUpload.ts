@@ -4,7 +4,7 @@ import { RootState } from '../store';
 import dayjs from 'dayjs';
 import { setEnterCommissionsRows } from '../slices/enterCommissionsSlice';
 import { interfaceCreatorIEnterCommissionRow } from '../../data/interface-creators/interfaceCreatorIEnterCommissionRow';
-import { postInvoicesFromCommissions } from './postInvoicesFromCommissionRows';
+
 /**
  * Creates our enter commissions rows based on the file data we read in
  *

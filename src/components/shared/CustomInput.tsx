@@ -1,7 +1,7 @@
 import { FormControl, InputAdornment, MenuItem, Stack, TextField, TextFieldProps } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { Search } from '@mui/icons-material';
+import { CloseRounded, Search } from '@mui/icons-material';
 import { useAppSelector } from '../../hooks/ReduxHooks';
 import { isModeDark } from '../../store/slices/themeSlice';
 
@@ -132,9 +132,13 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
           }}
         >
           {props.options && props.options.length > 0 ? (
-            props.options.map((option, index) => (
-              <MenuItem key={index} value={option}>
-                {option}
+            [...props.options, ''].map((option, index) => (
+              <MenuItem
+                key={index}
+                value={option}
+                sx={option === '' ? { fontSize: '0.75rem', color: 'warning.main' } : {}}
+              >
+                {option === '' ? 'clear dropdown' : option}
               </MenuItem>
             ))
           ) : (

@@ -23,6 +23,7 @@ import { checkDisplayValue } from '../../../functions/checkDisplayValue';
 import { ESheets } from '../../../data/enums/ESheets';
 import { updateThunk } from '../../../store/thunks/requests/updateThunk';
 import { deleteThunk } from '../../../store/thunks/requests/deleteThunk';
+import { ICheck } from '../../../data/interfaces/ICheck';
 
 export interface ICommissionDraftHeader {
   label: string;
@@ -143,7 +144,12 @@ export function CommissionsDraftTable() {
     if (repSelected) filteredRows = filteredRows.filter((row) => row.rep === repSelected);
     if (payPeriodSelected) filteredRows = filteredRows.filter((row) => row.payPeriod === payPeriodSelected);
     if (checkSelected)
-      filteredRows = filteredRows.filter((row) => `${row.checkNumber} - ${row.checkAmount}` === checkSelected);
+      filteredRows = filteredRows.filter(
+        (row) =>
+          checkDisplayValue(
+            checks.find((check) => check.number === row.checkNumber && check.payPeriod === row.payPeriod)
+          ) === checkSelected
+      );
     if (searchText !== '')
       filteredRows = filteredRows.filter((row) =>
         Object.values(row).some((value) => value.toString().toLowerCase().includes(searchText.toLowerCase()))

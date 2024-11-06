@@ -110,8 +110,7 @@ class SheetsService {
     rows.forEach((row) => {
       const index = existingRows.findIndex((existingRow) => existingRow.guid === row.guid);
 
-      // Check if index not found or found multiple
-      if (index === -1 || index === 0) {
+      if (index === -1) {
         errors.push(row);
       } else {
         body.push({

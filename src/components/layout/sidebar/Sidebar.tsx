@@ -10,7 +10,6 @@ import {
   CheckBox,
   PriceChangeRounded,
   PaidRounded,
-  MapRounded,
   LocationCityRounded,
 } from '@mui/icons-material';
 import { Box, IconButton, List } from '@mui/material';
@@ -20,11 +19,7 @@ import MuiDrawer from '@mui/material/Drawer';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { DrawerHeader } from '../DrawerHeader';
-import Link from 'next/link';
 import { sidebarWidth, topbarHeight } from '../../../data/constants';
-import EmunLogo from '../../shared/EmunLogo';
-import { useAppSelector } from '../../../hooks/ReduxHooks';
-import { isModeDark } from '../../../store/slices/themeSlice';
 
 export interface ISidebarContent {
   icon: JSX.Element;

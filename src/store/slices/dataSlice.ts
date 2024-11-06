@@ -5,7 +5,6 @@ import { ICheck } from '../../data/interfaces/ICheck';
 import { IVendor } from '../../data/interfaces/IVendor';
 import { IPayPeriod } from '../../data/interfaces/IPayPeriod';
 import { IInvoice } from '../../data/interfaces/IInvoice';
-import { ICustomer } from '../../data/interfaces/ICustomer';
 
 interface IDataState {
   orders: IOrder[];
