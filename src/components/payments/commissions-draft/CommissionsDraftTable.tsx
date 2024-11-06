@@ -28,6 +28,9 @@ import {
 import { IInvoice } from '../../../data/interfaces/IInvoice';
 import { CustomModal } from '../../shared/CustomModal';
 import { checkDisplayValue } from '../../../functions/checkDisplayValue';
+import { updateInvoice } from '../../../data/requests/invoices/updateInvoice';
+import { deleteInvoice } from '../../../data/requests/invoices/deleteInvoice';
+import { batchUpdateInvoices } from '../../../data/requests/invoices/batchUpdateInvoices';
 
 export interface ICommissionDraftHeader {
   label: string;
@@ -185,30 +188,23 @@ export function CommissionsDraftTable() {
 
   const saveCommission = (updatedInvoice: IInvoice) => {
     dispatch(stateUpdateInvoice(updatedInvoice));
-    // TODO MOVE this to row component
-    // TODO update invoice in db
-    // TODO could add error handling if match not found
+    updateInvoice(updatedInvoice);
   };
 
   const handleDeleteRow = (invoiceToDelete: IInvoice) => {
     dispatch(stateDeleteInvoice(invoiceToDelete));
-    // TODO MOVE this to row component
-    // TODO Delete Row from invoices in db
-    // TODO could add error handling if match not found
+    deleteInvoice(invoiceToDelete);
   };
 
   const handleConfirmCloseDraft = () => {
     setCloseDraftModal(false);
-    dispatch(
-      stateBatchUpdateInvoices(
-        draftInvoices
-          .filter((invoice) => invoice.payPeriod === payPeriodSelected)
-          .map((invoice) => {
-            return { ...invoice, status: 'Closed' };
-          })
-      )
-    );
-    // TODO update invoices in db
+    const updatedInvoices = draftInvoices
+      .filter((invoice) => invoice.payPeriod === payPeriodSelected)
+      .map((invoice) => {
+        return { ...invoice, status: 'Closed' };
+      });
+    dispatch(stateBatchUpdateInvoices(updatedInvoices));
+    batchUpdateInvoices(updatedInvoices);
   };
 
   return (

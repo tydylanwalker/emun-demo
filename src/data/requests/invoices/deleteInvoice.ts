@@ -1,8 +1,8 @@
 import { IInvoice } from '../../interfaces/IInvoice';
 
-export async function updateInvoice(invoiceData: IInvoice): Promise<boolean> {
-  const response = await fetch('/api/updateInvoice', {
-    method: 'PATCH',
+export async function deleteInvoice(invoiceData: IInvoice): Promise<boolean> {
+  const response = await fetch('/api/deleteInvoice', {
+    method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },

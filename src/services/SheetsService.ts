@@ -119,14 +119,21 @@ class SheetsService {
     }
   }
 
-  async update(index: number, row: { [key: string]: any }) {
+  async update(row: { [key: string]: any }) {
     const sheet = await this.getSheet();
     await sheet.loadHeaderRow();
     const headers = sheet.headerValues;
+    const sheetTitle = sheet.title;
 
-    const values = headers.map((header) => row[header] ?? '');
+    const existingRows = await this.getAll();
 
-    const range = `${sheet.title}!A${index + 2}`;
+    // Find index and update row values
+    const index = existingRows.findIndex((existingRow) => existingRow.guid === row.guid);
+    const updatedRow = { ...existingRows[index], ...row };
+
+    const values = headers.map((header) => updatedRow[header] ?? '');
+
+    const range = `${sheetTitle}!A${index + 2}`;
 
     const resource = {
       range,
@@ -193,6 +200,41 @@ class SheetsService {
       });
     } catch (error) {
       console.error('Error in batchUpdateRows:', error);
+      throw error;
+    }
+  }
+
+  async delete(row: { [key: string]: any }) {
+    const sheet = await this.getSheet();
+
+    const existingRows = await this.getAll();
+
+    // Find index of row to delete
+    const index = existingRows.findIndex((existingRow) => existingRow.guid === row.guid);
+    const startIndex = index + 1;
+    const endIndex = startIndex + 1;
+
+    try {
+      // Use batchUpdate to delete the row entirely
+      await this.sheetsApi.spreadsheets.batchUpdate({
+        spreadsheetId: this.spreadsheetId,
+        requestBody: {
+          requests: [
+            {
+              deleteDimension: {
+                range: {
+                  sheetId: sheet.sheetId,
+                  dimension: 'ROWS',
+                  startIndex: startIndex,
+                  endIndex: endIndex,
+                },
+              },
+            },
+          ],
+        },
+      });
+    } catch (error) {
+      console.error('Error in deleteRow:', error);
       throw error;
     }
   }
