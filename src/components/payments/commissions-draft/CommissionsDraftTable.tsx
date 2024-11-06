@@ -14,6 +14,7 @@ import {
   getPayPeriods,
   getVendors,
   setInvoices,
+  stateBatchUpdateInvoices,
   stateDeleteInvoice,
   stateUpdateInvoice,
 } from '../../../store/slices/dataSlice';
@@ -25,6 +26,7 @@ import {
 } from '../../../store/slices/enterCommissionsSlice';
 import { IInvoice } from '../../../data/interfaces/IInvoice';
 import updateInvoice from '../../../pages/api/updateInvoice';
+import { CustomModal } from '../../shared/CustomModal';
 
 export interface ICommissionDraftHeader {
   label: string;
@@ -130,8 +132,7 @@ export function CommissionsDraftTable() {
   const [commissionAmount, setCommissionAmount] = useState(0);
   const [repAmount, setRepAmount] = useState(0);
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [closeDraftModal, setCloseDraftModal] = useState(false);
 
   useEffect(() => {
     let filteredRows = [...draftInvoices];
@@ -186,13 +187,18 @@ export function CommissionsDraftTable() {
     // TODO could add error handling if match not found
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+  const handleConfirmCloseDraft = () => {
+    setCloseDraftModal(false);
+    dispatch(
+      stateBatchUpdateInvoices(
+        draftInvoices
+          .filter((invoice) => invoice.payPeriod === payPeriodSelected)
+          .map((invoice) => {
+            return { ...invoice, status: 'Closed' };
+          })
+      )
+    );
+    // TODO update invoices in db
   };
 
   return (
@@ -203,17 +209,18 @@ export function CommissionsDraftTable() {
             Commissions Draft
           </Typography>
           <Stack direction='row' gap={3} alignItems='center'>
-            <Button size='large' variant='contained'>
+            <Button size='large' variant='contained' disabled={!payPeriodSelected}>
               <Visibility /> View Statement
             </Button>
-            <Button color='primary' size='large' variant='outlined'>
+            <Button
+              color='primary'
+              size='large'
+              variant='outlined'
+              onClick={() => setCloseDraftModal(true)}
+              disabled={!payPeriodSelected}
+            >
               Close Draft
             </Button>
-
-            {/* <IconButton color='inherit' onClick={() => setAddDrawerOpen(true)}>
-              <AddRounded />
-            </IconButton> */}
-
             <CommissionsSpeedDial />
           </Stack>
         </Stack>
@@ -223,7 +230,6 @@ export function CommissionsDraftTable() {
           <HeaderAndValueCard header='Rep Commission' value={'$' + formatCurrency(repAmount)} />
         </Stack>
       </Stack>
-
       <CustomTableContainer
         taskBar={
           <Stack px={1} pb={1} gap={0} position='sticky' top={0} zIndex={2}>
@@ -291,18 +297,29 @@ export function CommissionsDraftTable() {
                 repOptions={repOptions}
               />
             ))}
-            {/* {filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-              <CommissionsDraftTableRow
-                key={index}
-                row={row}
-                headers={commissionsHeader}
-                handleDeleteRow={handleDeleteRow}
-                saveCommission={saveCommission}
-              />
-            ))} */}
           </TableBody>
         </Table>
       </CustomTableContainer>
+      <CustomModal
+        open={closeDraftModal}
+        closeModal={() => setCloseDraftModal(false)}
+        header='Confirm Close Commissions'
+      >
+        <Stack gap={3}>
+          <Typography>
+            Are you sure you want to close ALL <b>{draftInvoices.length}</b> invoices for <b>{payPeriodSelected}</b> Pay
+            Period?{' '}
+          </Typography>
+          <Stack justifyContent='flex-end' direction='row' gap={2}>
+            <Button variant='outlined' onClick={() => setCloseDraftModal(false)}>
+              Cancel
+            </Button>
+            <Button color='error' variant='outlined' onClick={handleConfirmCloseDraft}>
+              Confirm Close
+            </Button>
+          </Stack>
+        </Stack>
+      </CustomModal>
     </>
   );
 }

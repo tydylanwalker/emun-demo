@@ -13,7 +13,6 @@ interface IDataState {
   vendors: IVendor[];
   payPeriods: IPayPeriod[];
   invoices: IInvoice[];
-  customers: ICustomer[];
   dataInitialized: boolean;
 }
 
@@ -23,7 +22,6 @@ const initialState: IDataState = {
   vendors: [],
   payPeriods: [],
   invoices: [],
-  customers: [],
   dataInitialized: false,
 };
 
@@ -31,18 +29,39 @@ const dataSlice = createSlice({
   name: 'data',
   initialState,
   reducers: {
+    // * ORDER SETTERS
     setOrders: (state, action: PayloadAction<IOrder[]>) => {
       state.orders = action.payload;
     },
+    stateAddOrder: (state, action: PayloadAction<IOrder>) => {
+      state.orders.unshift(action.payload);
+    },
+
+    // * CHECK SETTERS
     setChecks: (state, action: PayloadAction<ICheck[]>) => {
       state.checks = action.payload;
     },
+    stateAddCheck: (state, action: PayloadAction<ICheck>) => {
+      state.checks.unshift(action.payload);
+    },
+
+    // * VENDOR SETTERS
     setVendors: (state, action: PayloadAction<IVendor[]>) => {
       state.vendors = action.payload;
     },
+    stateAddVendor: (state, action: PayloadAction<IVendor>) => {
+      state.vendors.unshift(action.payload);
+    },
+
+    // * PAY PERIOD SETTERS
     setPayPeriods: (state, action: PayloadAction<IPayPeriod[]>) => {
       state.payPeriods = action.payload;
     },
+    stateAddPayPeriod: (state, action: PayloadAction<IPayPeriod>) => {
+      state.payPeriods.unshift(action.payload);
+    },
+
+    // * INVOICE SETTERS
     setInvoices: (state, action: PayloadAction<IInvoice[]>) => {
       state.invoices = action.payload;
     },
@@ -59,30 +78,16 @@ const dataSlice = createSlice({
     stateDeleteInvoice: (state, action: PayloadAction<IInvoice>) => {
       state.invoices = state.invoices.filter((invoice) => invoice.guid !== action.payload.guid);
     },
-    // stateUpdateMultipleInvoices: (state, action: PayloadAction<IInvoice[]>) => {
-    //   const updated = state.invoices.map((invoice) => {
-    //     if (invoice.invoiceNumber === action.payload.invoiceNumber) return action.payload;
-    //     return invoice;
-    //   });
-    //   state.invoices = updated;
-    // },
-    setCustomers: (state, action: PayloadAction<ICustomer[]>) => {
-      state.customers = action.payload;
-    },
-    addOrder: (state, action: PayloadAction<IOrder>) => {
-      state.orders.unshift(action.payload);
-    },
-    addVendor: (state, action: PayloadAction<IVendor>) => {
-      state.vendors.unshift(action.payload);
-    },
-    addPayPeriod: (state, action: PayloadAction<IPayPeriod>) => {
-      state.payPeriods.unshift(action.payload);
-    },
-    addCustomer: (state, action: PayloadAction<ICustomer>) => {
-      state.customers.unshift(action.payload);
-    },
-    addCheck: (state, action: PayloadAction<ICheck>) => {
-      state.checks.unshift(action.payload);
+    stateBatchUpdateInvoices: (state, action: PayloadAction<IInvoice[]>) => {
+      state.invoices = state.invoices.map((invoice) => {
+        const foundInvoice = action.payload.find((payload) => invoice.guid === payload.guid);
+        return foundInvoice || invoice;
+      });
+      // action.payload.forEach((updatedInvoice) => {
+      //   const indexToUpdate = state.invoices.findIndex((invoice) => invoice.guid === updatedInvoice.guid);
+      //   if (indexToUpdate !== -1)
+      //     state.invoices[indexToUpdate] = { ...state.invoices[indexToUpdate], ...updatedInvoice };
+      // });
     },
     dataInitialized: (state) => {
       state.dataInitialized = true;
@@ -97,23 +102,21 @@ export const getPayPeriods = (state: RootState) => state.data.payPeriods;
 export const getInvoices = (state: RootState) => state.data.invoices;
 export const getDraftInvoices = (state: RootState) =>
   state.data.invoices.filter((invoice) => invoice.posted && invoice.status.toLowerCase() !== 'closed');
-export const getCustomers = (state: RootState) => state.data.customers;
 export const getDataInitialized = (state: RootState) => state.data.dataInitialized;
 
 export const {
   setOrders,
   setChecks,
-  setCustomers,
   setInvoices,
   stateUpdateInvoice,
   stateDeleteInvoice,
+  stateBatchUpdateInvoices,
   setPayPeriods,
   setVendors,
-  addCheck,
-  addCustomer,
-  addOrder,
-  addPayPeriod,
-  addVendor,
+  stateAddCheck,
+  stateAddOrder,
+  stateAddPayPeriod,
+  stateAddVendor,
   dataInitialized,
 } = dataSlice.actions;
 
