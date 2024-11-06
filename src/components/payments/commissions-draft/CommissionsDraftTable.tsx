@@ -14,6 +14,7 @@ import {
   getPayPeriods,
   getVendors,
   setInvoices,
+  stateDeleteInvoice,
   stateUpdateInvoice,
 } from '../../../store/slices/dataSlice';
 import {
@@ -179,7 +180,7 @@ export function CommissionsDraftTable() {
   };
 
   const handleDeleteRow = (invoiceToDelete: IInvoice) => {
-    // dispatch(setInvoices(invoices.filter((invoice) => invoice !== invoiceToDelete)));
+    dispatch(stateDeleteInvoice(invoiceToDelete));
     // TODO MOVE this to row component
     // TODO Delete Row from invoices in db
     // TODO could add error handling if match not found

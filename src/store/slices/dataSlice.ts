@@ -53,6 +53,13 @@ const dataSlice = createSlice({
       });
       state.invoices = updated;
     },
+    stateAddInvoice: (state, action: PayloadAction<IInvoice>) => {
+      state.invoices.unshift(action.payload);
+    },
+    stateDeleteInvoice: (state, action: PayloadAction<IInvoice>) => {
+      state.invoices = state.invoices.filter((invoice) => invoice.guid !== action.payload.guid);
+    },
+
     // stateUpdateMultipleInvoices: (state, action: PayloadAction<IInvoice[]>) => {
     //   const updated = state.invoices.map((invoice) => {
     //     if (invoice.invoiceNumber === action.payload.invoiceNumber) return action.payload;
@@ -71,9 +78,6 @@ const dataSlice = createSlice({
     },
     addPayPeriod: (state, action: PayloadAction<IPayPeriod>) => {
       state.payPeriods.unshift(action.payload);
-    },
-    addInvoice: (state, action: PayloadAction<IInvoice>) => {
-      state.invoices.unshift(action.payload);
     },
     addCustomer: (state, action: PayloadAction<ICustomer>) => {
       state.customers.unshift(action.payload);
@@ -103,11 +107,11 @@ export const {
   setCustomers,
   setInvoices,
   stateUpdateInvoice,
+  stateDeleteInvoice,
   setPayPeriods,
   setVendors,
   addCheck,
   addCustomer,
-  addInvoice,
   addOrder,
   addPayPeriod,
   addVendor,
