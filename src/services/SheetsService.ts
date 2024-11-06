@@ -84,7 +84,7 @@ class SheetsService {
     const startRow = existingRows.length + 2;
 
     const data = rows.map((row, index) => ({
-      range: `${sheetTitle}!A${startRow + index}`,
+      range: `${sheetTitle}!B${startRow + index}`,
       values: [Object.values(row)],
     }));
 

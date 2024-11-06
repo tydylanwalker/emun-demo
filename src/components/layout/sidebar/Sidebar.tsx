@@ -10,6 +10,8 @@ import {
   CheckBox,
   PriceChangeRounded,
   PaidRounded,
+  MapRounded,
+  LocationCityRounded,
 } from '@mui/icons-material';
 import { Box, IconButton, List } from '@mui/material';
 import { SidebarItem } from './SidebarItem';
@@ -60,7 +62,7 @@ const sidebarContent: ISidebarContent[] = [
   },
   {
     icon: <AccountBalanceRounded />,
-    label: 'Payments',
+    label: 'Commissions',
     children: [
       {
         label: 'Enter Commissions',
@@ -86,6 +88,37 @@ const sidebarContent: ISidebarContent[] = [
         label: 'Commissions Draft',
         icon: <PaidRounded />,
         href: '/payments/commissions-draft',
+      },
+    ],
+  },
+  {
+    icon: <LocationCityRounded />,
+    label: 'Territory Management',
+    children: [
+      {
+        label: 'Rep Groups',
+        icon: <UploadFileRounded />,
+        href: '/territory-management/rep-groups',
+      },
+      {
+        label: 'Divisions',
+        icon: <PaymentRounded />,
+        href: '/territory-management/divisions',
+      },
+      {
+        label: 'Regions',
+        icon: <CheckBox />,
+        href: '/territory-management/regions',
+      },
+      {
+        label: 'Territories',
+        icon: <PriceChangeRounded />,
+        href: '/territory-management/territories',
+      },
+      {
+        label: 'Zip Codes',
+        icon: <PaidRounded />,
+        href: '/territory-management/zip-codes',
       },
     ],
   },
@@ -140,15 +173,12 @@ const Drawer = styled(MuiDrawer, {
 export function Sidebar(props: ISidebarProps) {
   const theme = useTheme();
   const { open, handleDrawerClose, handleDrawerOpen } = props;
-  const color = useAppSelector(isModeDark) ? '#fff' : 'secondary.main';
 
   return (
     <Drawer variant='permanent' open={open}>
       <DrawerHeader>
         <Box display='flex' width='100%' height={topbarHeight} justifyContent='space-between' borderBottom={1}>
-          <Link href='/'>
-            <EmunLogo color={color} />
-          </Link>
+          <Box flexGrow={1}></Box>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>

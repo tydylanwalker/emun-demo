@@ -30,13 +30,13 @@ export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) 
   return (
     <>
       <TableRow sx={hasError ? { border: 2, borderColor: 'error.main' } : {}}>
-        <TableCell align={'center'} sx={{ cursor: 'default' }}>
+        {/* <TableCell align={'center'} sx={{ cursor: 'default' }}>
           <Checkbox
             checked={props.row.checked.value}
             onChange={() => props.toggleChecked?.(props.row)}
             disabled={hasError}
           />
-        </TableCell>
+        </TableCell> */}
         {enterCommissionHeaders.map((header, index) => {
           const error = determineErrorHandling(props.row[header.id].error, props.row);
 

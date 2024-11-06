@@ -17,15 +17,15 @@ export interface IOrderHeader {
 }
 
 const orderHeaders: IOrderHeader[] = [
-  { label: 'Order #', align: 'left', id: 'orderNumber' },
-  { label: 'Customer', align: 'left', id: 'customerName' },
   { label: 'PO #', align: 'left', id: 'poNumber' },
+  { label: 'Order #', align: 'left', id: 'orderNumber' },
   { label: 'Source', align: 'center', id: 'source' },
   { label: 'Vendor', align: 'left', id: 'vendorName' },
   { label: 'Amount', align: 'right', id: 'amount', type: 'currency' },
   { label: 'Balance', align: 'right', id: 'balance', type: 'currency' },
   { label: 'Order Date', align: 'center', id: 'orderDate', type: 'date' },
   { label: 'Ship Date', align: 'center', id: 'shipDate', type: 'date' },
+  { label: 'Customer', align: 'left', id: 'customerName' },
   { label: 'Address', align: 'left', id: 'shipAddress' },
   { label: 'City', align: 'left', id: 'shipCity' },
   { label: 'State', align: 'center', id: 'shipState' },

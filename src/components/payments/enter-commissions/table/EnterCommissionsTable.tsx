@@ -114,20 +114,20 @@ export function EnterCommissionsTable() {
           setOnlyShowErrors={setOnlyShowErrors}
         />
       }
-      pagination={{
-        count: renderedRows.length,
-        page,
-        rowsPerPage,
-        onPageChange: handleChangePage,
-        onRowsPerPageChange: handleChangeRowsPerPage,
-      }}
+      // pagination={{
+      //   count: renderedRows.length,
+      //   page,
+      //   rowsPerPage,
+      //   onPageChange: handleChangePage,
+      //   onRowsPerPageChange: handleChangeRowsPerPage,
+      // }}
     >
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell align={'center'} sx={{ cursor: 'default' }}>
+            {/* <TableCell align={'center'} sx={{ cursor: 'default' }}>
               <Checkbox checked={true} onChange={() => {}} />
-            </TableCell>
+            </TableCell> */}
             {enterCommissionHeaders.map((header, index) => (
               <TableCell key={index} align={header.align || 'left'}>
                 {header.label}
@@ -136,9 +136,12 @@ export function EnterCommissionsTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {renderedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+          {renderedRows.map((row, index) => (
             <EnterCommissionsTableRow key={index} row={row} onConfirmMatch={updateRows} toggleChecked={toggleChecked} />
           ))}
+          {/* {renderedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+            <EnterCommissionsTableRow key={index} row={row} onConfirmMatch={updateRows} toggleChecked={toggleChecked} />
+          ))} */}
         </TableBody>
       </Table>
     </CustomTableContainer>

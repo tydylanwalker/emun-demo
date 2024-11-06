@@ -8,7 +8,7 @@ import { topbarHeight } from '../../data/constants';
 import { Stack } from '@mui/material';
 
 export function BaseLayout(props: IBaseLayoutProps): JSX.Element {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleDrawerOpen = () => {
     setOpen(true);

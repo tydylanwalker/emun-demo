@@ -46,6 +46,20 @@ const dataSlice = createSlice({
     setInvoices: (state, action: PayloadAction<IInvoice[]>) => {
       state.invoices = action.payload;
     },
+    stateUpdateInvoice: (state, action: PayloadAction<IInvoice>) => {
+      const updated = state.invoices.map((invoice) => {
+        if (invoice.invoiceNumber === action.payload.invoiceNumber) return action.payload;
+        return invoice;
+      });
+      state.invoices = updated;
+    },
+    // stateUpdateMultipleInvoices: (state, action: PayloadAction<IInvoice[]>) => {
+    //   const updated = state.invoices.map((invoice) => {
+    //     if (invoice.invoiceNumber === action.payload.invoiceNumber) return action.payload;
+    //     return invoice;
+    //   });
+    //   state.invoices = updated;
+    // },
     setCustomers: (state, action: PayloadAction<ICustomer[]>) => {
       state.customers = action.payload;
     },
@@ -78,6 +92,8 @@ export const getChecks = (state: RootState) => state.data.checks;
 export const getVendors = (state: RootState) => state.data.vendors;
 export const getPayPeriods = (state: RootState) => state.data.payPeriods;
 export const getInvoices = (state: RootState) => state.data.invoices;
+export const getDraftInvoices = (state: RootState) =>
+  state.data.invoices.filter((invoice) => invoice.posted && invoice.status.toLowerCase() !== 'closed');
 export const getCustomers = (state: RootState) => state.data.customers;
 export const getDataInitialized = (state: RootState) => state.data.dataInitialized;
 
@@ -86,6 +102,7 @@ export const {
   setChecks,
   setCustomers,
   setInvoices,
+  stateUpdateInvoice,
   setPayPeriods,
   setVendors,
   addCheck,

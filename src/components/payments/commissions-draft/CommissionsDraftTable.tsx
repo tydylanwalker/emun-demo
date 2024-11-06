@@ -8,7 +8,14 @@ import { Visibility } from '@mui/icons-material';
 import { CustomTableContainer } from '../../shared/CustomTableContainer';
 import { CommissionsSpeedDial } from '../../shared/CommissionsSpeedDial';
 import { useAppDispatch, useAppSelector } from '../../../hooks/ReduxHooks';
-import { getInvoices, getPayPeriods, getVendors, setInvoices } from '../../../store/slices/dataSlice';
+import {
+  getDraftInvoices,
+  getInvoices,
+  getPayPeriods,
+  getVendors,
+  setInvoices,
+  stateUpdateInvoice,
+} from '../../../store/slices/dataSlice';
 import {
   getPayPeriodSelected,
   getVendorSelected,
@@ -16,6 +23,7 @@ import {
   setVendorSelected,
 } from '../../../store/slices/enterCommissionsSlice';
 import { IInvoice } from '../../../data/interfaces/IInvoice';
+import updateInvoice from '../../../pages/api/updateInvoice';
 
 export interface ICommissionDraftHeader {
   label: string;
@@ -100,18 +108,17 @@ const commissionsHeader: ICommissionDraftHeader[] = [
 
 export function CommissionsDraftTable() {
   const dispatch = useAppDispatch();
-  const invoices = useAppSelector(getInvoices);
-  const postedInvoices = invoices.filter((invoice) => invoice.posted);
+  const draftInvoices = useAppSelector(getDraftInvoices);
   const [searchText, setSearchText] = useState('');
 
-  const [filteredRows, setFilteredRows] = useState(postedInvoices);
+  const [filteredRows, setFilteredRows] = useState(draftInvoices);
 
   const vendorSelected = useAppSelector(getVendorSelected);
   const vendors = useAppSelector(getVendors);
   const vendorOptions = vendors.map((vendor) => vendor.VendorName);
 
   const [repSelected, setRepSelected] = useState('');
-  const repNames = postedInvoices.map((invoice) => invoice.rep);
+  const repNames = draftInvoices.map((invoice) => invoice.rep);
   const repOptions = Array.from(new Set(repNames.filter((name) => name.trim() !== '')));
 
   const payPeriods = useAppSelector(getPayPeriods);
@@ -126,8 +133,7 @@ export function CommissionsDraftTable() {
   const [rowsPerPage, setRowsPerPage] = useState(100);
 
   useEffect(() => {
-    console.log(1);
-    let filteredRows = postedInvoices;
+    let filteredRows = [...draftInvoices];
     if (vendorSelected) filteredRows = filteredRows.filter((row) => row.vendorName === vendorSelected);
     if (repSelected) filteredRows = filteredRows.filter((row) => row.rep === repSelected);
     if (payPeriodSelected) filteredRows = filteredRows.filter((row) => row.payPeriod === payPeriodSelected);
@@ -137,7 +143,7 @@ export function CommissionsDraftTable() {
       );
 
     setFilteredRows(filteredRows);
-  }, [vendorSelected, repSelected, payPeriodSelected, searchText]);
+  }, [draftInvoices, vendorSelected, repSelected, payPeriodSelected, searchText]);
 
   useEffect(() => {
     setInvoicesTotal(
@@ -166,21 +172,14 @@ export function CommissionsDraftTable() {
   }, [filteredRows]);
 
   const saveCommission = (updatedInvoice: IInvoice) => {
-    dispatch(
-      setInvoices(
-        invoices.map((invoice) => {
-          if (invoice.invoiceNumber === updatedInvoice.invoiceNumber) return updatedInvoice;
-          return invoice;
-        })
-      )
-    );
+    dispatch(stateUpdateInvoice(updatedInvoice));
     // TODO MOVE this to row component
     // TODO update invoice in db
     // TODO could add error handling if match not found
   };
 
   const handleDeleteRow = (invoiceToDelete: IInvoice) => {
-    dispatch(setInvoices(invoices.filter((invoice) => invoice !== invoiceToDelete)));
+    // dispatch(setInvoices(invoices.filter((invoice) => invoice !== invoiceToDelete)));
     // TODO MOVE this to row component
     // TODO Delete Row from invoices in db
     // TODO could add error handling if match not found
@@ -261,13 +260,13 @@ export function CommissionsDraftTable() {
             />
           </Stack>
         }
-        pagination={{
-          count: filteredRows.length,
-          page,
-          rowsPerPage,
-          onPageChange: handleChangePage,
-          onRowsPerPageChange: handleChangeRowsPerPage,
-        }}
+        // pagination={{
+        //   count: filteredRows.length,
+        //   page,
+        //   rowsPerPage,
+        //   onPageChange: handleChangePage,
+        //   onRowsPerPageChange: handleChangeRowsPerPage,
+        // }}
       >
         <Table stickyHeader>
           <TableHead>
@@ -281,7 +280,7 @@ export function CommissionsDraftTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+            {filteredRows.map((row, index) => (
               <CommissionsDraftTableRow
                 key={index}
                 row={row}
@@ -290,6 +289,15 @@ export function CommissionsDraftTable() {
                 saveCommission={saveCommission}
               />
             ))}
+            {/* {filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+              <CommissionsDraftTableRow
+                key={index}
+                row={row}
+                headers={commissionsHeader}
+                handleDeleteRow={handleDeleteRow}
+                saveCommission={saveCommission}
+              />
+            ))} */}
           </TableBody>
         </Table>
       </CustomTableContainer>
