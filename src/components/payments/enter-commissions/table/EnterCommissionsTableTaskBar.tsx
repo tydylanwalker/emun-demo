@@ -3,6 +3,8 @@ import { useAppDispatch } from '../../../../hooks/ReduxHooks';
 import { setEnterCommissionsRows } from '../../../../store/slices/enterCommissionsSlice';
 import { IEnterCommissionsRow } from '../EnterCommissions';
 import { postInvoicesFromCommissions } from '../../../../store/thunks/postInvoicesFromCommissionRows';
+import { initializeData } from '../../../../store/thunks/data-initialization/initializeData';
+import { ESheets } from '../../../../data/enums/ESheets';
 
 export function EnterCommissionsTableTaskBar(props: IEnterCommissionsTableTaskBarProps) {
   const dispatch = useAppDispatch();
@@ -10,6 +12,7 @@ export function EnterCommissionsTableTaskBar(props: IEnterCommissionsTableTaskBa
   const submitRows = async () => {
     const ok = await dispatch(await postInvoicesFromCommissions(props.matchedRows, true));
     if (ok) dispatch(setEnterCommissionsRows(props.rowsWithErrors));
+    dispatch(initializeData(ESheets.Invoices));
     // TODO if ok is false then do some type of error message
   };
   return (

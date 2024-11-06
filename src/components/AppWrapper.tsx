@@ -9,7 +9,7 @@ import { getTheme } from '../theme/theme';
 import { GlobalStyles } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/ReduxHooks';
 import { getMode, setMode } from '../store/slices/themeSlice';
-import { initializeData } from '../store/thunks/initializeData';
+import { initializeData } from '../store/thunks/data-initialization/initializeData';
 import { AddAdjustment } from './payments/enter-commissions/forms/AddAdjustment';
 import { AddCheck } from './payments/enter-commissions/forms/AddCheck';
 import { AddDirectOrder } from './payments/enter-commissions/forms/AddDirectOrder';
