@@ -18,21 +18,25 @@ const HomePage: NextPage = () => {
   return (
     <>
       <Stack spacing={{ xs: 1, sm: 2 }} overflow={'auto'}>
-        <Typography fontSize={30} fontWeight={200} color='text.secondary'>
-          Commissions
-        </Typography>
-        <Divider></Divider>
-        <Stack
-          spacing={{ xs: 1, sm: 2 }}
-          direction='row'
-          sx={{
-            display: 'flex', // Enable Flexbox
-            width: '100%', // Make sure the container spans full width
-          }}
-        >
-          <MonthlyInvoiceOverview monthsAgoItr={0} invoices={invoices}></MonthlyInvoiceOverview>
-          <MonthlyInvoiceOverview monthsAgoItr={1} invoices={invoices}></MonthlyInvoiceOverview>
-        </Stack>
+        {invoices.length > 0 && (
+          <>
+            <Typography fontSize={30} fontWeight={200} color='text.secondary'>
+              Commissions
+            </Typography>
+            <Divider></Divider>
+            <Stack
+              spacing={{ xs: 1, sm: 2 }}
+              direction='row'
+              sx={{
+                display: 'flex', // Enable Flexbox
+                width: '100%', // Make sure the container spans full width
+              }}
+            >
+              <MonthlyInvoiceOverview monthsAgoItr={0} invoices={invoices}></MonthlyInvoiceOverview>
+              <MonthlyInvoiceOverview monthsAgoItr={1} invoices={invoices}></MonthlyInvoiceOverview>
+            </Stack>
+          </>
+        )}
 
         <Stack
           spacing={{ xs: 1, sm: 2 }}
