@@ -7,6 +7,7 @@ import { OrdersTable } from '../../../components/orders/OrdersTable';
 import dynamic from 'next/dynamic';
 import { useAppSelector } from '../../../hooks/ReduxHooks';
 import { getDivisions } from '../../../store/slices/dataSlice';
+import { DivisionsTable } from '../../../components/territory-management/divisions/DivisionsTable';
 
 const ViewDivisionsPage: NextPage = () => {
   const divisions = useAppSelector(getDivisions);
@@ -21,7 +22,7 @@ const ViewDivisionsPage: NextPage = () => {
         <title>Divisions</title>
       </Head>
 
-      <DynamicMap></DynamicMap>
+      <DivisionsTable divisions={divisions}></DivisionsTable>
     </>
   );
 };
