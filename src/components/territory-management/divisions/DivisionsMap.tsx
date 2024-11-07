@@ -1,124 +1,263 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet'; // Import leaflet for custom icons (optional)
 import 'leaflet/dist/leaflet.css';
 import axios from 'axios';
 import { getDivisions } from '../../../store/slices/dataSlice';
 import { useAppSelector } from '../../../hooks/ReduxHooks';
-import { IDivision } from '../../../data/interfaces/IDivision';
-import { Divider, Stack, Typography } from '@mui/material';
-import { DivisionsTable } from './DivisionsTable';
+import { LoadScript, GoogleMap, InfoWindow, Marker } from '@react-google-maps/api';
 
-interface Point {
-  id: number;
-  lat: number;
-  lng: number;
-  label: string;
+const darkModeStyle = [
+  {
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#212121',
+      },
+    ],
+  },
+  {
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#757575',
+      },
+    ],
+  },
+  {
+    elementType: 'labels.text.stroke',
+    stylers: [
+      {
+        color: '#212121',
+      },
+    ],
+  },
+  {
+    featureType: 'administrative.land_parcel',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#BDBDBD',
+      },
+    ],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#212121',
+      },
+    ],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#757575',
+      },
+    ],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#7F7F7F',
+      },
+    ],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry.stroke',
+    stylers: [
+      {
+        color: '#9E9E9E',
+      },
+    ],
+  },
+  {
+    featureType: 'road',
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'road',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#9E9E9E',
+      },
+    ],
+  },
+  {
+    featureType: 'road',
+    elementType: 'labels.text.stroke',
+    stylers: [
+      {
+        color: '#212121',
+      },
+    ],
+  },
+  {
+    featureType: 'transit',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#212121',
+      },
+    ],
+  },
+  {
+    featureType: 'transit.station',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#757575',
+      },
+    ],
+  },
+  {
+    featureType: 'water',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#000000',
+      },
+    ],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#3d3d3d',
+      },
+    ],
+  },
+];
+
+export interface MarkerData {
+  id: string;
+  title: string;
+  position: google.maps.LatLngLiteral;
 }
 
-const apiKey = process.env.NEXT_PUBLIC_OPENCAGE_API_KEY; // Replace with your actual OpenCage API key
+const apiAxiosKey = process.env.NEXT_PUBLIC_OPENCAGE_API_KEY; // Replace with your actual OpenCage API key
+const apiGoogleKey = 'AIzaSyCiress-B17tqnGC-U-qMIXCQNqJUUCSoo'; // Replace with your actual OpenCage API key
 
-const MapComponent: React.FC = () => {
-  // Define the center of the map and zoom level
+const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
+  const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
+  const [coordinates, setCoordinates] = useState<MarkerData[]>([]); // Coordinates for the markers
+  const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false); // Track if Google Maps is loaded
+
+  const defaultCenter = { lat: 34.7749, lng: -86.601791 }; // Default center (San Francisco)
+
   const divisions = useAppSelector(getDivisions);
-  let divs = divisions;
 
-  const [points, setPoints] = useState<Point[]>([]);
-  const [selectedZip, setSelectedZip] = useState<string | null>(null);
-
-  const uniqueZipCodes = divisions.filter(
+  const uniqueDivisions = divisions.filter(
     (value, index, self) => index === self.findIndex((division) => division.zip === value.zip)
   );
-  console.log(uniqueZipCodes);
-  var defaultIcon = new L.Icon({
-    iconUrl: '/logo.svg', // Path to the PNG file in the public directory
-    iconSize: [100, 100], // Icon size
-    iconAnchor: [16, 32], // Icon anchor point (adjust as needed)
-    popupAnchor: [16, 32], // Position of the popup relative to the icon
-  });
-
-  function getPoints(divisions: IDivision[]) {
-    divisions.forEach((division) => {
-      console.log(division);
-      fetchCoordinates(division.zip);
-    });
-  }
-
-  const center = { lat: 34.7304, lng: -86.5861 }; // Center of the map (US)
-  const zoom = 6;
-
-  const handleMarkerClick = (point: Point) => {
-    // Update the state with the selected point
-    setSelectedZip(point.label);
-  };
-
-  const fetchCoordinates = async (zipCode: string) => {
-    try {
-      const response = await axios.get(
-        `https://api.opencagedata.com/geocode/v1/json?q=${zipCode}&key=${apiKey}&no_annotations=1`
-      );
-
-      if (response.data.results && response.data.results.length > 0) {
-        const { lat, lng } = response.data.results[0].geometry;
-        const newPoint: Point = {
-          id: parseInt(zipCode),
-          lat: lat,
-          lng: lng,
-          label: zipCode,
-        };
-        setPoints((prevPoints) => [...prevPoints, newPoint]); // Add the new number immutably
-      }
-    } catch (err) {
-      console.log('Error fetching data');
-    }
-  };
 
   useEffect(() => {
-    getPoints(uniqueZipCodes); // Call the async function
+    // Ensure Google Maps API is loaded before calling Geocoder
+    if (window.google && window.google.maps) {
+      setGoogleMapsLoaded(true);
+    }
   }, []);
 
-  return (
-    <Stack spacing={{ xs: 1, sm: 2 }} overflow={'auto'}>
-      <Typography fontSize={30} fontWeight={200} color='text.secondary'>
-        Divisions
-      </Typography>
-      <Divider></Divider>
-      {points ? (
-        <div style={{ height: '400px', width: '70%', borderRadius: '4px' }}>
-          {/* MapContainer is the container for the Leaflet map */}
-          <MapContainer center={center} zoom={zoom} style={{ height: '100%', width: '100%' }}>
-            {/* TileLayer is the background layer of the map (OpenStreetMap tiles in this case) */}
-            <TileLayer
-              url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
+  useEffect(() => {
+    // Fetch coordinates from the Google Geocoding API
+    const allCoordinates: MarkerData[] = [];
+    if (googleMapsLoaded) {
+      const fetchCoordinates = async () => {
+        for (let division of uniqueDivisions) {
+          try {
+            const geocoder = new google.maps.Geocoder();
+            const results = await geocoder.geocode({ address: division.zip });
 
-            {/* Add markers to the map for each point */}
-            {points.map((point) => (
-              <Marker
-                key={point.id}
-                position={{ lat: point.lat, lng: point.lng }}
-                icon={defaultIcon}
-                eventHandlers={{
-                  click: () => handleMarkerClick(point), // Handle click on marker
-                }}
-              >
-                {/* Popup is the label for each marker */}
-                <Popup>
-                  {' '}
-                  <div style={{ width: '200px', textAlign: 'center', backgroundColor: 'secondary.main' }}>
-                    <h3>{point.label}</h3>
-                  </div>
-                </Popup>
-                <Typography>AAAA</Typography>
-              </Marker>
-            ))}
-          </MapContainer>
-        </div>
-      ) : null}
-      <DivisionsTable divisions={divisions.filter((division) => division.zip == selectedZip)}></DivisionsTable>
-    </Stack>
+            if (results && results.results[0]) {
+              const { lat, lng } = results.results[0].geometry.location;
+              allCoordinates.push({
+                id: division.zip,
+                title: division.division,
+                position: { lat: lat(), lng: lng() },
+              });
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        }
+
+        setCoordinates(allCoordinates);
+      };
+
+      fetchCoordinates();
+    }
+  }, [googleMapsLoaded]);
+
+  // Handle marker click to show InfoWindow
+  const handleMarkerClick = (marker: MarkerData) => {
+    onMarkerClick(marker);
+    setSelectedMarker(marker);
+    console.log(marker.title);
+  };
+
+  return (
+    <LoadScript googleMapsApiKey={apiGoogleKey}>
+      <GoogleMap
+        mapContainerStyle={{ width: '60%', height: '10000px' }}
+        zoom={12}
+        center={defaultCenter}
+        options={{
+          styles: darkModeStyle, // Apply dark theme styles
+        }}
+      >
+        {/* Example of a Marker */}
+        {coordinates.map((marker) => (
+          <Marker
+            key={marker.id}
+            position={marker.position}
+            title={marker.title}
+            onClick={() => handleMarkerClick(marker)}
+          />
+        ))}
+        {/* {points.map((point) => (
+          <Marker
+            key={point.id}
+            position={{ lat: point.lat, lng: point.lng }}
+            onClick={() => handleMarkerClick(point)}
+            title={point.label}
+            icon='/logo.svg'
+          />
+        ))} */}
+
+        {/* InfoWindow to show when a marker is clicked */}
+        {selectedMarker && (
+          <InfoWindow position={selectedMarker.position} onCloseClick={() => setSelectedMarker(null)}>
+            <div>
+              <h2>{selectedMarker.title}</h2>
+            </div>
+          </InfoWindow>
+        )}
+      </GoogleMap>
+    </LoadScript>
   );
 };
+
+interface MapComponentProps {
+  onMarkerClick: (marker: MarkerData) => void; // Define the prop type for the click handler
+}
 
 export default MapComponent;

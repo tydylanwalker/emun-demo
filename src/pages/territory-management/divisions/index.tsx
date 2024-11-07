@@ -9,10 +9,15 @@ import { useAppSelector } from '../../../hooks/ReduxHooks';
 import { getDivisions } from '../../../store/slices/dataSlice';
 import { DivisionsTable } from '../../../components/territory-management/divisions/DivisionsTable';
 import { CustomInput } from '../../../components/shared/CustomInput';
+import { MarkerData } from '../../../components/territory-management/divisions/DivisionsMap';
 
 const ViewDivisionsPage: NextPage = () => {
   const divisions = useAppSelector(getDivisions);
   const [divisionSelected, setDivisionSelected] = useState<string>('All');
+
+  const handleMarkerClick = (marker: MarkerData) => {
+    setDivisionSelected(marker.title);
+  };
 
   const uniqueDivisions = divisions.filter(
     (value, index, self) => index === self.findIndex((division) => division.division === value.division)
@@ -30,21 +35,24 @@ const ViewDivisionsPage: NextPage = () => {
         <title>Divisions</title>
       </Head>
       <Stack spacing={{ xs: 1, sm: 2 }} overflow={'auto'}>
-        <CustomInput
-          select
-          value={divisionSelected}
-          label='Select Division'
-          options={options}
-          onChange={(event) => setDivisionSelected(event.target.value as string)}
-          sx={{ maxWidth: '40%' }}
-        />
-        <DivisionsTable
-          divisions={
-            divisionSelected === 'All'
-              ? divisions
-              : divisions.filter((division) => division.division === divisionSelected)
-          }
-        ></DivisionsTable>
+        <Stack spacing={{ xs: 1, sm: 2 }} overflow={'auto'}>
+          <CustomInput
+            select
+            value={divisionSelected}
+            label='Select Division'
+            options={options}
+            onChange={(event) => setDivisionSelected(event.target.value as string)}
+            sx={{ maxWidth: '40%' }}
+          />
+          <DivisionsTable
+            divisions={
+              divisionSelected === 'All'
+                ? divisions
+                : divisions.filter((division) => division.division === divisionSelected)
+            }
+          ></DivisionsTable>
+        </Stack>
+        {/* <DynamicMap onMarkerClick={handleMarkerClick} /> */}
       </Stack>
     </>
   );
