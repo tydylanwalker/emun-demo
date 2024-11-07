@@ -5,10 +5,15 @@ import React from 'react';
 import { BaseLayout } from '../../../components/layout/BaseLayout';
 import { OrdersTable } from '../../../components/orders/OrdersTable';
 import dynamic from 'next/dynamic';
+import { useAppSelector } from '../../../hooks/ReduxHooks';
+import { getDivisions } from '../../../store/slices/dataSlice';
+
 const ViewDivisionsPage: NextPage = () => {
-  // const DynamicMap = dynamic(() => import('../../../components/territory-management/divisions/DivisionsMap'), {
-  //   ssr: false,
-  // });
+  const divisions = useAppSelector(getDivisions);
+
+  const DynamicMap = dynamic(() => import('../../../components/territory-management/divisions/DivisionsMap'), {
+    ssr: false,
+  });
 
   return (
     <>
@@ -16,13 +21,7 @@ const ViewDivisionsPage: NextPage = () => {
         <title>Divisions</title>
       </Head>
 
-      {/* <Stack direction='row' sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant='h5' gap={2}>
-              View Orders
-            </Typography>
-            <BasicSelect vendor={vendor} vendorSelected={vendorSelected}></BasicSelect>
-          </Stack> */}
-      <Stack height={1}>{/* <DynamicMap></DynamicMap> */}</Stack>
+      <DynamicMap></DynamicMap>
     </>
   );
 };
