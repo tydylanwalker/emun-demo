@@ -12,7 +12,6 @@ export interface IDivisionHeader {
 }
 
 const divisionHeaders: IDivisionHeader[] = [
-  { label: 'Division', align: 'center', id: 'division' },
   { label: 'Rep', align: 'center', id: 'rep' },
   { label: 'Rep Group', align: 'center', id: 'repGroup' },
   { label: 'Vendor', align: 'center', id: 'vendor' },

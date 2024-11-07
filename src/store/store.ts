@@ -3,11 +3,13 @@ import { createWrapper } from 'next-redux-wrapper';
 import { themeReducer } from './slices/themeSlice';
 import { dataReducer } from './slices/dataSlice';
 import { enterCommissionsReducer } from './slices/enterCommissionsSlice';
+import { divisionsReducer } from './slices/divisionSlice';
 
 const rootReducer = combineReducers({
   theme: themeReducer,
   data: dataReducer,
   enterCommissions: enterCommissionsReducer,
+  divisions: divisionsReducer,
 });
 
 export const store = configureStore({
