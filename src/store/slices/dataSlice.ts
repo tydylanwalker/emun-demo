@@ -5,6 +5,7 @@ import { ICheck } from '../../data/interfaces/ICheck';
 import { IVendor } from '../../data/interfaces/IVendor';
 import { IPayPeriod } from '../../data/interfaces/IPayPeriod';
 import { IInvoice } from '../../data/interfaces/IInvoice';
+import { IDivision } from '../../data/interfaces/IDivision';
 
 interface IDataState {
   orders: IOrder[];
@@ -12,6 +13,7 @@ interface IDataState {
   vendors: IVendor[];
   payPeriods: IPayPeriod[];
   invoices: IInvoice[];
+  divisions: IDivision[];
   dataInitialized: boolean;
 }
 
@@ -21,6 +23,7 @@ const initialState: IDataState = {
   vendors: [],
   payPeriods: [],
   invoices: [],
+  divisions: [],
   dataInitialized: false,
 };
 
@@ -43,6 +46,9 @@ const dataSlice = createSlice({
     setInvoices: (state, action: PayloadAction<IInvoice[]>) => {
       state.invoices = action.payload;
     },
+    setDivisions: (state, action: PayloadAction<IDivision[]>) => {
+      state.divisions = action.payload;
+    },
     dataInitialized: (state) => {
       state.dataInitialized = true;
     },
@@ -50,6 +56,7 @@ const dataSlice = createSlice({
 });
 
 export const getOrders = (state: RootState) => state.data.orders;
+export const getDivisions = (state: RootState) => state.data.divisions;
 export const getChecks = (state: RootState) => state.data.checks;
 export const getVendors = (state: RootState) => state.data.vendors;
 export const getPayPeriods = (state: RootState) => state.data.payPeriods;
@@ -58,6 +65,7 @@ export const getDraftInvoices = (state: RootState) =>
   state.data.invoices.filter((invoice) => invoice.posted && invoice.status.toLowerCase() !== 'closed');
 export const getDataInitialized = (state: RootState) => state.data.dataInitialized;
 
-export const { setOrders, setChecks, setInvoices, setPayPeriods, setVendors, dataInitialized } = dataSlice.actions;
+export const { setOrders, setChecks, setInvoices, setPayPeriods, setVendors, setDivisions, dataInitialized } =
+  dataSlice.actions;
 
 export const dataReducer = dataSlice.reducer;

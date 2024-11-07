@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
     CHECKS_ID: process.env.NEXT_PUBLIC_CHECKS_ID,
     PAY_PERIODS_ID: process.env.NEXT_PUBLIC_PAY_PERIODS_ID,
     INVOICES_ID: process.env.NEXT_PUBLIC_INVOICES_ID,
+    DIVISIONS_ID: process.env.NEXT_PUBLIC_DIVISIONS_ID,
   },
 };
 

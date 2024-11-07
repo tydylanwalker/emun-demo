@@ -18,6 +18,7 @@ export function initializeData(): ThunkAction<void, RootState, unknown, AnyActio
       dispatch(getThunk(ESheets.Vendors)),
       dispatch(getThunk(ESheets.Checks)),
       dispatch(getThunk(ESheets.PayPeriods)),
+      dispatch(getThunk(ESheets.Divisions)),
     ]);
 
     dispatch(dataInitialized());

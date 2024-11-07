@@ -1,13 +1,14 @@
 import { AnyAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { ThunkAction } from 'redux-thunk';
-import { setOrders, setVendors, setChecks, setPayPeriods, setInvoices } from '../slices/dataSlice';
+import { setOrders, setVendors, setChecks, setPayPeriods, setInvoices, setDivisions } from '../slices/dataSlice';
 import { ESheets } from '../../data/enums/ESheets';
 import { mapOrder } from '../../data/mappers/mapOrder';
 import { mapInvoice } from '../../data/mappers/mapInvoice';
 import { mapPayPeriod } from '../../data/mappers/mapPayPeriod';
 import { mapCheck } from '../../data/mappers/mapCheck';
 import { mapVendor } from '../../data/mappers/mapVendor';
+import { mapDivision } from '../../data/mappers/mapDivision';
 
 /**
  * Sets the data for a specific sheet
@@ -31,6 +32,9 @@ export function setStateData(rows: any, sheet: ESheets): ThunkAction<void, RootS
         break;
       case ESheets.Invoices:
         dispatch(setInvoices(mapInvoice(rows)));
+        break;
+      case ESheets.Divisions:
+        dispatch(setDivisions(mapDivision(rows)));
         break;
       default:
         console.warn(`No matching case for sheet type: ${sheet}`);
