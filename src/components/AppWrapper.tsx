@@ -10,10 +10,10 @@ import { GlobalStyles } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/ReduxHooks';
 import { getMode, setMode } from '../store/slices/themeSlice';
 import { initializeData } from '../store/thunks/data-initialization/initializeData';
-import { AddAdjustment } from './payments/enter-commissions/forms/AddAdjustment';
-import { AddCheck } from './payments/enter-commissions/forms/AddCheck';
-import { AddDirectOrder } from './payments/enter-commissions/forms/AddDirectOrder';
-import { AddPayPeriod } from './payments/enter-commissions/forms/AddPayPeriod';
+import { AddAdjustment } from './commissions/enter-commissions/forms/AddAdjustment';
+import { AddCheck } from './commissions/enter-commissions/forms/AddCheck';
+import { AddDirectOrder } from './commissions/enter-commissions/forms/AddDirectOrder';
+import { AddPayPeriod } from './commissions/enter-commissions/forms/AddPayPeriod';
 import { getDataInitialized } from '../store/slices/dataSlice';
 import { SplashScreen } from './shared/SplashScreen';
 

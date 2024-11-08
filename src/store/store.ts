@@ -4,12 +4,14 @@ import { themeReducer } from './slices/themeSlice';
 import { dataReducer } from './slices/dataSlice';
 import { enterCommissionsReducer } from './slices/enterCommissionsSlice';
 import { divisionsReducer } from './slices/divisionSlice';
+import { commissionDraftReducer } from './slices/commissionDraftSlice';
 
 const rootReducer = combineReducers({
   theme: themeReducer,
   data: dataReducer,
   enterCommissions: enterCommissionsReducer,
   divisions: divisionsReducer,
+  commissionDraft: commissionDraftReducer,
 });
 
 export const store = configureStore({

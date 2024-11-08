@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { IOrder } from '../data/interfaces/IOrder';
-import { IEnterCommissionsRow } from '../components/payments/enter-commissions/EnterCommissions';
+import { IEnterCommissionsRow } from '../components/commissions/enter-commissions/EnterCommissions';
 
 export function createDirectOrder(row?: IEnterCommissionsRow, newCustomer: boolean = false): IOrder {
   const poNumber = newCustomer && row?.poNumber ? row.poNumber.value : 'OC-' + dayjs().valueOf();

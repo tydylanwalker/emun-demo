@@ -26,6 +26,7 @@ import {
   setVendorSelected,
 } from '../../../store/slices/enterCommissionsSlice';
 import { checkDisplayValue } from '../../../functions/checkDisplayValue';
+import { showTransition } from '../../../functions/showTransition';
 interface IRowObject<T> {
   value: T;
   error?: ErrorEnum;
@@ -95,8 +96,6 @@ export function EnterCommissions() {
       setSuccessfulEntry(false);
     }, 2500);
   };
-
-  const showTransition = (show: boolean) => ({ opacity: show ? 1 : 0, transition: 'opacity 1s ease-in' });
 
   // /**
   //  * Whenever all 3 dropdown values are selected and or changed we find any existing (not posted) commission rows and then populate the table if there are any

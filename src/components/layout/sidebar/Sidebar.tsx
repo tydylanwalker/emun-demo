@@ -62,27 +62,27 @@ const sidebarContent: ISidebarContent[] = [
       {
         label: 'Enter Commissions',
         icon: <UploadFileRounded />,
-        href: '/payments/enter-commissions',
+        href: '/commissions/enter-commissions',
       },
       {
         label: 'Checks',
         icon: <PaymentRounded />,
-        href: '/payments/checks',
+        href: '/commissions/checks',
       },
       {
         label: 'Invoices',
         icon: <CheckBox />,
-        href: '/payments/invoices',
+        href: '/commissions/invoices',
       },
       {
         label: 'Adjustments',
         icon: <PriceChangeRounded />,
-        href: '/payments/adjustments',
+        href: '/commissions/adjustments',
       },
       {
         label: 'Commissions Draft',
         icon: <PaidRounded />,
-        href: '/payments/commissions-draft',
+        href: '/commissions/commissions-draft',
       },
     ],
   },

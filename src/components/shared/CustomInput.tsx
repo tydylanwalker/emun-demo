@@ -1,15 +1,16 @@
 import { FormControl, InputAdornment, MenuItem, Stack, TextField, TextFieldProps } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { CloseRounded, Search } from '@mui/icons-material';
+import { Search } from '@mui/icons-material';
 import { useAppSelector } from '../../hooks/ReduxHooks';
 import { isModeDark } from '../../store/slices/themeSlice';
 
 export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
+  const darkMode = useAppSelector(isModeDark);
   const inputStyles = {
     '& .MuiOutlinedInput-root': {
       borderRadius: 5,
-      border: useAppSelector(isModeDark) ? 1 : 0,
+      border: props.error ? '0.1rem solid red !important' : darkMode ? 1 : 0,
       position: 'relative',
       '& fieldset': {
         display: 'none',
@@ -46,6 +47,12 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
       left: 0,
       fontSize: '1rem',
       background: 'transparent',
+    },
+    '& .MuiFormHelperText-root': {
+      position: 'absolute',
+      bottom: '-1.25rem',
+      width: '100%',
+      textAlign: 'center',
     },
     ...props.sx,
   };
@@ -110,6 +117,8 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
         />
       ) : (
         <TextField
+          error={props.error}
+          helperText={props.error && props.helperText}
           onKeyDown={props.onKeyDown}
           autoFocus={props.autoFocus}
           select={props.select}
@@ -131,7 +140,9 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
             },
           }}
         >
-          {props.options && props.options.length > 0 ? (
+          {props.renderedOptions ? (
+            props.renderedOptions
+          ) : props.options && props.options.length > 0 ? (
             [...props.options, ''].map((option, index) => (
               <MenuItem
                 key={index}
@@ -156,4 +167,5 @@ interface ICustomSelectProps {
   currency?: boolean;
   date?: boolean;
   maxWidth?: string;
+  renderedOptions?: JSX.Element[];
 }

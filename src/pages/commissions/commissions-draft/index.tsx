@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { BaseLayout } from '../../../components/layout/BaseLayout';
-import { CommissionsDraftTable } from '../../../components/payments/commissions-draft/CommissionsDraftTable';
+import { CommissionsDraftTable } from '../../../components/commissions/commissions-draft/CommissionsDraftTable';
 
 const CommissionsDraftPage: NextPage = () => {
   return (

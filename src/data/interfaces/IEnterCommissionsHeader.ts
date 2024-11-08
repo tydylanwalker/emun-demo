@@ -1,4 +1,4 @@
-import { IEnterCommissionsRow } from '../../components/payments/enter-commissions/EnterCommissions';
+import { IEnterCommissionsRow } from '../../components/commissions/enter-commissions/EnterCommissions';
 
 export interface IEnterCommissionsHeader {
   label: string;

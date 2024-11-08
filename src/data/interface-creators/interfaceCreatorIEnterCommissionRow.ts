@@ -1,4 +1,4 @@
-import { IEnterCommissionsRow } from '../../components/payments/enter-commissions/EnterCommissions';
+import { IEnterCommissionsRow } from '../../components/commissions/enter-commissions/EnterCommissions';
 import { ErrorEnum } from '../enums/ErrorEnum';
 import { IOrder } from '../interfaces/IOrder';
 

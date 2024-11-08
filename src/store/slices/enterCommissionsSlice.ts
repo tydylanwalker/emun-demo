@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { IEnterCommissionsRow } from '../../components/payments/enter-commissions/EnterCommissions';
+import { IEnterCommissionsRow } from '../../components/commissions/enter-commissions/EnterCommissions';
 
 interface IEnterCommissionsState {
   enterCommissionsRows: IEnterCommissionsRow[];

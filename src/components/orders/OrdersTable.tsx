@@ -4,7 +4,7 @@ import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typogr
 import { CustomInput } from '../shared/CustomInput';
 import { OrdersTableRow } from './OrdersTableRow';
 import { CustomTableContainer } from '../shared/CustomTableContainer';
-import { IEnterCommissionsRow } from '../payments/enter-commissions/EnterCommissions';
+import { IEnterCommissionsRow } from '../commissions/enter-commissions/EnterCommissions';
 import { useAppSelector } from '../../hooks/ReduxHooks';
 import { getOrders } from '../../store/slices/dataSlice';
 

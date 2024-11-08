@@ -1,7 +1,7 @@
 import { AnyAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { ThunkAction } from 'redux-thunk';
-import { IEnterCommissionsRow } from '../../components/payments/enter-commissions/EnterCommissions';
+import { IEnterCommissionsRow } from '../../components/commissions/enter-commissions/EnterCommissions';
 import { IInvoice } from '../../data/interfaces/IInvoice';
 import { checkDisplayValue } from '../../functions/checkDisplayValue';
 import { postThunk } from './requests/postThunk';
