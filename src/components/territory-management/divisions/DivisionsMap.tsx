@@ -182,6 +182,11 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
     const allCoordinates: MarkerData[] = [];
     if (googleMapsLoaded) {
       const fetchCoordinates = async () => {
+        if (!window.google || !window.google.maps) {
+          console.error('Google Maps API is not loaded yet.');
+          return;
+        }
+
         for (let division of uniqueDivisions) {
           try {
             const geocoder = new google.maps.Geocoder();
@@ -216,24 +221,25 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
 
   return (
     <LoadScript googleMapsApiKey={apiGoogleKey}>
-      <GoogleMap
-        mapContainerStyle={{ width: '60%', height: '10000px' }}
-        zoom={12}
-        center={defaultCenter}
-        options={{
-          styles: darkModeStyle, // Apply dark theme styles
-        }}
-      >
-        {/* Example of a Marker */}
-        {coordinates.map((marker) => (
-          <Marker
-            key={marker.id}
-            position={marker.position}
-            title={marker.title}
-            onClick={() => handleMarkerClick(marker)}
-          />
-        ))}
-        {/* {points.map((point) => (
+      <div style={{ display: 'flex', flexDirection: 'row', width: '50%', height: '1000px' }}>
+        <GoogleMap
+          mapContainerStyle={{ flex: 1, height: '100%' }}
+          zoom={12}
+          center={defaultCenter}
+          options={{
+            styles: darkModeStyle, // Apply dark theme styles
+          }}
+        >
+          {/* Example of a Marker */}
+          {coordinates.map((marker) => (
+            <Marker
+              key={marker.id}
+              position={marker.position}
+              title={marker.title}
+              onClick={() => handleMarkerClick(marker)}
+            />
+          ))}
+          {/* {points.map((point) => (
           <Marker
             key={point.id}
             position={{ lat: point.lat, lng: point.lng }}
@@ -243,15 +249,16 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
           />
         ))} */}
 
-        {/* InfoWindow to show when a marker is clicked */}
-        {selectedMarker && (
-          <InfoWindow position={selectedMarker.position} onCloseClick={() => setSelectedMarker(null)}>
-            <div>
-              <h2>{selectedMarker.title}</h2>
-            </div>
-          </InfoWindow>
-        )}
-      </GoogleMap>
+          {/* InfoWindow to show when a marker is clicked */}
+          {selectedMarker && (
+            <InfoWindow position={selectedMarker.position} onCloseClick={() => setSelectedMarker(null)}>
+              <div>
+                <h2>{selectedMarker.title}</h2>
+              </div>
+            </InfoWindow>
+          )}
+        </GoogleMap>
+      </div>
     </LoadScript>
   );
 };

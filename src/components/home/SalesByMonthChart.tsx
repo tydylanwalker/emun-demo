@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 import { Box, Typography } from '@mui/material';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { getMonthsAgo } from './MonthlyOrdersOverview';
@@ -67,7 +67,7 @@ function generateGraphData(orders: IOrder[]): { labels: string[]; datasets: any 
   return { labels, datasets };
 }
 
-export default function SalesByRepChart(props: SalesByRepChartProps) {
+export default function SalesByMonthChart(props: SalesByMonthChartProps) {
   let fromMonth = new Date(getMonthsAgo(2));
 
   let last3MonthsOrders = props.orders.filter(
@@ -87,33 +87,33 @@ export default function SalesByRepChart(props: SalesByRepChartProps) {
       <Typography fontSize={'1.6vw'} fontWeight={800}>
         Sales by Rep Last 3 Months
       </Typography>
-      <Bar
+      <Line
         data={data}
         options={{
           responsive: true,
           plugins: {
-            legend: {
-              position: 'top',
+            title: {
+              display: true,
+              text: 'Sales vs Orders Over Time',
             },
             tooltip: {
-              callbacks: {
-                label: (context: any) => `${context.dataset.label}: $${context.raw}`, // Show sales value with dollar sign
-              },
+              mode: 'index',
+              intersect: false,
             },
           },
           scales: {
             x: {
               title: {
                 display: true,
-                text: 'Time (Months)', // Label for x-axis
+                text: 'Months',
               },
             },
             y: {
               title: {
                 display: true,
-                text: 'Sales ($)', // Label for y-axis
+                text: 'Value',
               },
-              beginAtZero: true, // Ensure y-axis starts from 0
+              beginAtZero: true, // Start the Y-axis from 0
             },
           },
         }}
@@ -122,6 +122,6 @@ export default function SalesByRepChart(props: SalesByRepChartProps) {
   );
 }
 
-interface SalesByRepChartProps {
+interface SalesByMonthChartProps {
   orders: IOrder[];
 }

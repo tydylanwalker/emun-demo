@@ -34,8 +34,9 @@ const ViewDivisionsPage: NextPage = () => {
       <Head>
         <title>Divisions</title>
       </Head>
-      <Stack spacing={{ xs: 1, sm: 2 }} overflow={'auto'}>
-        <Stack spacing={{ xs: 1, sm: 2 }} overflow={'auto'}>
+      <Stack spacing={{ xs: 1, sm: 2 }} direction={'row'} overflow={'auto'}>
+        <DynamicMap onMarkerClick={handleMarkerClick} />
+        <Stack spacing={{ xs: 1, sm: 2 }} overflow={'auto'} flex={1}>
           <CustomInput
             select
             value={divisionSelected}
@@ -52,7 +53,6 @@ const ViewDivisionsPage: NextPage = () => {
             }
           ></DivisionsTable>
         </Stack>
-        {/* <DynamicMap onMarkerClick={handleMarkerClick} /> */}
       </Stack>
     </>
   );

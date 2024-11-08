@@ -10,6 +10,7 @@ import { getInvoices, getOrders } from '../../store/slices/dataSlice';
 import MonthlyInvoiceOverview from '../../components/home/MonthlyInvoiceOverview';
 import MonthlyOrdersOverview from '../../components/home/MonthlyOrdersOverview';
 import SalesByRepChart from '../../components/home/SalesByRepChart';
+import SalesByMonthChart from '../../components/home/SalesByMonthChart';
 
 const HomePage: NextPage = () => {
   const orders = useAppSelector(getOrders);
@@ -49,7 +50,7 @@ const HomePage: NextPage = () => {
           <Stack
             spacing={{ xs: 1, sm: 2 }}
             sx={{
-              width: '70%',
+              width: '50%',
               display: 'flex', // Enable Flexbox
             }}
           >
@@ -57,10 +58,23 @@ const HomePage: NextPage = () => {
               Top Reps
             </Typography>
             <Divider></Divider>
-            <SalesByRepChart></SalesByRepChart>
+            <SalesByRepChart orders={orders}></SalesByRepChart>
+          </Stack>
+          <Stack
+            spacing={{ xs: 1, sm: 2 }}
+            sx={{
+              width: '50%',
+              display: 'flex', // Enable Flexbox
+            }}
+          >
+            <Typography fontSize={30} fontWeight={200} color='text.secondary'>
+              Sales By Month
+            </Typography>
+            <Divider></Divider>
+            <SalesByMonthChart orders={orders}></SalesByMonthChart>
           </Stack>
 
-          <Stack
+          {/* <Stack
             spacing={{ xs: 1, sm: 2 }}
             sx={{
               width: '30%',
@@ -80,8 +94,8 @@ const HomePage: NextPage = () => {
               <MonthlyOrdersOverview monthsAgoItr={0} orders={orders}></MonthlyOrdersOverview>
               <MonthlyOrdersOverview monthsAgoItr={1} orders={orders}></MonthlyOrdersOverview>
               <MonthlyOrdersOverview monthsAgoItr={12} orders={orders} yearly={true}></MonthlyOrdersOverview>
-            </Stack>
-          </Stack>
+            </Stack> 
+          </Stack>*/}
         </Stack>
       </Stack>
     </>
