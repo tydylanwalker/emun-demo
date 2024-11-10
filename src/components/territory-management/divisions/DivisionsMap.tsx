@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import 'leaflet/dist/leaflet.css';
-import axios from 'axios';
 import { getDivisions } from '../../../store/slices/dataSlice';
 import { useAppSelector } from '../../../hooks/ReduxHooks';
 import { LoadScript, GoogleMap, InfoWindow, Marker } from '@react-google-maps/api';
