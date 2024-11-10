@@ -6,9 +6,8 @@ import { NextPage } from 'next';
 import { BaseLayout } from '../../components/layout/BaseLayout';
 import { useAppSelector } from '../../hooks/ReduxHooks';
 import { getInvoices, getOrders } from '../../store/slices/dataSlice';
-
+import 'chart.js/auto';
 import MonthlyInvoiceOverview from '../../components/home/MonthlyInvoiceOverview';
-import MonthlyOrdersOverview from '../../components/home/MonthlyOrdersOverview';
 import SalesByRepChart from '../../components/home/SalesByRepChart';
 import SalesByMonthChart from '../../components/home/SalesByMonthChart';
 
@@ -68,7 +67,7 @@ const HomePage: NextPage = () => {
             }}
           >
             <Typography fontSize={30} fontWeight={200} color='text.secondary'>
-              Sales By Month
+              Orders
             </Typography>
             <Divider></Divider>
             <SalesByMonthChart orders={orders}></SalesByMonthChart>

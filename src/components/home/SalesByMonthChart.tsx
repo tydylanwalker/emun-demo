@@ -7,6 +7,7 @@ import { useAppSelector } from '../../hooks/ReduxHooks';
 import { getOrders } from '../../store/slices/dataSlice';
 import { IOrder } from '../../data/interfaces/IOrder';
 import { isModeDark } from '../../store/slices/themeSlice';
+import 'chart.js/auto';
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -32,38 +33,34 @@ function generateGraphData(orders: IOrder[]): { labels: string[]; datasets: any 
   let repOrders = orders.filter((order) => topThreeRepsInSales.includes(order.rep));
 
   var datasets = [];
+  var orderData = [];
+  for (let i = 0; i < monthItrs.length; i++) {
+    let itr = monthItrs[i];
+    let fromMonth = new Date(getMonthsAgo(itr));
+    let toMonth = new Date(getMonthsAgo(itr - 1));
 
-  for (let i = 0; i < topThreeRepsInSales.length; i++) {
-    var orderData = [];
+    let thisMonthsOrdersAmount = repOrders
+      .filter(
+        (order) =>
+          new Date(order.orderDate ?? '') >= fromMonth &&
+          new Date(order.orderDate ?? '') < toMonth &&
+          order.rep === topThreeRepsInSales[i]
+      )
+      .reduce((sum, order) => sum + (order.amount ?? 0.0), 0);
 
-    for (let j = 0; j < monthItrs.length; j++) {
-      let itr = monthItrs[j];
-      let fromMonth = new Date(getMonthsAgo(itr));
-      let toMonth = new Date(getMonthsAgo(itr - 1));
-
-      let thisMonthsOrdersAmount = repOrders
-        .filter(
-          (order) =>
-            new Date(order.orderDate ?? '') >= fromMonth &&
-            new Date(order.orderDate ?? '') < toMonth &&
-            order.rep === topThreeRepsInSales[i]
-        )
-        .reduce((sum, order) => sum + (order.amount ?? 0.0), 0);
-
-      orderData.push(thisMonthsOrdersAmount);
-    }
-
-    let chartData = {
-      label: topThreeRepsInSales[i],
-      data: orderData,
-      backgroundColor: `rgba(${133 / (i + 1)}, ${195 / (i + 1)}, ${248}, 0.5)`,
-      borderColor: `rgba(${133 / (i + 1)}, ${195 / (i + 1)}, ${248}, 1.0)`,
-      borderWidth: 1,
-    };
-
-    datasets.push(chartData);
+    orderData.push(thisMonthsOrdersAmount);
   }
 
+  let i = 1;
+  let chartData = {
+    label: 'Sales',
+    data: orderData,
+    backgroundColor: `rgba(${133 / (i + 1)}, ${195 / (i + 1)}, ${248}, 0.5)`,
+    borderColor: `rgba(${133 / (i + 1)}, ${195 / (i + 1)}, ${248}, 1.0)`,
+    borderWidth: 1,
+  };
+
+  datasets.push(chartData);
   return { labels, datasets };
 }
 

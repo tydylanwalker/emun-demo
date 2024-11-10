@@ -7,6 +7,7 @@ import { useAppSelector } from '../../hooks/ReduxHooks';
 import { getOrders } from '../../store/slices/dataSlice';
 import { IOrder } from '../../data/interfaces/IOrder';
 import { isModeDark } from '../../store/slices/themeSlice';
+import 'chart.js/auto';
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -85,7 +86,7 @@ export default function SalesByRepChart(props: SalesByRepChartProps) {
       }}
     >
       <Typography fontSize={'1.6vw'} fontWeight={800}>
-        Sales by Rep Last 3 Months
+        Sales by Month
       </Typography>
       <Bar
         data={data}
