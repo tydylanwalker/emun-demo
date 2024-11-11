@@ -10,8 +10,8 @@ import { getMonthsAgo } from './MonthlyOrdersOverview';
 import HeaderAndValueLabel from './HeaderAndValueLabel';
 
 export default function MonthlyInvoiceOverview(props: MonthlyInvoiceOverviewProps) {
-  let currentMonth = new Date(getMonthsAgo(props.monthsAgoItr));
-  let toMonth = new Date(getMonthsAgo(props.monthsAgoItr - 1));
+  const currentMonth = new Date(getMonthsAgo(props.monthsAgoItr));
+  const toMonth = new Date(getMonthsAgo(props.monthsAgoItr - 1));
 
   const thisMonthInvoices = props.invoices.filter(
     (invoice) => new Date(invoice.orderDate ?? '') >= currentMonth && new Date(invoice.orderDate ?? '') < toMonth

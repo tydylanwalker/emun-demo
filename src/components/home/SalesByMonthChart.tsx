@@ -1,10 +1,9 @@
 import React from 'react';
-import { Bar, Line } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import { Box, Typography } from '@mui/material';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { getMonthsAgo } from './MonthlyOrdersOverview';
 import { useAppSelector } from '../../hooks/ReduxHooks';
-import { getOrders } from '../../store/slices/dataSlice';
 import { IOrder } from '../../data/interfaces/IOrder';
 import { isModeDark } from '../../store/slices/themeSlice';
 import 'chart.js/auto';
@@ -13,8 +12,8 @@ import 'chart.js/auto';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function generateGraphData(orders: IOrder[]): { labels: string[]; datasets: any } {
-  let monthItrs = [0, 1, 2].reverse();
-  let labels = monthItrs.map((itr) => getMonthsAgo(itr).toLocaleString('default', { month: 'long' }));
+  const monthItrs = [0, 1, 2].reverse();
+  const labels = monthItrs.map((itr) => getMonthsAgo(itr).toLocaleString('default', { month: 'long' }));
 
   const valueCount = orders.reduce(
     (acc, value) => {
@@ -30,16 +29,16 @@ function generateGraphData(orders: IOrder[]): { labels: string[]; datasets: any 
 
   const topThreeRepsInSales = sortedRepsByTotalSales.slice(0, 3);
 
-  let repOrders = orders.filter((order) => topThreeRepsInSales.includes(order.rep));
+  const repOrders = orders.filter((order) => topThreeRepsInSales.includes(order.rep));
 
-  var datasets = [];
-  var orderData = [];
+  const datasets = [];
+  const orderData = [];
   for (let i = 0; i < monthItrs.length; i++) {
-    let itr = monthItrs[i];
-    let fromMonth = new Date(getMonthsAgo(itr));
-    let toMonth = new Date(getMonthsAgo(itr - 1));
+    const itr = monthItrs[i];
+    const fromMonth = new Date(getMonthsAgo(itr));
+    const toMonth = new Date(getMonthsAgo(itr - 1));
 
-    let thisMonthsOrdersAmount = repOrders
+    const thisMonthsOrdersAmount = repOrders
       .filter(
         (order) =>
           new Date(order.orderDate ?? '') >= fromMonth &&
@@ -51,8 +50,8 @@ function generateGraphData(orders: IOrder[]): { labels: string[]; datasets: any 
     orderData.push(thisMonthsOrdersAmount);
   }
 
-  let i = 1;
-  let chartData = {
+  const i = 1;
+  const chartData = {
     label: 'Sales',
     data: orderData,
     backgroundColor: `rgba(${133 / (i + 1)}, ${195 / (i + 1)}, ${248}, 0.5)`,
@@ -65,9 +64,9 @@ function generateGraphData(orders: IOrder[]): { labels: string[]; datasets: any 
 }
 
 export default function SalesByMonthChart(props: SalesByMonthChartProps) {
-  let fromMonth = new Date(getMonthsAgo(2));
+  const fromMonth = new Date(getMonthsAgo(2));
 
-  let last3MonthsOrders = props.orders.filter(
+  const last3MonthsOrders = props.orders.filter(
     (order) => new Date(order.orderDate ?? '') >= fromMonth && new Date(order.orderDate ?? '')
   );
   const data = generateGraphData(last3MonthsOrders);

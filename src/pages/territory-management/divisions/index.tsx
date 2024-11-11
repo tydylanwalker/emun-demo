@@ -3,7 +3,6 @@ import { NextPage } from 'next';
 import Head from 'next/head';
 import React, { useState } from 'react';
 import { BaseLayout } from '../../../components/layout/BaseLayout';
-import { OrdersTable } from '../../../components/orders/OrdersTable';
 import dynamic from 'next/dynamic';
 import { useAppSelector } from '../../../hooks/ReduxHooks';
 import { getDivisions } from '../../../store/slices/dataSlice';
@@ -23,7 +22,7 @@ const ViewDivisionsPage: NextPage = () => {
     (value, index, self) => index === self.findIndex((division) => division.division === value.division)
   );
 
-  let options = ['All', ...uniqueDivisions.map((division) => division.division)];
+  const options = ['All', ...uniqueDivisions.map((division) => division.division)];
 
   const DynamicMap = dynamic(() => import('../../../components/territory-management/divisions/DivisionsMap'), {
     ssr: false,

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { Stack } from '@mui/material';
-import { formatCurrency } from '../../functions/formatCurrency';
 
 export default function HeaderAndValueLabel(props: HeaderAndValueLabelProps) {
   return (

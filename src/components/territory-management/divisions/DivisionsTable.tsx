@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { CustomTableContainer } from '../../shared/CustomTableContainer';
 import { IDivision } from '../../../data/interfaces/IDivision';
 import { DivisionsTableRow } from './DivisionsTableRow';

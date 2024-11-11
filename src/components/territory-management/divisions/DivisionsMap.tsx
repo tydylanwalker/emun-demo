@@ -152,8 +152,7 @@ export interface MarkerData {
   position: google.maps.LatLngLiteral;
 }
 
-const apiAxiosKey = process.env.NEXT_PUBLIC_OPENCAGE_API_KEY; // Replace with your actual OpenCage API key
-const apiGoogleKey = 'AIzaSyCiress-B17tqnGC-U-qMIXCQNqJUUCSoo'; // Replace with your actual OpenCage API key
+const apiGoogleKey = process.env.NEXT_PUBLIC_GOOGLEMAPS_API_KEY as string; // Replace with your actual OpenCage API key
 
 const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
   const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
@@ -185,7 +184,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
           return;
         }
 
-        for (let division of uniqueDivisions) {
+        for (const division of uniqueDivisions) {
           try {
             const geocoder = new google.maps.Geocoder();
             const results = await geocoder.geocode({ address: division.zip });

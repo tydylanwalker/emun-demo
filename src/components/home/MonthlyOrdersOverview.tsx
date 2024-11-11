@@ -18,9 +18,9 @@ export function getMonthsAgo(months: number): Date {
 }
 
 export default function MonthlyOrdersOverview(props: MonthlyOrdersOverviewProps) {
-  let fromMonth = new Date(getMonthsAgo(props.monthsAgoItr));
-  let toMonthIndex = props.yearly ? -1 : props.monthsAgoItr - 1;
-  let toMonth = new Date(getMonthsAgo(toMonthIndex));
+  const fromMonth = new Date(getMonthsAgo(props.monthsAgoItr));
+  const toMonthIndex = props.yearly ? -1 : props.monthsAgoItr - 1;
+  const toMonth = new Date(getMonthsAgo(toMonthIndex));
 
   const thisMonthsOrders = props.orders.filter(
     (order) => new Date(order.orderDate ?? '') >= fromMonth && new Date(order.orderDate ?? '') < toMonth
