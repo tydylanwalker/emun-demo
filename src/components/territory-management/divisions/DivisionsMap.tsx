@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { getDivisions } from '../../../store/slices/dataSlice';
 import { useAppSelector } from '../../../hooks/ReduxHooks';
 import { LoadScript, GoogleMap, InfoWindow, Marker } from '@react-google-maps/api';
+import { Button, IconButton, Stack, TableCell, Typography } from '@mui/material';
+import { DeleteOutlineRounded } from '@mui/icons-material';
+import { head } from 'lodash';
+import { IDivision } from '../../../data/interfaces/IDivision';
 
 const darkModeStyle = [
   {
@@ -158,6 +162,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
   const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
   const [coordinates, setCoordinates] = useState<MarkerData[]>([]);
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
+  const [territories, setTerritories] = useState<String[]>([]);
 
   const defaultCenter = { lat: 34.7749, lng: -86.601791 };
 
@@ -173,6 +178,16 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
       setGoogleMapsLoaded(true);
     }
   }, []);
+
+  useEffect(() => {
+    const filteredDivisions = divisions
+      .filter((division) => division.zip === selectedMarker?.id)
+      .map((division) => division.territory);
+    const territories = filteredDivisions.filter(
+      (value, index, self) => index === self.findIndex((territory) => territory === value)
+    );
+    setTerritories(territories);
+  }, [selectedMarker]);
 
   useEffect(() => {
     // Fetch coordinates from the Google Geocoding API
@@ -212,8 +227,8 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
 
   // Handle marker click to show InfoWindow
   const handleMarkerClick = (marker: MarkerData) => {
-    onMarkerClick(marker);
     setSelectedMarker(marker);
+    onMarkerClick(marker);
     console.log(marker.title);
   };
 
@@ -238,10 +253,20 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
           ))}
 
           {selectedMarker && (
-            <InfoWindow position={selectedMarker.position} onCloseClick={() => setSelectedMarker(null)}>
-              <div>
-                <h2>{selectedMarker.title}</h2>
-              </div>
+            <InfoWindow zIndex={10000} position={selectedMarker.position} onCloseClick={() => setSelectedMarker(null)}>
+              <Stack padding={2} textAlign={'left'}>
+                <Typography color='black' fontSize={'12px'}>
+                  {selectedMarker.id} is contained in the following territories
+                </Typography>
+
+                {territories.map((territory, index) => (
+                  <Stack direction={'row'}>
+                    <Typography color='black' fontSize={'12px'}>
+                      • {territory}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
             </InfoWindow>
           )}
         </GoogleMap>
