@@ -207,7 +207,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
 
       fetchCoordinates();
     }
-  }, [googleMapsLoaded]);
+  }, [googleMapsLoaded, uniqueDivisions]);
 
   // Handle marker click to show InfoWindow
   const handleMarkerClick = (marker: MarkerData) => {
@@ -218,7 +218,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
 
   return (
     <LoadScript googleMapsApiKey={apiGoogleKey}>
-      <div style={{ display: 'flex', flexDirection: 'row', width: '50%', height: '1000px' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', width: '50%', height: '100%' }}>
         <GoogleMap
           mapContainerStyle={{ flex: 1, height: '100%' }}
           zoom={12}
