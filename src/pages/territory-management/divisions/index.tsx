@@ -1,16 +1,25 @@
 import { Stack } from '@mui/material';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BaseLayout } from '../../../components/layout/BaseLayout';
 import dynamic from 'next/dynamic';
-import { useAppSelector } from '../../../hooks/ReduxHooks';
-import { getDivisions } from '../../../store/slices/dataSlice';
+import { useAppDispatch, useAppSelector } from '../../../hooks/ReduxHooks';
+import { getDivisions, getTerritoryDataInitialized } from '../../../store/slices/dataSlice';
 import { DivisionsTable } from '../../../components/territory-management/divisions/DivisionsTable';
 import { CustomInput } from '../../../components/shared/CustomInput';
 import { MarkerData } from '../../../components/territory-management/divisions/DivisionsMap';
+import { initializeTerritoryData } from '../../../store/thunks/data-initialization/initializeTerritoryData';
+import { SplashScreen } from '../../../components/shared/SplashScreen';
 
 const ViewDivisionsPage: NextPage = () => {
+  const dispatch = useAppDispatch();
+  const dataInitialized = useAppSelector(getTerritoryDataInitialized);
+
+  useEffect(() => {
+    if (!dataInitialized) dispatch(initializeTerritoryData());
+  }, [dispatch, dataInitialized]);
+
   const divisions = useAppSelector(getDivisions);
   const [divisionSelected, setDivisionSelected] = useState<string>('All');
 
@@ -27,6 +36,10 @@ const ViewDivisionsPage: NextPage = () => {
   const DynamicMap = dynamic(() => import('../../../components/territory-management/divisions/DivisionsMap'), {
     ssr: false,
   });
+
+  if (!dataInitialized) {
+    return <SplashScreen />;
+  }
 
   return (
     <>

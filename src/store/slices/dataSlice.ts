@@ -14,7 +14,8 @@ interface IDataState {
   payPeriods: IPayPeriod[];
   invoices: IInvoice[];
   divisions: IDivision[];
-  dataInitialized: boolean;
+  commissionDataInitialized: boolean;
+  territoryDataInitialized: boolean;
 }
 
 const initialState: IDataState = {
@@ -24,7 +25,8 @@ const initialState: IDataState = {
   payPeriods: [],
   invoices: [],
   divisions: [],
-  dataInitialized: false,
+  commissionDataInitialized: false,
+  territoryDataInitialized: false,
 };
 
 const dataSlice = createSlice({
@@ -49,8 +51,11 @@ const dataSlice = createSlice({
     setDivisions: (state, action: PayloadAction<IDivision[]>) => {
       state.divisions = action.payload;
     },
-    dataInitialized: (state) => {
-      state.dataInitialized = true;
+    commissionDataInitialized: (state) => {
+      state.commissionDataInitialized = true;
+    },
+    territoryDataInitialized: (state) => {
+      state.territoryDataInitialized = true;
     },
   },
 });
@@ -63,9 +68,18 @@ export const getPayPeriods = (state: RootState) => state.data.payPeriods;
 export const getInvoices = (state: RootState) => state.data.invoices;
 export const getDraftInvoices = (state: RootState) =>
   state.data.invoices.filter((invoice) => invoice.posted && invoice.status.toLowerCase() !== 'closed');
-export const getDataInitialized = (state: RootState) => state.data.dataInitialized;
+export const getCommissionDataInitialized = (state: RootState) => state.data.commissionDataInitialized;
+export const getTerritoryDataInitialized = (state: RootState) => state.data.territoryDataInitialized;
 
-export const { setOrders, setChecks, setInvoices, setPayPeriods, setVendors, setDivisions, dataInitialized } =
-  dataSlice.actions;
+export const {
+  setOrders,
+  setChecks,
+  setInvoices,
+  setPayPeriods,
+  setVendors,
+  setDivisions,
+  commissionDataInitialized,
+  territoryDataInitialized,
+} = dataSlice.actions;
 
 export const dataReducer = dataSlice.reducer;

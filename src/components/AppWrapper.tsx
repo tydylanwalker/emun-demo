@@ -9,13 +9,10 @@ import { getTheme } from '../theme/theme';
 import { GlobalStyles } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/ReduxHooks';
 import { getMode, setMode } from '../store/slices/themeSlice';
-import { initializeData } from '../store/thunks/data-initialization/initializeData';
 import { AddAdjustment } from './commissions/enter-commissions/forms/AddAdjustment';
 import { AddCheck } from './commissions/enter-commissions/forms/AddCheck';
 import { AddDirectOrder } from './commissions/enter-commissions/forms/AddDirectOrder';
 import { AddPayPeriod } from './commissions/enter-commissions/forms/AddPayPeriod';
-import { getDataInitialized } from '../store/slices/dataSlice';
-import { SplashScreen } from './shared/SplashScreen';
 
 dayjs.extend(customParseFormat);
 
@@ -49,15 +46,7 @@ export function AppWrapper(props: IAppWrapper) {
     dispatch(setMode(preferredMode));
   }, [prefersDarkMode, dispatch]);
 
-  useEffect(() => {
-    dispatch(initializeData());
-  }, [dispatch]);
-
   const theme = useMemo(() => getTheme(mode), [mode]);
-
-  if (!useAppSelector(getDataInitialized)) {
-    return <SplashScreen />;
-  }
 
   return (
     <ThemeProvider theme={theme}>
