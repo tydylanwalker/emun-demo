@@ -1,6 +1,6 @@
 import { TableCell, TableRow, TableRowProps, Typography } from '@mui/material';
-import { IDivision } from '../../../data/interfaces/IDivision';
 import { IDivisionHeader } from './table/DivisionsTable';
+import { IDivision } from '../../data/interfaces/IDivision';
 
 export function DivisionsTableRow(props: IDivisionTableRowProps & TableRowProps) {
   return (
