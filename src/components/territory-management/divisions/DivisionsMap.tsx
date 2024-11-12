@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { getDivisions } from '../../../store/slices/dataSlice';
 import { useAppSelector } from '../../../hooks/ReduxHooks';
 import { LoadScript, GoogleMap, InfoWindow, Marker } from '@react-google-maps/api';
-import { Button, IconButton, Stack, TableCell, Typography } from '@mui/material';
-import { DeleteOutlineRounded } from '@mui/icons-material';
-import { head } from 'lodash';
-import { IDivision } from '../../../data/interfaces/IDivision';
+import { Stack, Typography } from '@mui/material';
+import { topbarHeight } from '../../../data/constants';
 
 const darkModeStyle = [
   {
@@ -162,7 +160,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
   const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
   const [coordinates, setCoordinates] = useState<MarkerData[]>([]);
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
-  const [territories, setTerritories] = useState<String[]>([]);
+  const [territories, setTerritories] = useState<string[]>([]);
 
   const defaultCenter = { lat: 34.7749, lng: -86.601791 };
 
@@ -187,7 +185,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
       (value, index, self) => index === self.findIndex((territory) => territory === value)
     );
     setTerritories(territories);
-  }, [selectedMarker]);
+  }, [divisions, selectedMarker]);
 
   useEffect(() => {
     // Fetch coordinates from the Google Geocoding API
@@ -234,7 +232,14 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
 
   return (
     <LoadScript googleMapsApiKey={apiGoogleKey}>
-      <div style={{ display: 'flex', flexDirection: 'row', width: '50%', height: '100vh' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '50%',
+          height: `calc(100vh - ${topbarHeight}px - 32px)`,
+        }}
+      >
         <GoogleMap
           mapContainerStyle={{ flexGrow: 1, height: '100%' }}
           zoom={12}
@@ -260,7 +265,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
                 </Typography>
 
                 {territories.map((territory, index) => (
-                  <Stack direction={'row'}>
+                  <Stack key={index} direction={'row'}>
                     <Typography color='black' fontSize={'12px'}>
                       • {territory}
                     </Typography>
