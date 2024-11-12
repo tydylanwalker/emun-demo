@@ -207,7 +207,8 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
 
       fetchCoordinates();
     }
-  }, [googleMapsLoaded, uniqueDivisions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [googleMapsLoaded]);
 
   // Handle marker click to show InfoWindow
   const handleMarkerClick = (marker: MarkerData) => {
