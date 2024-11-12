@@ -9,12 +9,18 @@ import { getThunk } from '../../../../store/thunks/requests/getThunk';
 export function EnterCommissionsTableTaskBar(props: IEnterCommissionsTableTaskBarProps) {
   const dispatch = useAppDispatch();
 
-  const submitRows = async () => {
+  const submitMatchedRows = async () => {
     const ok = await dispatch(await postInvoicesFromCommissions(props.matchedRows, true));
     if (ok) dispatch(setEnterCommissionsRows(props.rowsWithErrors));
     dispatch(getThunk(ESheets.Invoices));
-    // TODO if ok is false then do some type of error message
   };
+
+  const submitErrorRows = async () => {
+    const ok = await dispatch(await postInvoicesFromCommissions(props.rowsWithErrors, true, true));
+    if (ok) dispatch(setEnterCommissionsRows(props.matchedRows));
+    dispatch(getThunk(ESheets.Invoices));
+  };
+
   return (
     <Stack direction='row' justifyContent='space-between' p={1.5}>
       <Stack direction='row' gap={3} alignItems='center'>
@@ -37,15 +43,11 @@ export function EnterCommissionsTableTaskBar(props: IEnterCommissionsTableTaskBa
           />
         )}
         {props.onlyShowErrors ? (
-          <Button
-            variant='contained'
-            color='warning'
-            onClick={() => window.alert('Creating no detail orders for errors and submitting...')}
-          >
-            Create {props.rowsWithErrors.length} No Detail Orders
+          <Button variant='contained' color='warning' onClick={() => submitErrorRows()}>
+            Submit {props.rowsWithErrors.length} Entries with Direct Orders
           </Button>
         ) : (
-          <Button variant='contained' onClick={submitRows} disabled={props.matchedRows.length === 0}>
+          <Button variant='contained' onClick={() => submitMatchedRows()} disabled={props.matchedRows.length === 0}>
             Submit {props.matchedRows.length} Entries without Errors
           </Button>
         )}
