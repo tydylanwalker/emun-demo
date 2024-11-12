@@ -52,7 +52,7 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
       position: 'absolute',
       bottom: '-1.25rem',
       width: '100%',
-      textAlign: 'center',
+      textAlign: 'start',
     },
     ...props.sx,
   };

@@ -98,14 +98,22 @@ export function CommissionDraftTaskBar(props: ICommissionDraftTaskBarProps) {
           select
           value={checkDisplayValue(checkSelected || undefined)}
           label='Select Check'
-          renderedOptions={checkBalances.map((check, index) => {
-            const value = `${check.checkNumber} - $${formatCurrency(Number(check.checkAmount))}`;
-            return (
-              <MenuItem key={index} value={value} sx={check.checkBalance !== 0 ? { color: 'error.main' } : {}}>
-                {value}
-              </MenuItem>
-            );
-          })}
+          renderedOptions={
+            checkBalances.length > 0
+              ? checkBalances.map((check, index) => {
+                  const value = `${check.checkNumber} - $${formatCurrency(Number(check.checkAmount))}`;
+                  return (
+                    <MenuItem key={index} value={value} sx={check.checkBalance !== 0 ? { color: 'error.main' } : {}}>
+                      {value}
+                    </MenuItem>
+                  );
+                })
+              : [
+                  <MenuItem key={1} disabled>
+                    No Options Available
+                  </MenuItem>,
+                ]
+          }
           onChange={(event) =>
             dispatch(
               setCheckSelected(checks.find((entry) => checkDisplayValue(entry) === (event.target.value as string)))
