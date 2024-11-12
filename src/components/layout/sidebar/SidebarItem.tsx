@@ -14,12 +14,11 @@ export function SidebarItem(props: ISidebarItemProps) {
     // If has an href route to that page
     if (href) {
       router.push(href);
-      return;
     }
     // If has children open them and open sidebar if not already open
     if (children) {
       setOpen(!open);
-      if (!sidebarOpen) handleDrawerOpen();
+      if (!sidebarOpen && !href) handleDrawerOpen();
     }
   };
   return (
