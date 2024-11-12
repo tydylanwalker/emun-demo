@@ -11,6 +11,11 @@ import {
   PriceChangeRounded,
   PaidRounded,
   LocationCityRounded,
+  GroupRounded,
+  SafetyDividerRounded,
+  CropOriginalRounded,
+  TerrainRounded,
+  NumbersRounded,
 } from '@mui/icons-material';
 import { Box, IconButton, List } from '@mui/material';
 import { SidebarItem } from './SidebarItem';
@@ -89,31 +94,32 @@ const sidebarContent: ISidebarContent[] = [
   {
     icon: <LocationCityRounded />,
     label: 'Territory Management',
+    href: '/territory-management',
     children: [
       {
         label: 'Rep Groups',
-        icon: <UploadFileRounded />,
-        href: '/territory-management/rep-groups',
+        icon: <GroupRounded />,
+        href: '/territory-management',
       },
       {
         label: 'Divisions',
-        icon: <PaymentRounded />,
-        href: '/territory-management/divisions',
+        icon: <SafetyDividerRounded />,
+        href: '/territory-management',
       },
       {
         label: 'Regions',
-        icon: <CheckBox />,
-        href: '/territory-management/regions',
+        icon: <CropOriginalRounded />,
+        href: '/territory-management',
       },
       {
         label: 'Territories',
-        icon: <PriceChangeRounded />,
-        href: '/territory-management/territories',
+        icon: <TerrainRounded />,
+        href: '/territory-management',
       },
       {
         label: 'Zip Codes',
-        icon: <PaidRounded />,
-        href: '/territory-management/zip-codes',
+        icon: <NumbersRounded />,
+        href: '/territory-management',
       },
     ],
   },

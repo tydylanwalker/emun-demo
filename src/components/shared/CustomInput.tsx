@@ -144,12 +144,8 @@ export function CustomInput(props: TextFieldProps & ICustomSelectProps) {
             props.renderedOptions
           ) : props.options && props.options.length > 0 ? (
             [...props.options, ''].map((option, index) => (
-              <MenuItem
-                key={index}
-                value={option}
-                sx={option === '' ? { fontSize: '0.75rem', color: 'warning.main' } : {}}
-              >
-                {option === '' ? 'clear dropdown' : option}
+              <MenuItem key={index} value={option} sx={option === '' ? { color: 'warning.light' } : {}}>
+                {option === '' ? 'No Value' : option}
               </MenuItem>
             ))
           ) : (

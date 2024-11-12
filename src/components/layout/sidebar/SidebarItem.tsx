@@ -12,7 +12,10 @@ export function SidebarItem(props: ISidebarItemProps) {
 
   const handleClick = () => {
     // If has an href route to that page
-    if (href) router.push(href);
+    if (href) {
+      router.push(href);
+      return;
+    }
     // If has children open them and open sidebar if not already open
     if (children) {
       setOpen(!open);
@@ -43,6 +46,7 @@ export function SidebarItem(props: ISidebarItemProps) {
                 sidebarOpen={sidebarOpen}
                 sidebarItem={child}
                 handleDrawerOpen={handleDrawerOpen}
+                isChild
               />
             ))}
           </List>
@@ -56,4 +60,5 @@ interface ISidebarItemProps {
   sidebarOpen?: boolean;
   sidebarItem: ISidebarContent;
   handleDrawerOpen: () => void;
+  isChild?: boolean;
 }
