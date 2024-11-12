@@ -60,11 +60,18 @@ export function DivisionMap(props: IDivisionMapProps) {
 
   const handleMarkerClick = (marker: MarkerData) => {
     setSelectedMarker(marker);
-    // props.onMarkerClick(marker);
+  };
+
+  const handleGoogleMapsLoaded = () => {
+    setGoogleMapsLoaded(true);
   };
 
   return (
-    <LoadScript googleMapsApiKey={apiGoogleKey} onLoad={() => setGoogleMapsLoaded(true)}>
+    <LoadScript
+      googleMapsApiKey={apiGoogleKey}
+      onLoad={handleGoogleMapsLoaded}
+      key={isGoogleMapsLoaded ? 'loaded' : 'loading'} // Forces re-mount on each change
+    >
       <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%' }}>
         <GoogleMap
           mapContainerStyle={{ flexGrow: 1, height: '100%' }}
