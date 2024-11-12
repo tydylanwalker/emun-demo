@@ -152,14 +152,14 @@ export interface MarkerData {
   position: google.maps.LatLngLiteral;
 }
 
-const apiGoogleKey = process.env.NEXT_PUBLIC_GOOGLEMAPS_API_KEY as string; // Replace with your actual OpenCage API key
+const apiGoogleKey = process.env.NEXT_PUBLIC_GOOGLEMAPS_API_KEY as string;
 
 const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
   const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
-  const [coordinates, setCoordinates] = useState<MarkerData[]>([]); // Coordinates for the markers
-  const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false); // Track if Google Maps is loaded
+  const [coordinates, setCoordinates] = useState<MarkerData[]>([]);
+  const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false);
 
-  const defaultCenter = { lat: 34.7749, lng: -86.601791 }; // Default center (San Francisco)
+  const defaultCenter = { lat: 34.7749, lng: -86.601791 };
 
   const divisions = useAppSelector(getDivisions);
 
@@ -219,16 +219,15 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
 
   return (
     <LoadScript googleMapsApiKey={apiGoogleKey}>
-      <div style={{ display: 'flex', flexDirection: 'row', width: '50%', height: '100%' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', width: '50%', height: '100vh' }}>
         <GoogleMap
-          mapContainerStyle={{ flex: 1, height: '100%' }}
+          mapContainerStyle={{ flexGrow: 1, height: '100%' }}
           zoom={12}
           center={defaultCenter}
           options={{
-            styles: darkModeStyle, // Apply dark theme styles
+            styles: darkModeStyle,
           }}
         >
-          {/* Example of a Marker */}
           {coordinates.map((marker) => (
             <Marker
               key={marker.id}
@@ -237,17 +236,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
               onClick={() => handleMarkerClick(marker)}
             />
           ))}
-          {/* {points.map((point) => (
-          <Marker
-            key={point.id}
-            position={{ lat: point.lat, lng: point.lng }}
-            onClick={() => handleMarkerClick(point)}
-            title={point.label}
-            icon='/logo.svg'
-          />
-        ))} */}
 
-          {/* InfoWindow to show when a marker is clicked */}
           {selectedMarker && (
             <InfoWindow position={selectedMarker.position} onCloseClick={() => setSelectedMarker(null)}>
               <div>
@@ -262,7 +251,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onMarkerClick }) => {
 };
 
 interface MapComponentProps {
-  onMarkerClick: (marker: MarkerData) => void; // Define the prop type for the click handler
+  onMarkerClick: (marker: MarkerData) => void;
 }
 
 export default MapComponent;
