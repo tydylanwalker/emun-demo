@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { LoadScript, GoogleMap, InfoWindow, Marker } from '@react-google-maps/api';
 import { Stack, Typography } from '@mui/material';
 import { darkModeStyle } from './constants';
@@ -52,25 +52,20 @@ export function DivisionMap(props: IDivisionMapProps) {
     setCoordinates(allCoordinates);
   }, [props.data]);
 
-  useEffect(() => {
-    if (isGoogleMapsLoaded) {
-      fetchCoordinates();
-    }
-  }, [isGoogleMapsLoaded, fetchCoordinates]);
+  const handleGoogleMapsLoaded = () => {
+    setGoogleMapsLoaded(true);
+    fetchCoordinates(); // Ensure geocoding occurs after maps load
+  };
 
   const handleMarkerClick = (marker: MarkerData) => {
     setSelectedMarker(marker);
-  };
-
-  const handleGoogleMapsLoaded = () => {
-    setGoogleMapsLoaded(true);
   };
 
   return (
     <LoadScript
       googleMapsApiKey={apiGoogleKey}
       onLoad={handleGoogleMapsLoaded}
-      key={isGoogleMapsLoaded ? 'loaded' : 'loading'} // Forces re-mount on each change
+      key={isGoogleMapsLoaded ? 'loaded' : 'loading'}
     >
       <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%' }}>
         <GoogleMap
