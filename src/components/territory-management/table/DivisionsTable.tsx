@@ -29,17 +29,20 @@ export function DivisionsTable(props: IDivisionsTableProps) {
     <CustomTableContainer
       tabIndex={0}
       header={
-        <Stack direction='row' alignItems='center' gap={2} justifyContent='space-between'>
-          <Typography variant='h5' fontWeight='bold' p={2}>
-            Territory Management
-          </Typography>
-          <Stack direction='row' gap={1} px={2}>
-            <Button variant='outlined' onClick={() => setAddNewDivisionOpen(true)}>
-              New Division
-            </Button>
-            <Button variant='outlined' onClick={() => setAddNewTerritoryOpen(true)}>
-              New Territory
-            </Button>
+        <Stack gap={3} px={2} pb={2}>
+          {props.filters}
+          <Stack direction='row' alignItems='center' gap={2} justifyContent='space-between'>
+            <Typography variant='h5' fontWeight='bold'>
+              Territory Management
+            </Typography>
+            <Stack direction='row' gap={1}>
+              <Button variant='outlined' onClick={() => setAddNewDivisionOpen(true)}>
+                New Division
+              </Button>
+              <Button variant='outlined' onClick={() => setAddNewTerritoryOpen(true)}>
+                New Territory
+              </Button>
+            </Stack>
           </Stack>
         </Stack>
       }
@@ -70,4 +73,5 @@ export function DivisionsTable(props: IDivisionsTableProps) {
 
 interface IDivisionsTableProps {
   divisions: IDivision[];
+  filters?: JSX.Element;
 }

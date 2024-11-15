@@ -53,8 +53,8 @@ const TerritoryManagementPage: NextPage = () => {
       <Head>
         <title>Territory Management</title>
       </Head>
-      <Stack gap={3} direction='row' height={1}>
-        <Stack gap={0.5} flexGrow={1}>
+      <Stack gap={1} direction='row' height={1} flexWrap='wrap'>
+        <Stack gap={0.5} flexGrow={1} minWidth='40%' minHeight='40%' mx={2}>
           <Stack direction='row' gap={1} justifyContent='right'>
             <Typography fontSize='0.75rem'>Exists in Territories: </Typography>
             <Stack alignItems='center' direction='row' gap={1}>
@@ -72,35 +72,40 @@ const TerritoryManagementPage: NextPage = () => {
           </Stack>
           <DivisionMap data={rows} />
         </Stack>
-        <Stack gap={2}>
-          <Stack direction='row' gap={2}>
-            <CustomInput
-              size='small'
-              select
-              value={divisionSelected}
-              label='Select Division'
-              options={divisionOptions.map((option) => option.division)}
-              onChange={(event) => setDivisionSelected(event.target.value as string)}
-            />
-            <CustomInput
-              size='small'
-              select
-              value={territorySelected}
-              label='Select Territory'
-              options={territoryOptions.map((option) => option.territory)}
-              onChange={(event) => setTerritorySelected(event.target.value as string)}
-            />
-            <CustomInput
-              size='small'
-              select
-              value={stateSelected}
-              label='Select State'
-              options={states}
-              onChange={(event) => setStateSelected(event.target.value as string)}
+        <Stack gap={2} height={1} flexGrow={1} mx={2}>
+          <Stack height={1}>
+            <DivisionsTable
+              divisions={rows}
+              filters={
+                <Stack direction='row' gap={2}>
+                  <CustomInput
+                    size='small'
+                    select
+                    value={divisionSelected}
+                    label='Select Division'
+                    options={divisionOptions.map((option) => option.division)}
+                    onChange={(event) => setDivisionSelected(event.target.value as string)}
+                  />
+                  <CustomInput
+                    size='small'
+                    select
+                    value={territorySelected}
+                    label='Select Territory'
+                    options={territoryOptions.map((option) => option.territory)}
+                    onChange={(event) => setTerritorySelected(event.target.value as string)}
+                  />
+                  <CustomInput
+                    size='small'
+                    select
+                    value={stateSelected}
+                    label='Select State'
+                    options={states}
+                    onChange={(event) => setStateSelected(event.target.value as string)}
+                  />
+                </Stack>
+              }
             />
           </Stack>
-
-          <DivisionsTable divisions={rows} />
         </Stack>
       </Stack>
     </>
