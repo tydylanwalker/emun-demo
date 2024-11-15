@@ -69,7 +69,13 @@ export function ErrorCommissionModal(props: IErrorCommissionModalProps) {
         </CustomTableContainer>
         <Typography variant='caption'>Note: Click on values to populate search bar</Typography>
       </Stack>
-      <OrdersTable initialSearchText={searchText} clickable onConfirmMatch={handleConfirm} />
+      <OrdersTable
+        initialSearchText={searchText}
+        clickable
+        onConfirmMatch={handleConfirm}
+        condensed
+        header='Find Matching Order'
+      />
     </CustomModal>
   );
 }

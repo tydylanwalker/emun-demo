@@ -219,6 +219,7 @@ export function EnterCommissions() {
                 clickable
                 onConfirmMatch={(order) => setSingleEntryMatchOrder(order || null)}
                 header='Find Order'
+                condensed
               />
               <Stack direction='row' gap={5} my={1}>
                 <Typography fontWeight='bolder'>{commissionRows.length} Current Entries</Typography>

@@ -34,6 +34,22 @@ const orderHeaders: IOrderHeader[] = [
   { label: 'Status', align: 'center', id: 'status' },
 ];
 
+const enterCommissionsModalHeaders: IOrderHeader[] = [
+  { label: 'PO #', align: 'left', id: 'poNumber' },
+  { label: 'Ship Date', align: 'center', id: 'shipDate', type: 'date' },
+  { label: 'Amount', align: 'right', id: 'amount', type: 'currency' },
+  { label: 'Balance', align: 'right', id: 'balance', type: 'currency' },
+  { label: 'Rep', align: 'left', id: 'rep' },
+  { label: 'Customer', align: 'left', id: 'customerName' },
+  { label: 'Address', align: 'left', id: 'shipAddress' },
+  { label: 'City', align: 'left', id: 'shipCity' },
+  { label: 'State', align: 'center', id: 'shipState' },
+  { label: 'Zip', align: 'center', id: 'shipZip' },
+  { label: 'Writing Rep', align: 'left', id: 'writingRep' },
+  { label: 'Order Date', align: 'center', id: 'orderDate', type: 'date' },
+  { label: 'Status', align: 'center', id: 'status' },
+];
+
 export enum EOrderButtons {
   directOrder = 'Create Direct Order',
   newCustomer = 'Add New Customer',
@@ -46,6 +62,7 @@ export function OrdersTable(props: IOrdersTableProps) {
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
+  const headers = props.condensed ? enterCommissionsModalHeaders : orderHeaders;
 
   useEffect(() => {
     setSearchText(props.initialSearchText || '');
@@ -156,7 +173,7 @@ export function OrdersTable(props: IOrdersTableProps) {
       <Table stickyHeader>
         <TableHead>
           <TableRow>
-            {orderHeaders.map((header, index) => (
+            {headers.map((header, index) => (
               <TableCell
                 key={index}
                 align={header.align || 'left'}
@@ -172,7 +189,7 @@ export function OrdersTable(props: IOrdersTableProps) {
             <OrdersTableRow
               key={index}
               row={row}
-              headers={orderHeaders}
+              headers={headers}
               selected={selectedRow === index}
               onClick={props.clickable ? () => setSelectedRow(index) : undefined}
               onKeyDown={(event) => {
@@ -201,4 +218,5 @@ interface IOrdersTableProps {
   onConfirmMatch?: (order?: IOrder, type?: EOrderButtons) => void;
   header?: string;
   commissionRow?: IEnterCommissionsRow;
+  condensed?: boolean;
 }
