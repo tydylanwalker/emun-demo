@@ -10,7 +10,7 @@ import { getThunk } from '../requests/getThunk';
  */
 export function initializeTerritoryData(): ThunkAction<void, RootState, unknown, AnyAction> {
   return async (dispatch) => {
-    await Promise.all([dispatch(getThunk(ESheets.Divisions))]);
+    await Promise.all([dispatch(getThunk(ESheets.Divisions)), dispatch(getThunk(ESheets.ZipCodes))]);
 
     dispatch(territoryDataInitialized());
   };

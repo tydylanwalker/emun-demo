@@ -5,4 +5,5 @@ export enum ESheets {
   PayPeriods = Number(process.env.PAY_PERIODS_ID),
   Invoices = Number(process.env.INVOICES_ID),
   Divisions = Number(process.env.DIVISIONS_ID),
+  ZipCodes = Number(process.env.ZIP_CODES_ID),
 }

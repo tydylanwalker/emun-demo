@@ -6,6 +6,7 @@ import { IVendor } from '../../data/interfaces/IVendor';
 import { IPayPeriod } from '../../data/interfaces/IPayPeriod';
 import { IInvoice } from '../../data/interfaces/IInvoice';
 import { IDivision } from '../../data/interfaces/IDivision';
+import { IZipCodes } from '../../data/interfaces/IZipCodes';
 
 interface IDataState {
   orders: IOrder[];
@@ -14,6 +15,7 @@ interface IDataState {
   payPeriods: IPayPeriod[];
   invoices: IInvoice[];
   divisions: IDivision[];
+  zipCodes: IZipCodes[];
   commissionDataInitialized: boolean;
   territoryDataInitialized: boolean;
 }
@@ -25,6 +27,7 @@ const initialState: IDataState = {
   payPeriods: [],
   invoices: [],
   divisions: [],
+  zipCodes: [],
   commissionDataInitialized: false,
   territoryDataInitialized: false,
 };
@@ -51,6 +54,9 @@ const dataSlice = createSlice({
     setDivisions: (state, action: PayloadAction<IDivision[]>) => {
       state.divisions = action.payload;
     },
+    setZipCodes: (state, action: PayloadAction<IZipCodes[]>) => {
+      state.zipCodes = action.payload;
+    },
     commissionDataInitialized: (state) => {
       state.commissionDataInitialized = true;
     },
@@ -61,6 +67,7 @@ const dataSlice = createSlice({
 });
 
 export const getOrders = (state: RootState) => state.data.orders;
+export const getZipCodes = (state: RootState) => state.data.zipCodes;
 export const getDivisions = (state: RootState) => state.data.divisions;
 export const getChecks = (state: RootState) => state.data.checks;
 export const getVendors = (state: RootState) => state.data.vendors;
@@ -78,6 +85,7 @@ export const {
   setPayPeriods,
   setVendors,
   setDivisions,
+  setZipCodes,
   commissionDataInitialized,
   territoryDataInitialized,
 } = dataSlice.actions;
