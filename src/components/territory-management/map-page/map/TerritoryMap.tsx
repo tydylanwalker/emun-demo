@@ -1,18 +1,18 @@
 import { Stack, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { states } from '../../data/constants';
-import { IDivision } from '../../data/interfaces/IDivision';
-import { useAppSelector } from '../../hooks/ReduxHooks';
-import { getDivisions, getZipCodes } from '../../store/slices/dataSlice';
-import { CustomInput } from '../shared/CustomInput';
-import { DivisionMap } from './map/DivisionsMap';
-import { DivisionsTable } from './table/DivisionsTable';
+import { states } from '../../../../data/constants';
+import { IDivision } from '../../../../data/interfaces/IDivision';
+import { useAppSelector } from '../../../../hooks/ReduxHooks';
+import { getDivisions, getZipCodes } from '../../../../store/slices/dataSlice';
+import { CustomInput } from '../../../shared/CustomInput';
+import { DivisionsTable } from '../table/DivisionsTable';
+import { DivisionMap } from './DivisionsMap';
 
-function findNonEmptyDivisions(divisions: IDivision[]) {
+export function findNonEmptyDivisions(divisions: IDivision[]) {
   return divisions.filter((division) => division.division !== '' && division.territory !== '');
 }
 
-export function TerritoryManagement() {
+export function TerritoryMap() {
   const divisions = useAppSelector(getDivisions);
   const [divisionSelected, setDivisionSelected] = useState<string>('');
   const divisionOptions = Array.from(

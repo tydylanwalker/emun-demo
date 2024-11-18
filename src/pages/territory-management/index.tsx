@@ -6,7 +6,7 @@ import { SplashScreen } from '../../components/shared/SplashScreen';
 import { useAppDispatch, useAppSelector } from '../../hooks/ReduxHooks';
 import { getTerritoryDataInitialized, getDivisions } from '../../store/slices/dataSlice';
 import { initializeTerritoryData } from '../../store/thunks/data-initialization/initializeTerritoryData';
-import { TerritoryManagement } from '../../components/territory-management/TerritoryManagement';
+import { TerritoryManagement } from '../../components/territory-management/management-page/TerritoryManagement';
 
 const TerritoryManagementPage: NextPage = () => {
   const dispatch = useAppDispatch();

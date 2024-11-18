@@ -1,18 +1,12 @@
 import { TableCell, TableRow, TableRowProps, Typography } from '@mui/material';
-import { IDivision } from '../../../data/interfaces/IDivision';
+import { IDivision } from '../../../../data/interfaces/IDivision';
 import { IDivisionHeader } from './DivisionsTable';
 
 export function DivisionsTableRow(props: IDivisionTableRowProps & TableRowProps) {
   return (
-    <TableRow
-      onKeyDown={props.onKeyDown}
-      tabIndex={-1}
-      sx={{
-        borderColor: 'primary.main',
-      }}
-    >
+    <TableRow>
       {props.headers.map((header, index) => (
-        <TableCell key={index} align={header.align || 'center'}>
+        <TableCell key={index} align={header.align || 'left'}>
           <Typography>{props.row[header.id]}</Typography>
         </TableCell>
       ))}

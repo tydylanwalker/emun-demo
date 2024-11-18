@@ -1,6 +1,6 @@
 import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
-import { CustomTableContainer } from '../../shared/CustomTableContainer';
-import { IDivision } from '../../../data/interfaces/IDivision';
+import { CustomTableContainer } from '../../../shared/CustomTableContainer';
+import { IDivision } from '../../../../data/interfaces/IDivision';
 import { useState } from 'react';
 import { AddNewDivision } from '../forms/AddNewDivision';
 import { AddNewTerritory } from '../forms/AddNewTerritory';
@@ -27,7 +27,6 @@ export function DivisionsTable(props: IDivisionsTableProps) {
   const [addNewDivisionOpen, setAddNewDivisionOpen] = useState(false);
   return (
     <CustomTableContainer
-      tabIndex={0}
       header={
         <Stack gap={3} px={2} pb={2}>
           {props.filters}

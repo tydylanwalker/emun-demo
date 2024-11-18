@@ -11,11 +11,8 @@ import {
   PriceChangeRounded,
   PaidRounded,
   LocationCityRounded,
-  GroupRounded,
-  SafetyDividerRounded,
-  CropOriginalRounded,
-  TerrainRounded,
-  NumbersRounded,
+  MapRounded,
+  ManageAccountsRounded,
 } from '@mui/icons-material';
 import { Box, IconButton, List } from '@mui/material';
 import { SidebarItem } from './SidebarItem';
@@ -94,32 +91,36 @@ const sidebarContent: ISidebarContent[] = [
   {
     icon: <LocationCityRounded />,
     label: 'Territory Management',
-    href: '/territory-management',
     children: [
+      // {
+      //   label: 'Rep Groups',
+      //   icon: <GroupRounded />,
+      //   href: '/territory-management',
+      // },
+      // {
+      //   label: 'Divisions',
+      //   icon: <SafetyDividerRounded />,
+      //   href: '/territory-management',
+      // },
+      // {
+      //   label: 'Regions',
+      //   icon: <CropOriginalRounded />,
+      //   href: '/territory-management',
+      // },
+      // {
+      //   label: 'Territories',
+      //   icon: <TerrainRounded />,
+      //   href: '/territory-management',
+      // },
       {
-        label: 'Rep Groups',
-        icon: <GroupRounded />,
+        label: 'Management',
+        icon: <ManageAccountsRounded />,
         href: '/territory-management',
       },
       {
-        label: 'Divisions',
-        icon: <SafetyDividerRounded />,
-        href: '/territory-management',
-      },
-      {
-        label: 'Regions',
-        icon: <CropOriginalRounded />,
-        href: '/territory-management',
-      },
-      {
-        label: 'Territories',
-        icon: <TerrainRounded />,
-        href: '/territory-management',
-      },
-      {
-        label: 'Zip Codes',
-        icon: <NumbersRounded />,
-        href: '/territory-management',
+        label: 'Map',
+        icon: <MapRounded />,
+        href: '/territory-management/map',
       },
     ],
   },

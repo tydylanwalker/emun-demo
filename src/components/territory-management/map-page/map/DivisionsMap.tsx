@@ -2,9 +2,10 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { LoadScript, GoogleMap, InfoWindow, Marker } from '@react-google-maps/api';
 import { Backdrop, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { darkModeStyle } from './constants';
-import { findColorAndTitleForMarker } from '../../../functions/findColorAndTitleForMarker';
-import { IDivision } from '../../../data/interfaces/IDivision';
-import { createCustomMarker } from '../../../functions/createCustomMarker';
+import { findColorAndTitleForMarker } from '../../../../functions/findColorAndTitleForMarker';
+import { IDivision } from '../../../../data/interfaces/IDivision';
+import { createCustomMarker } from '../../../../functions/createCustomMarker';
+import { isNullUndefinedOrEmpty } from '../../../../functions/isNullUndefinedOrEmpty';
 
 export interface MarkerData {
   zipCode: string;
@@ -46,14 +47,23 @@ export function DivisionMap(props: IDivisionMapProps) {
   //   // console.log(allCoordinates);
   // }, [allZipCodes, props.data]);
   const fetchCoordinates = useCallback(async () => {
-    if (!window.google || !window.google.maps) return;
-    setCoordinatesLoading(true);
-
-    const geocoder = new window.google.maps.Geocoder();
-    if (!geocoder) {
-      console.error('Failed to initialize Geocoder.');
+    if (
+      isNullUndefinedOrEmpty(window.google) ||
+      isNullUndefinedOrEmpty(window.google.maps) ||
+      isNullUndefinedOrEmpty(window.google.maps.Geocoder)
+    ) {
+      console.error('Google Maps or Geocoder is not available.');
       return;
     }
+    const geocoder = new window.google.maps.Geocoder();
+    if (isNullUndefinedOrEmpty(geocoder)) {
+      console.error('Geocoder is still undefined.');
+      return;
+    }
+
+    // Once everything is defined we end up here
+
+    setCoordinatesLoading(true);
     const allCoordinates: MarkerData[] = [];
 
     const uniqueZipCodes = props.data.filter(
@@ -62,7 +72,7 @@ export function DivisionMap(props: IDivisionMapProps) {
 
     for (const division of uniqueZipCodes) {
       try {
-        const results = await geocoder.geocode({ address: division.zip });
+        const results = await geocoder.geocode?.({ address: division.zip });
         if (results && results.results[0]) {
           const { lat, lng } = results.results[0].geometry.location;
           const { color, title } = findColorAndTitleForMarker(props.data, division.zip);

@@ -1,21 +1,23 @@
 import Button from '@mui/material/Button';
 import { Stack } from '@mui/material';
 import { useState } from 'react';
-import { CustomInput } from '../../shared/CustomInput';
-import { CustomModal } from '../../shared/CustomModal';
+import { CustomInput } from '../../../shared/CustomInput';
+import { CustomModal } from '../../../shared/CustomModal';
 
-interface INewTerritory {
+interface INewDivision {
   division: string;
-  territory: string;
+  rep: string;
+  repGroup: string;
 }
 
 const initialData = {
   division: '',
-  territory: '',
+  rep: '',
+  repGroup: '',
 };
 
-export function AddNewTerritory(props: IAddNewTerritoryProps) {
-  const [formData, setFormData] = useState<INewTerritory>(initialData);
+export function AddNewDivision(props: IAddNewDivisionProps) {
+  const [formData, setFormData] = useState<INewDivision>(initialData);
 
   const closeModal = () => {
     props.closeModal(false);
@@ -38,7 +40,7 @@ export function AddNewTerritory(props: IAddNewTerritoryProps) {
   };
 
   return (
-    <CustomModal open={props.open} closeModal={closeModal} header='Add Territory'>
+    <CustomModal open={props.open} closeModal={closeModal} header='Add Division'>
       <Stack
         gap={2}
         onKeyDown={(event) => {
@@ -46,8 +48,15 @@ export function AddNewTerritory(props: IAddNewTerritoryProps) {
         }}
       >
         <Stack direction='row' gap={2} py={2}>
-          <CustomInput required value={formData.division} label='Division' name='division' onChange={handleChange} />
-          <CustomInput required value={formData.territory} label='Territory' name='territory' onChange={handleChange} />
+          <CustomInput
+            required
+            value={formData.division}
+            label='Division Name'
+            name='division'
+            onChange={handleChange}
+          />
+          <CustomInput required value={formData.rep} label='Rep' name='rep' onChange={handleChange} />
+          <CustomInput required value={formData.repGroup} label='Rep Group' name='repGroup' onChange={handleChange} />
         </Stack>
         <Button onClick={onSave} variant='contained'>
           Confirm
@@ -57,7 +66,7 @@ export function AddNewTerritory(props: IAddNewTerritoryProps) {
   );
 }
 
-interface IAddNewTerritoryProps {
+interface IAddNewDivisionProps {
   open: boolean;
   closeModal: (newOpen: boolean) => void;
 }
