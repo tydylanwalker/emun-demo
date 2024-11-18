@@ -1,10 +1,10 @@
 import { Button, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { CustomTableContainer } from '../../shared/CustomTableContainer';
 import { IDivision } from '../../../data/interfaces/IDivision';
-import { DivisionsTableRow } from '../DivisionsTableRow';
 import { useState } from 'react';
 import { AddNewDivision } from '../forms/AddNewDivision';
 import { AddNewTerritory } from '../forms/AddNewTerritory';
+import { DivisionsTableRow } from './DivisionsTableRow';
 
 export interface IDivisionHeader {
   label: string;
