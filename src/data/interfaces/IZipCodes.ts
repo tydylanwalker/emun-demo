@@ -3,6 +3,6 @@ export interface IZipCodes {
   City: string;
   State: string;
   Country: string;
-  Latitude: string;
-  Longitude: string;
+  Latitude: number;
+  Longitude: number;
 }

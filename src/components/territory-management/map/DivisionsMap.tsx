@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { LoadScript, GoogleMap, InfoWindow, Marker } from '@react-google-maps/api';
-import { Stack, Typography } from '@mui/material';
+import { Backdrop, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { darkModeStyle } from './constants';
 import { findColorAndTitleForMarker } from '../../../functions/findColorAndTitleForMarker';
 import { IDivision } from '../../../data/interfaces/IDivision';
+import { createCustomMarker } from '../../../functions/createCustomMarker';
 
 export interface MarkerData {
   zipCode: string;
@@ -15,12 +16,38 @@ export interface MarkerData {
 const apiGoogleKey = process.env.NEXT_PUBLIC_GOOGLEMAPS_API_KEY as string;
 
 export function DivisionMap(props: IDivisionMapProps) {
+  // const allZipCodes = useAppSelector(getZipCodes);
   const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
   const [coordinates, setCoordinates] = useState<MarkerData[]>([]);
   const [isGoogleMapsLoaded, setGoogleMapsLoaded] = useState(false);
+  const [coordinatesLoading, setCoordinatesLoading] = useState(false);
 
+  // const fetchCoordinates = useCallback(async () => {
+  //   if (!window.google || !window.google.maps) return;
+
+  //   const allCoordinates: MarkerData[] = [];
+
+  //   for (const zipCode of allZipCodes) {
+  //     try {
+  //       const { color, title } = findColorAndTitleForMarker(props.data, zipCode.Id);
+  //       const coordinate = {
+  //         zipCode: zipCode.Id,
+  //         existsIn: title || [],
+  //         position: { lat: zipCode.Latitude, lng: zipCode.Longitude },
+  //         color: color,
+  //       };
+  //       allCoordinates.push(coordinate);
+  //     } catch (err) {
+  //       console.error(`Error plotting ${zipCode.Id}:`, err);
+  //     }
+  //   }
+
+  //   setCoordinates(allCoordinates);
+  //   // console.log(allCoordinates);
+  // }, [allZipCodes, props.data]);
   const fetchCoordinates = useCallback(async () => {
     if (!window.google || !window.google.maps) return;
+    setCoordinatesLoading(true);
 
     const geocoder = new window.google.maps.Geocoder();
     const allCoordinates: MarkerData[] = [];
@@ -35,12 +62,13 @@ export function DivisionMap(props: IDivisionMapProps) {
         if (results && results.results[0]) {
           const { lat, lng } = results.results[0].geometry.location;
           const { color, title } = findColorAndTitleForMarker(props.data, division.zip);
-          allCoordinates.push({
+          const coordinate = {
             zipCode: division.zip,
             existsIn: title || [],
             position: { lat: lat(), lng: lng() },
             color: color,
-          });
+          };
+          allCoordinates.push(coordinate);
         } else {
           console.warn(`No results for ZIP code ${division.zip}`);
         }
@@ -50,6 +78,7 @@ export function DivisionMap(props: IDivisionMapProps) {
     }
 
     setCoordinates(allCoordinates);
+    setCoordinatesLoading(false);
   }, [props.data]);
 
   const handleGoogleMapsLoaded = () => {
@@ -67,7 +96,10 @@ export function DivisionMap(props: IDivisionMapProps) {
       onLoad={handleGoogleMapsLoaded}
       key={isGoogleMapsLoaded ? 'loaded' : 'loading'}
     >
-      <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%', position: 'relative' }}>
+        <Backdrop open={coordinatesLoading} sx={{ zIndex: 1000000000, position: 'absolute' }}>
+          <CircularProgress />
+        </Backdrop>
         <GoogleMap
           mapContainerStyle={{ flexGrow: 1, height: '100%' }}
           zoom={12}
@@ -80,7 +112,7 @@ export function DivisionMap(props: IDivisionMapProps) {
               position={marker.position}
               onClick={() => handleMarkerClick(marker)}
               icon={{
-                url: `http://maps.google.com/mapfiles/ms/icons/${marker.color}-dot.png`,
+                url: createCustomMarker(marker.color),
                 scaledSize: new window.google.maps.Size(50, 50),
               }}
             />
@@ -113,7 +145,13 @@ export function DivisionMap(props: IDivisionMapProps) {
                     ))}
                   </Stack>
                 ) : (
-                  <Typography color='error'>DOES NOT EXIST IN ANY TERRITORIES</Typography>
+                  <Stack gap={3} pb={2}>
+                    <Typography color='error'>This Zip Code does not exist in any of your territories.</Typography>
+                    <Stack direction='row' gap={2}>
+                      <Button variant='outlined'>Add To Existing Territory</Button>
+                      <Button variant='contained'>Add To NEW Territory</Button>
+                    </Stack>
+                  </Stack>
                 )}
               </Stack>
             </InfoWindow>

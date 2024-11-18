@@ -59,11 +59,11 @@ const TerritoryManagementPage: NextPage = () => {
             <Typography fontSize='0.75rem'>Exists in Territories: </Typography>
             <Stack alignItems='center' direction='row' gap={1}>
               <Typography fontSize='0.675rem'>None</Typography>
-              <Stack bgcolor='warning.main' height='0.5rem' width='0.5rem' />
+              <Stack bgcolor='grey' height='0.5rem' width='0.5rem' />
             </Stack>
             <Stack alignItems='center' direction='row' gap={1}>
               <Typography fontSize='0.675rem'>Single</Typography>
-              <Stack bgcolor='primary.dark' height='0.5rem' width='0.5rem' />
+              <Stack bgcolor='#90caf9' height='0.5rem' width='0.5rem' />
             </Stack>
             <Stack alignItems='center' direction='row' gap={1}>
               <Typography fontSize='0.675rem'>Multiple</Typography>
