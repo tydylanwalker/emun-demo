@@ -50,6 +50,10 @@ export function DivisionMap(props: IDivisionMapProps) {
     setCoordinatesLoading(true);
 
     const geocoder = new window.google.maps.Geocoder();
+    if (!geocoder) {
+      console.error('Failed to initialize Geocoder.');
+      return;
+    }
     const allCoordinates: MarkerData[] = [];
 
     const uniqueZipCodes = props.data.filter(
