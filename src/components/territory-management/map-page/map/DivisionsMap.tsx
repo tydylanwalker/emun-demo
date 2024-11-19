@@ -73,21 +73,24 @@ export function DivisionMap(props: IDivisionMapProps) {
     for (const division of uniqueZipCodes) {
       try {
         const results = await geocoder.geocode?.({ address: division.zip });
-        if (results && results.results[0]) {
+        if (results?.results?.[0]?.geometry?.location) {
           const { lat, lng } = results.results[0].geometry.location;
           const { color, title } = findColorAndTitleForMarker(props.data, division.zip);
-          const coordinate = {
+          allCoordinates.push({
             zipCode: division.zip,
             existsIn: title || [],
             position: { lat: lat(), lng: lng() },
             color: color,
-          };
-          allCoordinates.push(coordinate);
+          });
         } else {
           console.warn(`No results for ZIP code ${division.zip}`);
         }
       } catch (err) {
-        console.error(`Error geocoding ${division.zip}:`, err);
+        if ((err as any).message.includes('ZERO_RESULTS')) {
+          console.warn(`ZERO_RESULTS for ZIP code ${division.zip}: No result was found.`);
+        } else {
+          console.error(`Error geocoding ${division.zip}:`, err);
+        }
       }
     }
 
