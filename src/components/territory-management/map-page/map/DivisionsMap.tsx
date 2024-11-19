@@ -121,8 +121,8 @@ export function DivisionMap(props: IDivisionMapProps) {
         </Backdrop>
         <GoogleMap
           mapContainerStyle={{ flexGrow: 1, height: '100%' }}
-          zoom={12}
-          center={coordinates.length > 0 ? coordinates[0].position : { lat: 0, lng: 0 }}
+          zoom={5}
+          center={coordinates.length > 0 ? coordinates[0].position : { lat: 32.806671, lng: -86.79113 }}
           options={{ styles: darkModeStyle }}
         >
           {coordinates.map((marker) => (
