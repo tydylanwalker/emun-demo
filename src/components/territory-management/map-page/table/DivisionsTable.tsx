@@ -24,6 +24,14 @@ const divisionHeaders: IDivisionHeader[] = [
 export function DivisionsTable(props: IDivisionsTableProps) {
   const [addNewTerritoryOpen, setAddNewTerritoryOpen] = useState(false);
   const [addNewDivisionOpen, setAddNewDivisionOpen] = useState(false);
+  const uniqueRows = Array.from(
+    new Map(
+      props.divisions.map((item) => [
+        `${item.division}|${item.territory}|${item.zip}|${item.rep}|${item.repGroup}`,
+        item,
+      ])
+    ).values()
+  );
 
   return (
     <CustomTableContainer
@@ -58,7 +66,7 @@ export function DivisionsTable(props: IDivisionsTableProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.divisions.map((row, index) => (
+            {uniqueRows.map((row, index) => (
               <DivisionsTableRow key={index} row={row} headers={divisionHeaders}></DivisionsTableRow>
             ))}
           </TableBody>
