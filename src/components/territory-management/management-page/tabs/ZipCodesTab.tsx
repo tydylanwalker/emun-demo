@@ -36,8 +36,16 @@ function formatCellData(data: string, header: string) {
 }
 
 function ZipCodesTableRow(props: IZipCodesTableRowProps & TableRowProps) {
+  const sx = props.onClick
+    ? {
+        cursor: 'pointer',
+        '&:hover': {
+          bgcolor: 'action.hover',
+        },
+      }
+    : {};
   return (
-    <TableRow sx={{ cursor: 'pointer' }} onClick={props.onClick}>
+    <TableRow sx={sx} onClick={props.onClick}>
       {props.headers.map((header, index) => (
         <TableCell key={index} align={header.align || 'left'}>
           <Typography>{formatCellData(props.row[header.id].toString(), header.id)}</Typography>
@@ -86,12 +94,7 @@ export function ZipCodesTab(props: IZipCodesTableProps) {
           </TableHead>
           <TableBody>
             {rows.map((row, index) => (
-              <ZipCodesTableRow
-                key={index}
-                row={row}
-                headers={divisionHeaders}
-                onClick={() => alert('Open ZipCode Row Stats')}
-              ></ZipCodesTableRow>
+              <ZipCodesTableRow key={index} row={row} headers={divisionHeaders}></ZipCodesTableRow>
             ))}
           </TableBody>
         </Table>

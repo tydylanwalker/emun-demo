@@ -52,8 +52,16 @@ const territoryHeaders: ITerritoryHeaders[] = [
 ];
 
 function DivisionsTableRow(props: IDivisionTableRowProps & TableRowProps) {
+  const sx = props.onClick
+    ? {
+        cursor: 'pointer',
+        '&:hover': {
+          bgcolor: 'action.hover',
+        },
+      }
+    : {};
   return (
-    <TableRow sx={{ cursor: 'pointer' }} onClick={props.onClick}>
+    <TableRow sx={sx} onClick={props.onClick}>
       {props.headers.map((header, index) => (
         <TableCell key={index} align={header.align || 'left'}>
           <Typography>{props.row[header.id]}</Typography>
@@ -195,16 +203,10 @@ export function DivisionsTab(props: IDivisionsTableProps) {
                   </TableHead>
                   <TableBody>
                     {vendorRows.map((row, index) => (
-                      <DivisionsTableRow
-                        key={index}
-                        row={row}
-                        headers={vendorHeaders}
-                        onClick={() => handleRowClick(row)}
-                      ></DivisionsTableRow>
+                      <DivisionsTableRow key={index} row={row} headers={vendorHeaders}></DivisionsTableRow>
                     ))}
                   </TableBody>
                 </Table>
-                <AddNewDivision open={addNewDivisionOpen} closeModal={() => setAddNewDivisionOpen(false)} />
               </>
             </CustomTableContainer>
             <CustomTableContainer
@@ -237,16 +239,10 @@ export function DivisionsTab(props: IDivisionsTableProps) {
                   </TableHead>
                   <TableBody>
                     {territoryRows.map((row, index) => (
-                      <DivisionsTableRow
-                        key={index}
-                        row={row}
-                        headers={territoryHeaders}
-                        onClick={() => handleRowClick(row)}
-                      ></DivisionsTableRow>
+                      <DivisionsTableRow key={index} row={row} headers={territoryHeaders}></DivisionsTableRow>
                     ))}
                   </TableBody>
                 </Table>
-                <AddNewDivision open={addNewDivisionOpen} closeModal={() => setAddNewDivisionOpen(false)} />
               </>
             </CustomTableContainer>
           </Stack>

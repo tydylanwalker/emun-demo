@@ -39,8 +39,16 @@ function formatCellData(data: string, header: string) {
 }
 
 function TerritoriesTableRow(props: IDivisionTableRowProps & TableRowProps) {
+  const sx = props.onClick
+    ? {
+        cursor: 'pointer',
+        '&:hover': {
+          bgcolor: 'action.hover',
+        },
+      }
+    : {};
   return (
-    <TableRow sx={{ cursor: 'pointer' }} onClick={props.onClick}>
+    <TableRow sx={sx} onClick={props.onClick}>
       {props.headers.map((header, index) => (
         <TableCell key={index} align={header.align || 'left'}>
           <Typography>{formatCellData(props.row[header.id], header.id)}</Typography>
