@@ -89,7 +89,7 @@ export function DivisionMap(props: IDivisionMapProps) {
         if ((err as any).message.includes('ZERO_RESULTS')) {
           console.warn(`ZERO_RESULTS for ZIP code ${division.zip}: No result was found.`);
         } else {
-          console.error(`Error geocoding ${division.zip}:`, err);
+          console.warn(`Error geocoding ${division.zip}:`, err);
         }
       }
     }
