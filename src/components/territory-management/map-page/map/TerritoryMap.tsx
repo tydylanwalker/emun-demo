@@ -44,7 +44,7 @@ export function TerritoryMap() {
 
   return (
     <Stack gap={1} direction='row' height={1} flexWrap='wrap'>
-      <Stack gap={0.5} flexGrow={1} minWidth='40%' minHeight='50%' mx={2}>
+      <Stack gap={0.5} flexGrow={1} minWidth='55%' minHeight='50%' mx={2}>
         <Stack direction='row' gap={1} justifyContent='right'>
           <Typography fontSize='0.75rem'>Exists in Territories: </Typography>
           <Stack alignItems='center' direction='row' gap={1}>

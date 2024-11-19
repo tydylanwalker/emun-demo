@@ -23,7 +23,7 @@ export function createEnterCommissionsRowsFromFileUpload(
       const values = {
         poNumber: row['PO #'],
         invoiceNumber: row['Invoice #'],
-        invoiceAmount: Number(row['Invoice $']) || 0,
+        invoiceAmount: Number(row['Invoice $'].replace(/,/g, '')) || 0,
         invoiceDate: row['Invoice Date'] || dayjs().format('MM/DD/YYYY'),
         customerName: row['Customer'],
         customerId: row['Customer ID'],

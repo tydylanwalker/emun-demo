@@ -35,10 +35,7 @@ interface IVendorHeaders {
   type?: 'currency' | 'date' | 'string';
 }
 
-const vendorHeaders: IVendorHeaders[] = [
-  { label: 'Company', align: 'left', id: 'vendor' },
-  { label: 'Zip Code', align: 'left', id: 'zip' },
-];
+const vendorHeaders: IVendorHeaders[] = [{ label: 'Company', align: 'left', id: 'vendor' }];
 interface ITerritoryHeaders {
   label: string;
   id: keyof IDivision;
@@ -46,10 +43,7 @@ interface ITerritoryHeaders {
   type?: 'currency' | 'date' | 'string';
 }
 
-const territoryHeaders: ITerritoryHeaders[] = [
-  { label: 'Id', align: 'left', id: 'guid' },
-  { label: 'Name', align: 'left', id: 'territory' },
-];
+const territoryHeaders: ITerritoryHeaders[] = [{ label: 'Name', align: 'left', id: 'territory' }];
 
 function DivisionsTableRow(props: IDivisionTableRowProps & TableRowProps) {
   const sx = props.onClick

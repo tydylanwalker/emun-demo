@@ -19,12 +19,12 @@ const divisionHeaders: IDivisionHeader[] = [
   { label: 'Territory', align: 'left', id: 'territory' },
   { label: 'Rep', align: 'left', id: 'rep' },
   { label: 'Rep Group', align: 'left', id: 'repGroup' },
-  { label: 'Vendor', align: 'left', id: 'vendor' },
 ];
 
 export function DivisionsTable(props: IDivisionsTableProps) {
   const [addNewTerritoryOpen, setAddNewTerritoryOpen] = useState(false);
   const [addNewDivisionOpen, setAddNewDivisionOpen] = useState(false);
+
   return (
     <CustomTableContainer
       header={

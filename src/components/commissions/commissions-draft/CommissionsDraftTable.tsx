@@ -108,7 +108,7 @@ export function CommissionsDraftTable() {
     setCloseDraftModal(false);
   };
 
-  const checkBalance = checkSelected ? checkSelected.checkAmount - commissionAmount : null;
+  const checkBalance = checkSelected ? Math.floor(checkSelected.checkAmount - commissionAmount) : null;
 
   return (
     <>
@@ -134,10 +134,10 @@ export function CommissionsDraftTable() {
           </Stack>
         </Stack>
         <Stack direction='row' gap={2} height='fit-content'>
-          <Box sx={showTransition(!!checkBalance)}>
+          <Box sx={showTransition(checkBalance !== null)}>
             <HeaderAndValueCard
               header='Check Balance'
-              value={'$' + formatCurrency(checkBalance || -9999)}
+              value={'$' + formatCurrency(checkBalance ?? -9999)}
               color={checkBalance !== 0 ? 'error.main' : 'inherit'}
             />
           </Box>

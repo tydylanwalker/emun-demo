@@ -59,7 +59,7 @@ export function CommissionDraftTaskBar(props: ICommissionDraftTaskBarProps) {
         checkBalance: check.checkAmount - invoiceSum,
       };
     });
-  const unbalancedChecks = checkBalances.filter((check) => check.checkBalance !== 0);
+  const unbalancedChecks = checkBalances.filter((check) => Math.floor(check.checkBalance) !== 0);
 
   const repSelected = useAppSelector(getRepSelected);
   const repOptions = getRepOptions(props.rows);
@@ -103,7 +103,11 @@ export function CommissionDraftTaskBar(props: ICommissionDraftTaskBarProps) {
               ? checkBalances.map((check, index) => {
                   const value = `${check.checkNumber} - $${formatCurrency(Number(check.checkAmount))}`;
                   return (
-                    <MenuItem key={index} value={value} sx={check.checkBalance !== 0 ? { color: 'error.main' } : {}}>
+                    <MenuItem
+                      key={index}
+                      value={value}
+                      sx={Math.floor(check.checkBalance) !== 0 ? { color: 'error.main' } : {}}
+                    >
                       {value}
                     </MenuItem>
                   );
