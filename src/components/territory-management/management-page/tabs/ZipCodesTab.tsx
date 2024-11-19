@@ -57,7 +57,7 @@ export function ZipCodesTab(props: IZipCodesTableProps) {
   const rows = props.zipCodes;
 
   return (
-    <Stack>
+    <Stack height={1}>
       <CustomTableContainer
         header={
           <Stack gap={3} p={2}>

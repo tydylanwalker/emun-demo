@@ -13,7 +13,7 @@ import { getDivisions } from '../../../store/slices/dataSlice';
 import { getZipCodes } from '../../../store/slices/dataSlice';
 import { findNonEmptyDivisions } from '../map-page/map/TerritoryMap';
 import { Stack } from '@mui/material';
-import { zip } from 'lodash';
+import { topbarHeight } from '../../../data/constants';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -31,7 +31,7 @@ function TabPanel(props: TabPanelProps) {
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
-      style={{ flexGrow: 1, padding: '1rem' }}
+      style={{ flexGrow: 1, height: `calc(98vh - ${topbarHeight}px)`, width: '100%', padding: '1rem' }}
     >
       {value === index && children}
     </div>
