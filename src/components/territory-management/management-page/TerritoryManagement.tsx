@@ -4,14 +4,16 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { TerritoriesTab } from './tabs/TerritoriesTab';
-import { RepGroupTab } from './tabs/RepGroupTab';
+import { RepGroupsTab } from './tabs/RepGroupTab';
 import { RegionsTab } from './tabs/RegionsTab';
 import { ZipCodesTab } from './tabs/ZipCodesTab';
 import { DivisionsTab } from './tabs/DivisionsTab';
 import { useAppSelector } from '../../../hooks/ReduxHooks';
 import { getDivisions } from '../../../store/slices/dataSlice';
+import { getZipCodes } from '../../../store/slices/dataSlice';
 import { findNonEmptyDivisions } from '../map-page/map/TerritoryMap';
 import { Stack } from '@mui/material';
+import { zip } from 'lodash';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -50,6 +52,7 @@ export function TerritoryManagement() {
     setValue(newValue);
   };
 
+  const zipCodes = useAppSelector(getZipCodes);
   const divisions = useAppSelector(getDivisions);
   const nonEmptyDivisions = findNonEmptyDivisions(divisions);
 
@@ -75,13 +78,13 @@ export function TerritoryManagement() {
         <TerritoriesTab divisions={nonEmptyDivisions} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <RepGroupTab />
+        <RepGroupsTab divisions={nonEmptyDivisions} />
       </TabPanel>
       <TabPanel value={value} index={3}>
         <RegionsTab />
       </TabPanel>
       <TabPanel value={value} index={4}>
-        <ZipCodesTab />
+        <ZipCodesTab zipCodes={zipCodes} />
       </TabPanel>
     </Stack>
   );

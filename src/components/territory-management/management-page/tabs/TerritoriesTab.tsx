@@ -56,7 +56,7 @@ interface IDivisionTableRowProps {
 }
 
 export function TerritoriesTab(props: ITerritoriesTableProps) {
-  const [addNewDivisionOpen, setAddNewDivisionOpen] = useState(false);
+  const [addNewTerritoryOpen, setAddNewTerritoryOpen] = useState(false);
   const rows = Array.from(new Map(props.divisions.map((division) => [division.territory, division])).values());
 
   return (
@@ -69,8 +69,8 @@ export function TerritoriesTab(props: ITerritoriesTableProps) {
                 Territories
               </Typography>
               <Stack direction='row' gap={1}>
-                <Button variant='outlined' onClick={() => setAddNewDivisionOpen(true)}>
-                  New Division
+                <Button variant='outlined' onClick={() => setAddNewTerritoryOpen(true)}>
+                  New Territory
                 </Button>
               </Stack>
             </Stack>
@@ -99,7 +99,7 @@ export function TerritoriesTab(props: ITerritoriesTableProps) {
               ))}
             </TableBody>
           </Table>
-          <AddNewDivision open={addNewDivisionOpen} closeModal={() => setAddNewDivisionOpen(false)} />
+          <AddNewDivision open={addNewTerritoryOpen} closeModal={() => setAddNewTerritoryOpen(false)} />
         </>
       </CustomTableContainer>
     </Stack>
