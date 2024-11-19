@@ -11,7 +11,9 @@ export function CustomTableContainer(props: ICustomTableContainerProps & TableCo
         height: props.height || '100%',
         display: 'flex',
         flexDirection: 'column',
-        boxShadow: useAppSelector(isModeDark) ? '-2px 2px 16px rgba(50, 50, 50, 1)' : '0px 2px 16px rgba(0, 0, 0, 0.4)',
+        boxShadow: useAppSelector(isModeDark)
+          ? '-2px 2px 16px rgba(50, 50, 50, 0.5)'
+          : '0px 2px 16px rgba(0, 0, 0, 0.4)',
         borderRadius: '1rem',
         overflow: 'hidden',
       }}
