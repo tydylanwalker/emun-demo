@@ -9,6 +9,7 @@ export function CustomTableContainer(props: ICustomTableContainerProps & TableCo
     <Paper
       sx={{
         height: props.height || '100%',
+        width: props.width || 'inherit',
         display: 'flex',
         flexDirection: 'column',
         boxShadow: useAppSelector(isModeDark)
@@ -54,6 +55,7 @@ interface ICustomTableContainerProps {
   taskBar?: JSX.Element;
   header?: JSX.Element;
   height?: string;
+  width?: string;
   pagination?: {
     rowsPerPageOptions?: number[];
     count: number;
