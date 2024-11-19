@@ -60,49 +60,47 @@ export function RepGroupsTab(props: IRepGroupsTableProps) {
   const rows = Array.from(new Map(props.divisions.map((division) => [division.repGroup, division])).values());
 
   return (
-    <Stack>
-      <CustomTableContainer
-        header={
-          <Stack gap={3} p={2}>
-            <Stack direction='row' alignItems='center' gap={2} justifyContent='space-between'>
-              <Typography variant='h5' fontWeight='bold'>
-                RepGroups
-              </Typography>
-              <Stack direction='row' gap={1}>
-                <Button variant='outlined' onClick={() => setAddNewRepGroupOpen(true)}>
-                  New Rep Group
-                </Button>
-              </Stack>
+    <CustomTableContainer
+      header={
+        <Stack gap={3} p={2}>
+          <Stack direction='row' alignItems='center' gap={2} justifyContent='space-between'>
+            <Typography variant='h5' fontWeight='bold'>
+              RepGroups
+            </Typography>
+            <Stack direction='row' gap={1}>
+              <Button variant='outlined' onClick={() => setAddNewRepGroupOpen(true)}>
+                New Rep Group
+              </Button>
             </Stack>
           </Stack>
-        }
-      >
-        <>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                {divisionHeaders.map((header, index) => (
-                  <TableCell key={index} align={header.align || 'left'}>
-                    {header.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row, index) => (
-                <RepGroupsTableRow
-                  key={index}
-                  row={row}
-                  headers={divisionHeaders}
-                  onClick={() => alert('Open RepGroup Row Stats')}
-                ></RepGroupsTableRow>
+        </Stack>
+      }
+    >
+      <>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              {divisionHeaders.map((header, index) => (
+                <TableCell key={index} align={header.align || 'left'}>
+                  {header.label}
+                </TableCell>
               ))}
-            </TableBody>
-          </Table>
-          <AddNewDivision open={addNewRepGroupOpen} closeModal={() => setAddNewRepGroupOpen(false)} />
-        </>
-      </CustomTableContainer>
-    </Stack>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) => (
+              <RepGroupsTableRow
+                key={index}
+                row={row}
+                headers={divisionHeaders}
+                onClick={() => alert('Open RepGroup Row Stats')}
+              ></RepGroupsTableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <AddNewDivision open={addNewRepGroupOpen} closeModal={() => setAddNewRepGroupOpen(false)} />
+      </>
+    </CustomTableContainer>
   );
 }
 

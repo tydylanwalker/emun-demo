@@ -60,49 +60,47 @@ export function TerritoriesTab(props: ITerritoriesTableProps) {
   const rows = Array.from(new Map(props.divisions.map((division) => [division.territory, division])).values());
 
   return (
-    <Stack>
-      <CustomTableContainer
-        header={
-          <Stack gap={3} p={2}>
-            <Stack direction='row' alignItems='center' gap={2} justifyContent='space-between'>
-              <Typography variant='h5' fontWeight='bold'>
-                Territories
-              </Typography>
-              <Stack direction='row' gap={1}>
-                <Button variant='outlined' onClick={() => setAddNewTerritoryOpen(true)}>
-                  New Territory
-                </Button>
-              </Stack>
+    <CustomTableContainer
+      header={
+        <Stack gap={3} p={2}>
+          <Stack direction='row' alignItems='center' gap={2} justifyContent='space-between'>
+            <Typography variant='h5' fontWeight='bold'>
+              Territories
+            </Typography>
+            <Stack direction='row' gap={1}>
+              <Button variant='outlined' onClick={() => setAddNewTerritoryOpen(true)}>
+                New Territory
+              </Button>
             </Stack>
           </Stack>
-        }
-      >
-        <>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                {divisionHeaders.map((header, index) => (
-                  <TableCell key={index} align={header.align || 'left'}>
-                    {header.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row, index) => (
-                <TerritoriesTableRow
-                  key={index}
-                  row={row}
-                  headers={divisionHeaders}
-                  onClick={() => alert('Open Territory Row Stats')}
-                ></TerritoriesTableRow>
+        </Stack>
+      }
+    >
+      <>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              {divisionHeaders.map((header, index) => (
+                <TableCell key={index} align={header.align || 'left'}>
+                  {header.label}
+                </TableCell>
               ))}
-            </TableBody>
-          </Table>
-          <AddNewDivision open={addNewTerritoryOpen} closeModal={() => setAddNewTerritoryOpen(false)} />
-        </>
-      </CustomTableContainer>
-    </Stack>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) => (
+              <TerritoriesTableRow
+                key={index}
+                row={row}
+                headers={divisionHeaders}
+                onClick={() => alert('Open Territory Row Stats')}
+              ></TerritoriesTableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <AddNewDivision open={addNewTerritoryOpen} closeModal={() => setAddNewTerritoryOpen(false)} />
+      </>
+    </CustomTableContainer>
   );
 }
 

@@ -57,49 +57,47 @@ export function ZipCodesTab(props: IZipCodesTableProps) {
   const rows = props.zipCodes;
 
   return (
-    <Stack height={1}>
-      <CustomTableContainer
-        header={
-          <Stack gap={3} p={2}>
-            <Stack direction='row' alignItems='center' gap={2} justifyContent='space-between'>
-              <Typography variant='h5' fontWeight='bold'>
-                ZipCodes
-              </Typography>
-              <Stack direction='row' gap={1}>
-                <Button variant='outlined' onClick={() => setAddNewZipCodeOpen(true)}>
-                  New Zip Code
-                </Button>
-              </Stack>
+    <CustomTableContainer
+      header={
+        <Stack gap={3} p={2}>
+          <Stack direction='row' alignItems='center' gap={2} justifyContent='space-between'>
+            <Typography variant='h5' fontWeight='bold'>
+              ZipCodes
+            </Typography>
+            <Stack direction='row' gap={1}>
+              <Button variant='outlined' onClick={() => setAddNewZipCodeOpen(true)}>
+                New Zip Code
+              </Button>
             </Stack>
           </Stack>
-        }
-      >
-        <>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow>
-                {divisionHeaders.map((header, index) => (
-                  <TableCell key={index} align={header.align || 'left'}>
-                    {header.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row, index) => (
-                <ZipCodesTableRow
-                  key={index}
-                  row={row}
-                  headers={divisionHeaders}
-                  onClick={() => alert('Open ZipCode Row Stats')}
-                ></ZipCodesTableRow>
+        </Stack>
+      }
+    >
+      <>
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow>
+              {divisionHeaders.map((header, index) => (
+                <TableCell key={index} align={header.align || 'left'}>
+                  {header.label}
+                </TableCell>
               ))}
-            </TableBody>
-          </Table>
-          <AddNewDivision open={addNewZipCodeOpen} closeModal={() => setAddNewZipCodeOpen(false)} />
-        </>
-      </CustomTableContainer>
-    </Stack>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) => (
+              <ZipCodesTableRow
+                key={index}
+                row={row}
+                headers={divisionHeaders}
+                onClick={() => alert('Open ZipCode Row Stats')}
+              ></ZipCodesTableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <AddNewDivision open={addNewZipCodeOpen} closeModal={() => setAddNewZipCodeOpen(false)} />
+      </>
+    </CustomTableContainer>
   );
 }
 
