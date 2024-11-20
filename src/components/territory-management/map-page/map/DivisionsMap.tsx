@@ -1,17 +1,19 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { LoadScript, GoogleMap, InfoWindow, Marker } from '@react-google-maps/api';
+import { LoadScript, GoogleMap, InfoWindow, Marker, PolygonF } from '@react-google-maps/api';
 import { Backdrop, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { darkModeStyle } from './constants';
 import { findColorAndTitleForMarker } from '../../../../functions/findColorAndTitleForMarker';
 import { IDivision } from '../../../../data/interfaces/IDivision';
 import { createCustomMarker } from '../../../../functions/createCustomMarker';
 import { isNullUndefinedOrEmpty } from '../../../../functions/isNullUndefinedOrEmpty';
+import { getCoordinates, Coordinate } from '../../../../data/json/AL';
 
 export interface MarkerData {
   zipCode: string;
   existsIn: IDivision[];
   position: google.maps.LatLngLiteral;
   color: string;
+  polygon: Coordinate[] | undefined;
 }
 
 const apiGoogleKey = process.env.NEXT_PUBLIC_GOOGLEMAPS_API_KEY as string;
@@ -23,29 +25,6 @@ export function DivisionMap(props: IDivisionMapProps) {
   const [isGoogleMapsLoaded, setGoogleMapsLoaded] = useState(false);
   const [coordinatesLoading, setCoordinatesLoading] = useState(false);
 
-  // const fetchCoordinates = useCallback(async () => {
-  //   if (!window.google || !window.google.maps) return;
-
-  //   const allCoordinates: MarkerData[] = [];
-
-  //   for (const zipCode of allZipCodes) {
-  //     try {
-  //       const { color, title } = findColorAndTitleForMarker(props.data, zipCode.Id);
-  //       const coordinate = {
-  //         zipCode: zipCode.Id,
-  //         existsIn: title || [],
-  //         position: { lat: zipCode.Latitude, lng: zipCode.Longitude },
-  //         color: color,
-  //       };
-  //       allCoordinates.push(coordinate);
-  //     } catch (err) {
-  //       console.error(`Error plotting ${zipCode.Id}:`, err);
-  //     }
-  //   }
-
-  //   setCoordinates(allCoordinates);
-  //   // console.log(allCoordinates);
-  // }, [allZipCodes, props.data]);
   const fetchCoordinates = useCallback(async () => {
     if (
       isNullUndefinedOrEmpty(window.google) ||
@@ -81,6 +60,7 @@ export function DivisionMap(props: IDivisionMapProps) {
             existsIn: title || [],
             position: { lat: lat(), lng: lng() },
             color: color,
+            polygon: getCoordinates(division.zip),
           });
         } else {
           console.warn(`No results for ZIP code ${division.zip}`);
@@ -129,18 +109,30 @@ export function DivisionMap(props: IDivisionMapProps) {
           options={{ styles: darkModeStyle }}
         >
           {coordinates.map((marker) => (
-            <Marker
-              key={marker.zipCode}
-              position={marker.position}
-              onClick={() => handleMarkerClick(marker)}
-              icon={{
-                url: createCustomMarker(marker.color),
-                scaledSize: new window.google.maps.Size(50, 50),
+            // <Marker
+            //   key={marker.zipCode}
+            //   position={marker.position}
+            //   onClick={() => handleMarkerClick(marker)}
+            //   icon={{
+            //     url: createCustomMarker(marker.color),
+            //     scaledSize: new window.google.maps.Size(50, 50),
+            //   }}
+            // />
+
+            <PolygonF
+              paths={marker.polygon}
+              options={{
+                strokeColor: marker.color, // Red border color of the polygon
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: marker.color, // Red fill color of the polygon
+                fillOpacity: 0.35,
               }}
+              onClick={() => handleMarkerClick(marker)}
             />
           ))}
           {selectedMarker && (
-            <InfoWindow position={selectedMarker.position} onCloseClick={() => setSelectedMarker(null)}>
+            <InfoWindow position={selectedMarker.position} onCloseClick={() => setSelectedMarker(null)} zIndex={10000}>
               <Stack paddingX={1} paddingBottom={1} gap={3} whiteSpace='nowrap'>
                 <Typography variant='h6' color='#252525' pb={0.5} borderBottom={1}>
                   {selectedMarker.zipCode}

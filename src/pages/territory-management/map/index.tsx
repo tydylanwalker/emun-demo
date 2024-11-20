@@ -7,6 +7,7 @@ import { getTerritoryDataInitialized } from '../../../store/slices/dataSlice';
 import { initializeTerritoryData } from '../../../store/thunks/data-initialization/initializeTerritoryData';
 import Head from 'next/head';
 import { TerritoryMap } from '../../../components/territory-management/map-page/map/TerritoryMap';
+import { TestMap } from '../../../components/territory-management/map-page/map/TestMap';
 
 const MapPage: NextPage = () => {
   const dispatch = useAppDispatch();
@@ -26,6 +27,7 @@ const MapPage: NextPage = () => {
         <title>Territory Map</title>
       </Head>
       <TerritoryMap />
+      {/* <TestMap></TestMap> */}
     </>
   );
 };
