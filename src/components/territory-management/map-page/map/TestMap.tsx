@@ -4,21 +4,10 @@ import { IDivision } from '../../../../data/interfaces/IDivision';
 import { getCoordinates } from '../../../../data/json/AL';
 import { darkModeStyle } from './constants';
 
-export interface MarkerData {
-  zipCode: string;
-  existsIn: IDivision[];
-  position: google.maps.LatLngLiteral;
-  color: string;
-}
-
 const apiGoogleKey = process.env.NEXT_PUBLIC_GOOGLEMAPS_API_KEY as string;
 
 export function TestMap() {
-  // const allZipCodes = useAppSelector(getZipCodes);
-  const [selectedMarker, setSelectedMarker] = useState<MarkerData | null>(null);
-  const [coordinates, setCoordinates] = useState<MarkerData[]>([]);
   const [isGoogleMapsLoaded, setGoogleMapsLoaded] = useState(false);
-  const [coordinatesLoading, setCoordinatesLoading] = useState(false);
 
   const handleGoogleMapsLoaded = () => {
     setGoogleMapsLoaded(true);
