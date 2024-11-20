@@ -1,5 +1,5 @@
 import { Button, Typography, Stack } from '@mui/material';
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import * as ExcelJS from 'exceljs';
 import { parse } from 'csv-parse/browser/esm/sync';
 import { Close, Check } from '@mui/icons-material';
@@ -10,6 +10,7 @@ import { isModeDark } from '../../../../store/slices/themeSlice';
 import { createEnterCommissionsRowsFromFileUpload } from '../../../../store/thunks/createEnterCommissionsRowsFromFileUpload';
 import { enterCommissionHeaders, IEnterCommissionsHeader } from '../../../../data/interfaces/IEnterCommissionsHeader';
 import { getUploadFileOpen, setUploadFileOpen } from '../../../../store/slices/enterCommissionsSlice';
+import { jaroWinkler } from '../../../../functions/jaroWrinkler';
 
 interface IEmunHeaders {
   label: string;
@@ -33,6 +34,9 @@ function setInitialHeaderValues(headers: IEnterCommissionsHeader[]): IEmunHeader
 export function UploadFileModal() {
   const dispatch = useAppDispatch();
   const [step, setStep] = useState(1);
+  const [didAutoMatch, setDidAutoMatch] = useState(false);
+  const [autoMatchedHeaders, setAutoMatchedHeaders] = useState<string[]>([]);
+
   const [fileHeaders, setFileHeaders] = useState<string[]>([]);
   const [emunHeaders, setEmunHeaders] = useState<IEmunHeaders[]>(setInitialHeaderValues(enterCommissionHeaders));
   const headersBeingUsed = emunHeaders.filter((header) => header.value !== '').map((header) => header.value);
@@ -124,6 +128,60 @@ export function UploadFileModal() {
       [name]: selectedIndex !== -1 ? selectedIndex : null,
     }));
   };
+
+  const findClosestFileHeader = (header: string, fileHeaders: string[]): string => {
+    let closestHeader = '';
+    let minScore = 0.0;
+
+    for (const fileHeader of fileHeaders) {
+      if (!autoMatchedHeaders.includes(fileHeader)) {
+        const likenessScore = jaroWinkler(header, fileHeader);
+
+        if (likenessScore > minScore) {
+          closestHeader = fileHeader;
+          minScore = likenessScore;
+        }
+      }
+    }
+
+    if (minScore < 0.65) {
+      return '';
+    }
+
+    setAutoMatchedHeaders((prevHeaders) => {
+      return [...prevHeaders, closestHeader]; // Add closestHeader to the array
+    });
+
+    return closestHeader;
+  };
+
+  const matchHeadersWithJaro = () => {
+    const updatedEmunHeaders = emunHeaders.map((header) => {
+      if (header.value === '') {
+        const closestMatch = findClosestFileHeader(header.label, fileHeaders);
+
+        return {
+          ...header,
+          value: closestMatch,
+        };
+      }
+      return header;
+    });
+
+    setEmunHeaders(updatedEmunHeaders);
+  };
+
+  useEffect(() => {
+    console.log('Updated autoMatchedHeaders:', autoMatchedHeaders);
+  }, [autoMatchedHeaders]);
+
+  useEffect(() => {
+    // Call this function after file data is loaded
+    if (fileHeaders.length > 0 && emunHeaders.some((header) => header.value === '') && !didAutoMatch) {
+      matchHeadersWithJaro();
+      setDidAutoMatch(true);
+    }
+  }, [fileHeaders, emunHeaders]);
 
   // Function to map the data rows based on selected indices
   const mapFileDataToHeaders = async () => {
