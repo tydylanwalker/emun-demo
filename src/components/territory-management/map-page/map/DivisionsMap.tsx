@@ -24,6 +24,7 @@ export function DivisionMap(props: IDivisionMapProps) {
   const [coordinates, setCoordinates] = useState<MarkerData[]>([]);
   const [isGoogleMapsLoaded, setGoogleMapsLoaded] = useState(false);
   const [coordinatesLoading, setCoordinatesLoading] = useState(false);
+  const [showMarkers, setShowMarkers] = useState(true); // Toggle state for markers vs polygons
 
   const fetchCoordinates = useCallback(async () => {
     if (
@@ -99,6 +100,13 @@ export function DivisionMap(props: IDivisionMapProps) {
       key={isGoogleMapsLoaded ? 'loaded' : 'loading'}
     >
       <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%', position: 'relative' }}>
+        <Button
+          variant='contained'
+          onClick={() => setShowMarkers((prev) => !prev)}
+          sx={{ zIndex: 999, position: 'absolute', top: '10px', left: '10px' }}
+        >
+          {showMarkers ? 'Show Polygons' : 'Show Markers'}
+        </Button>
         <Backdrop open={coordinatesLoading} sx={{ zIndex: 1000000000, position: 'absolute' }}>
           <CircularProgress />
         </Backdrop>
@@ -106,30 +114,40 @@ export function DivisionMap(props: IDivisionMapProps) {
           mapContainerStyle={{ flexGrow: 1, height: '100%' }}
           zoom={5}
           center={coordinates.length > 0 ? coordinates[0].position : { lat: 32.806671, lng: -86.79113 }}
-          options={{ styles: darkModeStyle }}
+          options={{
+            styles: darkModeStyle,
+            mapTypeControl: false, // Disable the map type control
+          }}
         >
           {coordinates.map((marker) => (
-            // <Marker
-            //   key={marker.zipCode}
-            //   position={marker.position}
-            //   onClick={() => handleMarkerClick(marker)}
-            //   icon={{
-            //     url: createCustomMarker(marker.color),
-            //     scaledSize: new window.google.maps.Size(50, 50),
-            //   }}
-            // />
+            <>
+              {showMarkers && (
+                <Marker
+                  key={marker.zipCode}
+                  position={marker.position}
+                  onClick={() => handleMarkerClick(marker)}
+                  icon={{
+                    url: createCustomMarker(marker.color),
+                    scaledSize: new window.google.maps.Size(50, 50),
+                  }}
+                />
+              )}
 
-            <PolygonF
-              paths={marker.polygon}
-              options={{
-                strokeColor: marker.color, // Red border color of the polygon
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: marker.color, // Red fill color of the polygon
-                fillOpacity: 0.35,
-              }}
-              onClick={() => handleMarkerClick(marker)}
-            />
+              {!showMarkers && marker.polygon && (
+                <PolygonF
+                  key={marker.zipCode}
+                  paths={marker.polygon}
+                  options={{
+                    strokeColor: marker.color,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: marker.color,
+                    fillOpacity: 0.35,
+                  }}
+                  onClick={() => handleMarkerClick(marker)}
+                />
+              )}
+            </>
           ))}
           {selectedMarker && (
             <InfoWindow position={selectedMarker.position} onCloseClick={() => setSelectedMarker(null)} zIndex={10000}>
