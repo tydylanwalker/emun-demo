@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, TableHead, TableRow, TableCell, TableBody, IconButton, Popover, Typography } from '@mui/material';
+import { Table, TableHead, TableRow, TableCell, TableBody, IconButton, Popover, Typography, Box } from '@mui/material';
 import { IEnterCommissionsRow } from '../EnterCommissions';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/ReduxHooks';
 import { getEnterCommissionsRows, setEnterCommissionsRows } from '../../../../store/slices/enterCommissionsSlice';
@@ -8,6 +8,22 @@ import { CustomTableContainer } from '../../../shared/CustomTableContainer';
 import { EnterCommissionsTableRow } from './EnterCommissionsTableRow';
 import { EnterCommissionsTableTaskBar } from './EnterCommissionsTableTaskBar';
 import { IOrder } from '../../../../data/interfaces/IOrder';
+import { OrdersTableRow } from '../../../orders/OrdersTableRow';
+import { getOrders } from '../../../../store/slices/dataSlice';
+import { IOrderHeader } from '../../../orders/OrdersTable';
+
+export const orderHeaders: IOrderHeader[] = [
+  { label: 'PO #', align: 'left', id: 'poNumber' },
+  { label: 'Source', align: 'center', id: 'source' },
+  { label: 'Vendor', align: 'left', id: 'vendorName' },
+  { label: 'Amount', align: 'right', id: 'amount', type: 'currency' },
+  { label: 'Customer', align: 'left', id: 'customerName' },
+  { label: 'Address', align: 'left', id: 'shipAddress' },
+  { label: 'City', align: 'left', id: 'shipCity' },
+  { label: 'State', align: 'center', id: 'shipState' },
+  { label: 'Zip', align: 'center', id: 'shipZip' },
+  { label: 'Rep', align: 'left', id: 'rep' },
+];
 
 export function EnterCommissionsTable() {
   const dispatch = useAppDispatch();
@@ -17,6 +33,7 @@ export function EnterCommissionsTable() {
   const [onlyShowErrors, setOnlyShowErrors] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // For Popover
   const [selectedRow, setSelectedRow] = useState<IEnterCommissionsRow | null>(null); // Track the selected row for popup content
+  const orders = useAppSelector(getOrders);
 
   const renderedRows = onlyShowErrors ? rowsWithErrors : commissionRows;
 
@@ -117,16 +134,36 @@ export function EnterCommissionsTable() {
             vertical: 'top',
             horizontal: 'center',
           }}
+          sx={{
+            width: '600px', // Set fixed width
+            maxWidth: '600px', // Optional: limit max width to prevent expansion
+            height: 'auto', // Adjust height as needed
+          }}
         >
-          <Typography sx={{ p: 2 }}>
-            {selectedRow && (
-              <>
-                <div>PO Number: {selectedRow.poNumber.value}</div>
-                <div>Customer Name: {selectedRow.customerName.value}</div>
-                <div>Order Date: {selectedRow.orderDate.value}</div>
-              </>
-            )}
-          </Typography>
+          <div style={{ overflowX: 'auto', maxWidth: '100%' }}>
+            <Typography paddingTop={1} paddingLeft={1}>
+              Potential Matches
+            </Typography>
+            <TableRow>
+              {orderHeaders.map((header, index) => (
+                <TableCell
+                  key={index}
+                  align={header.align || 'left'}
+                  sx={{
+                    fontSize: '0.75rem',
+                    whiteSpace: 'nowrap', // Prevent text from wrapping to next line
+                    overflow: 'hidden', // Hide any overflow text
+                    textOverflow: 'ellipsis', // Show ellipsis (...) for overflow text
+                  }}
+                >
+                  {header.label}
+                </TableCell>
+              ))}
+            </TableRow>
+            {orders.slice(0, 2).map((row, index) => (
+              <OrdersTableRow key={index} row={row} headers={orderHeaders} selected={false} shrinkText={true} />
+            ))}
+          </div>
         </Popover>
       </>
     </CustomTableContainer>

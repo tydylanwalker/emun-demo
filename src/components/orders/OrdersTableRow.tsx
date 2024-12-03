@@ -17,8 +17,27 @@ export function OrdersTableRow(props: IOrdersTableRowProps & TableRowProps) {
       onClick={props.onClick}
     >
       {props.headers.map((header, index) => (
-        <TableCell key={index} align={header.align || 'left'}>
-          <Typography>{formatCellData(header.type, props.row[header.id])}</Typography>
+        <TableCell
+          key={index}
+          align={header.align || 'left'}
+          sx={{
+            whiteSpace: 'nowrap', // Prevent text from wrapping to next line
+            overflow: 'hidden', // Hide any overflow text
+            textOverflow: 'ellipsis', // Show ellipsis (...) for overflow text
+          }}
+        >
+          <Typography
+            noWrap
+            sx={
+              props.shrinkText
+                ? {
+                    fontSize: '0.75rem', // Conditionally shrink the text size
+                  }
+                : {}
+            }
+          >
+            {formatCellData(header.type, props.row[header.id])}
+          </Typography>
         </TableCell>
       ))}
     </TableRow>
@@ -31,4 +50,5 @@ interface IOrdersTableRowProps {
   headers: IOrderHeader[];
   selected: boolean;
   onClick?: () => void;
+  shrinkText?: boolean; // Optional boolean to shrink the text size
 }

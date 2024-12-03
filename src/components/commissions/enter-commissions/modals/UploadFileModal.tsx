@@ -175,13 +175,13 @@ export function UploadFileModal() {
     console.log('Updated autoMatchedHeaders:', autoMatchedHeaders);
   }, [autoMatchedHeaders]);
 
-  useEffect(() => {
-    // Call this function after file data is loaded
-    if (fileHeaders.length > 0 && emunHeaders.some((header) => header.value === '') && !didAutoMatch) {
-      matchHeadersWithJaro();
-      setDidAutoMatch(true);
-    }
-  }, [fileHeaders, emunHeaders]);
+  // useEffect(() => {
+  //   // Call this function after file data is loaded
+  //   if (fileHeaders.length > 0 && emunHeaders.some((header) => header.value === '') && !didAutoMatch) {
+  //     matchHeadersWithJaro();
+  //     setDidAutoMatch(true);
+  //   }
+  // }, [fileHeaders, emunHeaders]);
 
   // Function to map the data rows based on selected indices
   const mapFileDataToHeaders = async () => {

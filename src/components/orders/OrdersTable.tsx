@@ -15,7 +15,7 @@ export interface IOrderHeader {
   type?: 'currency' | 'date' | 'string';
 }
 
-const orderHeaders: IOrderHeader[] = [
+export const orderHeaders: IOrderHeader[] = [
   { label: 'PO #', align: 'left', id: 'poNumber' },
   { label: 'Order #', align: 'left', id: 'orderNumber' },
   { label: 'Source', align: 'center', id: 'source' },

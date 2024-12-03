@@ -6,7 +6,7 @@ import { formatCellData } from '../../../../functions/formatCellData';
 import { IOrder } from '../../../../data/interfaces/IOrder';
 import { ErrorCommissionModal } from '../modals/ErrorCommissionModal';
 import { enterCommissionHeaders } from '../../../../data/interfaces/IEnterCommissionsHeader';
-import InfoIcon from '@mui/icons-material/Info'; // Add this for the icon
+import JoinLeftIcon from '@mui/icons-material/JoinLeft';
 
 export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) {
   const [orderGridOpen, setOrderGridOpen] = useState(false);
@@ -35,7 +35,7 @@ export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) 
         <TableCell align='center'>
           {props.row['poNumber'].error ? (
             <IconButton onClick={(event) => props.onPopoverOpen(event, props.row)}>
-              <InfoIcon />
+              <JoinLeftIcon />
             </IconButton>
           ) : (
             <></> // Empty or alternative content if no error
