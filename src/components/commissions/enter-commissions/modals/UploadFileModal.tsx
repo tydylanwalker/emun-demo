@@ -10,9 +10,9 @@ import { isModeDark } from '../../../../store/slices/themeSlice';
 import { createEnterCommissionsRowsFromFileUpload } from '../../../../store/thunks/createEnterCommissionsRowsFromFileUpload';
 import { enterCommissionHeaders, IEnterCommissionsHeader } from '../../../../data/interfaces/IEnterCommissionsHeader';
 import { getUploadFileOpen, setUploadFileOpen } from '../../../../store/slices/enterCommissionsSlice';
-import { jaroWinkler } from '../../../../functions/jaroWrinkler';
+import { mapCommissionsFields } from '../../../../functions/mapCommissionsFields';
 
-interface IEmunHeaders {
+export interface IEmunHeaders {
   label: string;
   value: string;
   required: boolean;
@@ -129,59 +129,14 @@ export function UploadFileModal() {
     }));
   };
 
-  const findClosestFileHeader = (header: string, fileHeaders: string[]): string => {
-    let closestHeader = '';
-    let minScore = 0.0;
-
-    for (const fileHeader of fileHeaders) {
-      if (!autoMatchedHeaders.includes(fileHeader)) {
-        const likenessScore = jaroWinkler(header, fileHeader);
-
-        if (likenessScore > minScore) {
-          closestHeader = fileHeader;
-          minScore = likenessScore;
-        }
-      }
-    }
-
-    if (minScore < 0.65) {
-      return '';
-    }
-
-    setAutoMatchedHeaders((prevHeaders) => {
-      return [...prevHeaders, closestHeader]; // Add closestHeader to the array
-    });
-
-    return closestHeader;
-  };
-
-  const matchHeadersWithJaro = () => {
-    const updatedEmunHeaders = emunHeaders.map((header) => {
-      if (header.value === '') {
-        const closestMatch = findClosestFileHeader(header.label, fileHeaders);
-
-        return {
-          ...header,
-          value: closestMatch,
-        };
-      }
-      return header;
-    });
-
-    setEmunHeaders(updatedEmunHeaders);
-  };
-
   useEffect(() => {
-    console.log('Updated autoMatchedHeaders:', autoMatchedHeaders);
-  }, [autoMatchedHeaders]);
-
-  // useEffect(() => {
-  //   // Call this function after file data is loaded
-  //   if (fileHeaders.length > 0 && emunHeaders.some((header) => header.value === '') && !didAutoMatch) {
-  //     matchHeadersWithJaro();
-  //     setDidAutoMatch(true);
-  //   }
-  // }, [fileHeaders, emunHeaders]);
+    // Call this function after file data is loaded
+    if (fileHeaders.length > 0 && emunHeaders.some((header) => header.value === '') && !didAutoMatch) {
+      let updatedHeaders: IEmunHeaders[] = mapCommissionsFields(fileHeaders, emunHeaders);
+      setEmunHeaders(updatedHeaders);
+      setDidAutoMatch(true);
+    }
+  }, [fileHeaders, emunHeaders]);
 
   // Function to map the data rows based on selected indices
   const mapFileDataToHeaders = async () => {
