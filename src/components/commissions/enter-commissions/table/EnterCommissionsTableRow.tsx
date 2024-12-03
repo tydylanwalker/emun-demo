@@ -1,4 +1,4 @@
-import { TableRow, TableCell, Typography, Stack } from '@mui/material';
+import { TableRow, TableCell, Typography, Stack, IconButton } from '@mui/material';
 import { ErrorEnum } from '../../../../data/enums/ErrorEnum';
 import { IEnterCommissionsRow } from '../EnterCommissions';
 import { useState } from 'react';
@@ -6,6 +6,7 @@ import { formatCellData } from '../../../../functions/formatCellData';
 import { IOrder } from '../../../../data/interfaces/IOrder';
 import { ErrorCommissionModal } from '../modals/ErrorCommissionModal';
 import { enterCommissionHeaders } from '../../../../data/interfaces/IEnterCommissionsHeader';
+import InfoIcon from '@mui/icons-material/Info'; // Add this for the icon
 
 export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) {
   const [orderGridOpen, setOrderGridOpen] = useState(false);
@@ -29,14 +30,18 @@ export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) 
 
   return (
     <>
-      <TableRow sx={hasError ? { border: 2, borderColor: 'error.main' } : {}}>
-        {/* <TableCell align={'center'} sx={{ cursor: 'default' }}>
-          <Checkbox
-            checked={props.row.checked.value}
-            onChange={() => props.toggleChecked?.(props.row)}
-            disabled={hasError}
-          />
-        </TableCell> */}
+      <TableRow sx={hasError ? { border: 1.5, borderColor: 'error.main' } : {}}>
+        {/* Render InfoIcon only when there's an error */}
+        <TableCell align='center'>
+          {props.row['poNumber'].error ? (
+            <IconButton onClick={(event) => props.onPopoverOpen(event, props.row)}>
+              <InfoIcon />
+            </IconButton>
+          ) : (
+            <></> // Empty or alternative content if no error
+          )}
+        </TableCell>
+
         {enterCommissionHeaders.map((header, index) => {
           const error = determineErrorHandling(props.row[header.id].error, props.row);
 
@@ -61,6 +66,8 @@ export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) 
           );
         })}
       </TableRow>
+
+      {/* Error Commission Modal */}
       <ErrorCommissionModal
         open={orderGridOpen}
         handleModalClose={handleModalClose}
@@ -76,6 +83,7 @@ interface IEnterCommissionsTableRowProps {
   row: IEnterCommissionsRow;
   onConfirmMatch?: (order: IOrder, row: IEnterCommissionsRow) => void;
   toggleChecked?: (row: IEnterCommissionsRow) => void;
+  onPopoverOpen: (event: React.MouseEvent<HTMLElement>, row: IEnterCommissionsRow) => void;
 }
 
 export interface IEnterCommissionsTableRowError {
@@ -83,6 +91,7 @@ export interface IEnterCommissionsTableRowError {
   searchText: string;
 }
 
+// Function to determine the error handling message based on the error
 function determineErrorHandling(
   error: ErrorEnum | undefined,
   row: IEnterCommissionsRow
