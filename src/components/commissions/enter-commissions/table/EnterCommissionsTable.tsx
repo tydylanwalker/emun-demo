@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableHead, TableRow, TableCell, TableBody, IconButton, Popover, Typography, Box } from '@mui/material';
 import { IEnterCommissionsRow } from '../EnterCommissions';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/ReduxHooks';
@@ -34,8 +34,25 @@ export function EnterCommissionsTable() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // For Popover
   const [selectedRow, setSelectedRow] = useState<IEnterCommissionsRow | null>(null); // Track the selected row for popup content
   const orders = useAppSelector(getOrders);
-
   const renderedRows = onlyShowErrors ? rowsWithErrors : commissionRows;
+
+  useEffect(() => {
+    const rowsWithErrors: IEnterCommissionsRow[] = [];
+    const matchedRows: IEnterCommissionsRow[] = [];
+
+    commissionRows.forEach((row) => {
+      if (Object.values(row).some((field) => field.error)) {
+        rowsWithErrors.push(row);
+      } else {
+        matchedRows.push(row);
+      }
+    });
+
+    if (rowsWithErrors.length === 0) setOnlyShowErrors(false);
+
+    setRowsWithErrors(rowsWithErrors);
+    setMatchedRows(matchedRows);
+  }, [commissionRows]);
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>, row: IEnterCommissionsRow) => {
     setAnchorEl(event.currentTarget); // Set the anchor element for the popover
