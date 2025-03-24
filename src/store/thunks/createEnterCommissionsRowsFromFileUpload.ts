@@ -19,11 +19,13 @@ export function createEnterCommissionsRowsFromFileUpload(
     const orders = state.data.orders.filter((order) => order.vendorName === vendorSelected);
 
     const commissionsRows = rows.map((row) => {
+      // console.log(row['Invoice $']);
+      // console.log(row['Invoice #']);
       // grab row data
       const values = {
         poNumber: row['PO #'],
         invoiceNumber: row['Invoice #'],
-        invoiceAmount: Number(row['Invoice $'].replace(/,/g, '')) || 0,
+        invoiceAmount: Number(row['Invoice $'] ? row['Invoice $'].replace(/,/g, '') : 0),
         invoiceDate: row['Invoice Date'] || dayjs().format('MM/DD/YYYY'),
         customerName: row['Customer'],
         customerId: row['Customer ID'],

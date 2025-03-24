@@ -3,10 +3,10 @@ import { IEmunHeaders } from '../components/commissions/enter-commissions/modals
 // Function to find the best match for a given field from the second set of data
 function findMatchingField(fileHeaders: string[], fieldNames: string[]): string | null {
   // Loop through fileHeaders
-  for (let fileHeader of fileHeaders) {
+  for (const fileHeader of fileHeaders) {
     // Check if fileHeader is present in fieldNames
     if (fieldNames.includes(fileHeader)) {
-      console.log('Found a match:', fileHeader);
+      // console.log('Found a match:', fileHeader);
       return fileHeader; // Return the first matching field
     }
   }
@@ -30,21 +30,25 @@ export const fieldMappingConfig: FieldMappingConfig = {
   Zip: ['shipZip', 'zipCode'],
 };
 
-export function mapCommissionsFields(fileHeaders: string[], headers: IEmunHeaders[]): IEmunHeaders[] {
-  const updatedEmunHeaders: IEmunHeaders[] = [];
-  headers.forEach((header) => {
-    console.log('Trying to match field');
-    console.log(header.label);
+export function mapCommissionsFields(
+  fileHeaders: string[],
+  headers: IEmunHeaders[]
+): { updatedHeaders: IEmunHeaders[]; headerIndices: { [key: string]: number | null } } {
+  const updatedHeaders: IEmunHeaders[] = [];
+  const headerIndices: { [key: string]: number | null } = {};
 
+  headers.forEach((header) => {
     const possibleFields = fieldMappingConfig[header.label];
     const matchingValue = findMatchingField(fileHeaders, possibleFields);
 
-    updatedEmunHeaders.push({
+    updatedHeaders.push({
       label: header.label,
       value: matchingValue || '',
       required: !!header.required,
     });
+
+    headerIndices[header.label] = matchingValue ? fileHeaders.indexOf(matchingValue) : null;
   });
 
-  return updatedEmunHeaders;
+  return { updatedHeaders, headerIndices };
 }

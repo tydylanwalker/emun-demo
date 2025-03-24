@@ -132,11 +132,12 @@ export function UploadFileModal() {
   useEffect(() => {
     // Call this function after file data is loaded
     if (fileHeaders.length > 0 && emunHeaders.some((header) => header.value === '') && !didAutoMatch) {
-      let updatedHeaders: IEmunHeaders[] = mapCommissionsFields(fileHeaders, emunHeaders);
+      const { updatedHeaders, headerIndices } = mapCommissionsFields(fileHeaders, emunHeaders);
       setEmunHeaders(updatedHeaders);
+      setMappedHeaderIndices(headerIndices);
       setDidAutoMatch(true);
     }
-  }, [fileHeaders, emunHeaders]);
+  }, [fileHeaders, emunHeaders, didAutoMatch]);
 
   // Function to map the data rows based on selected indices
   const mapFileDataToHeaders = async () => {
@@ -148,6 +149,7 @@ export function UploadFileModal() {
       });
       return mappedRow;
     });
+
     await dispatch(await createEnterCommissionsRowsFromFileUpload(mappedFileData || []));
     closeModal();
   };
