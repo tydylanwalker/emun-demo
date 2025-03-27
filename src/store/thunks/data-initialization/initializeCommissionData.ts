@@ -16,6 +16,7 @@ export function initializeCommissionData(): ThunkAction<void, RootState, unknown
       dispatch(getThunk(ESheets.Vendors)),
       dispatch(getThunk(ESheets.Checks)),
       dispatch(getThunk(ESheets.PayPeriods)),
+      dispatch(getThunk(ESheets.CommissionRules)),
     ]);
 
     dispatch(commissionDataInitialized());

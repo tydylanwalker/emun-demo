@@ -35,7 +35,6 @@ export function UploadFileModal() {
   const dispatch = useAppDispatch();
   const [step, setStep] = useState(1);
   const [didAutoMatch, setDidAutoMatch] = useState(false);
-  const [autoMatchedHeaders, setAutoMatchedHeaders] = useState<string[]>([]);
 
   const [fileHeaders, setFileHeaders] = useState<string[]>([]);
   const [emunHeaders, setEmunHeaders] = useState<IEmunHeaders[]>(setInitialHeaderValues(enterCommissionHeaders));
@@ -154,10 +153,6 @@ export function UploadFileModal() {
     closeModal();
   };
 
-  const boxShadow = useAppSelector(isModeDark)
-    ? '0px 2px 20px rgba(125, 125, 125, 0.4)'
-    : '0px 2px 16px rgba(0, 0, 0, 0.4)';
-
   return (
     <CustomModal open={useAppSelector(getUploadFileOpen)} closeModal={closeModal} header='Upload Invoices File'>
       {step === 1 && (
@@ -198,7 +193,7 @@ export function UploadFileModal() {
               overflow='hidden'
               borderRadius={3}
               sx={{
-                boxShadow: boxShadow,
+                boxShadow: (theme) => theme.shadows[5],
               }}
             >
               <Stack direction='row' width='60vw' p={1} bgcolor='secondary.dark' borderBottom={1}>

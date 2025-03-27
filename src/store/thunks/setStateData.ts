@@ -9,6 +9,7 @@ import {
   setInvoices,
   setDivisions,
   setZipCodes,
+  setCommissionRules,
 } from '../slices/dataSlice';
 import { ESheets } from '../../data/enums/ESheets';
 import { mapOrder } from '../../data/mappers/mapOrder';
@@ -18,6 +19,7 @@ import { mapCheck } from '../../data/mappers/mapCheck';
 import { mapVendor } from '../../data/mappers/mapVendor';
 import { mapDivision } from '../../data/mappers/mapDivision';
 import { mapZipCodes } from '../../data/mappers/mapZipCodes';
+import { mapCommissionRules } from '../../data/mappers/mapCommissionRules';
 
 /**
  * Sets the data for a specific sheet
@@ -47,6 +49,9 @@ export function setStateData(rows: any, sheet: ESheets): ThunkAction<void, RootS
         break;
       case ESheets.ZipCodes:
         dispatch(setZipCodes(mapZipCodes(rows)));
+        break;
+      case ESheets.CommissionRules:
+        dispatch(setCommissionRules(mapCommissionRules(rows)));
         break;
       default:
         console.warn(`No matching case for sheet type: ${sheet}`);

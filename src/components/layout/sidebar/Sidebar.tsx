@@ -13,6 +13,7 @@ import {
   LocationCityRounded,
   MapRounded,
   ManageAccountsRounded,
+  RuleFolder,
 } from '@mui/icons-material';
 import { Box, IconButton, List } from '@mui/material';
 import { SidebarItem } from './SidebarItem';
@@ -65,6 +66,11 @@ const sidebarContent: ISidebarContent[] = [
         label: 'Enter Commissions',
         icon: <UploadFileRounded />,
         href: '/commissions/enter-commissions',
+      },
+      {
+        label: 'Comission Rules',
+        icon: <RuleFolder />,
+        href: '/commissions/commission-rules',
       },
       {
         label: 'Checks',

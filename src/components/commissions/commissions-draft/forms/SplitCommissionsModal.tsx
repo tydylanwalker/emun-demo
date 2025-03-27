@@ -10,7 +10,9 @@ interface IRepCommissions {
 }
 
 export function SplitCommissionsModal(props: IProps) {
-  const [formData, setFormData] = useState<IRepCommissions[]>([{ rep: props.commission.rep, percentage: '100' }]);
+  const [formData, setFormData] = useState<IRepCommissions[]>([
+    { rep: props.commission?.rep || props.repSelected || '', percentage: '100' },
+  ]);
 
   const closeModal = () => {
     props.closeModal(false);
@@ -24,10 +26,12 @@ export function SplitCommissionsModal(props: IProps) {
   };
 
   const onSave = () => {
-    props.saveCommission({
-      ...props.commission,
-      rep: formData.length > 1 ? 'SPLIT' : props.commission.rep,
-    });
+    if (props.saveCommission && props.commission) {
+      props.saveCommission({
+        ...props.commission,
+        rep: formData.length > 1 ? 'SPLIT' : props.commission.rep,
+      });
+    }
     closeModal();
   };
 
@@ -82,7 +86,8 @@ export function SplitCommissionsModal(props: IProps) {
 interface IProps {
   open: boolean;
   closeModal: (newOpen: boolean) => void;
-  commission: IInvoice;
-  saveCommission: (commission: IInvoice) => void;
+  commission?: IInvoice;
+  saveCommission?: (commission: IInvoice) => void;
   repOptions: string[];
+  repSelected?: string;
 }

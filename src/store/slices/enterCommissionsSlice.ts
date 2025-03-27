@@ -1,13 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { IEnterCommissionsRow } from '../../components/commissions/enter-commissions/EnterCommissions';
+import { ICommissionRule } from '../../data/interfaces/ICommissionRule';
 
 interface IEnterCommissionsState {
   enterCommissionsRows: IEnterCommissionsRow[];
   vendorSelected: string;
   payPeriodSelected: string;
+  commissionRuleSelected: ICommissionRule | undefined;
   checkSelected: string;
   addCheckOpen: boolean;
+  commissionRulesDetailsOpen: boolean;
   addDirectOrderOpen: boolean;
   addPayPeriodOpen: boolean;
   addCreditOpen: boolean;
@@ -20,8 +23,10 @@ const initialState: IEnterCommissionsState = {
   enterCommissionsRows: [],
   vendorSelected: '',
   payPeriodSelected: '',
+  commissionRuleSelected: undefined,
   checkSelected: '',
   addCheckOpen: false,
+  commissionRulesDetailsOpen: false,
   addDirectOrderOpen: false,
   addPayPeriodOpen: false,
   addCreditOpen: false,
@@ -46,11 +51,17 @@ const enterCommissionsSlice = createSlice({
     setPayPeriodSelected: (state, action: PayloadAction<string>) => {
       state.payPeriodSelected = action.payload;
     },
+    setCommissionRuleSelected: (state, action: PayloadAction<ICommissionRule | undefined>) => {
+      state.commissionRuleSelected = action.payload;
+    },
     setCheckSelected: (state, action: PayloadAction<string>) => {
       state.checkSelected = action.payload;
     },
     setAddCheckOpen: (state, action: PayloadAction<boolean>) => {
       state.addCheckOpen = action.payload;
+    },
+    setCommissionRulesDetailsOpen: (state, action: PayloadAction<boolean>) => {
+      state.commissionRulesDetailsOpen = action.payload;
     },
     setAddPayPeriodOpen: (state, action: PayloadAction<boolean>) => {
       state.addPayPeriodOpen = action.payload;
@@ -76,8 +87,10 @@ const enterCommissionsSlice = createSlice({
 export const getEnterCommissionsRows = (state: RootState) => state.enterCommissions.enterCommissionsRows;
 export const getVendorSelected = (state: RootState) => state.enterCommissions.vendorSelected;
 export const getPayPeriodSelected = (state: RootState) => state.enterCommissions.payPeriodSelected;
+export const getCommissionRuleSelected = (state: RootState) => state.enterCommissions.commissionRuleSelected;
 export const getCheckSelected = (state: RootState) => state.enterCommissions.checkSelected;
 export const getAddCheckOpen = (state: RootState) => state.enterCommissions.addCheckOpen;
+export const getCommissionRulesDetailsOpen = (state: RootState) => state.enterCommissions.commissionRulesDetailsOpen;
 export const getAddPayPeriodOpen = (state: RootState) => state.enterCommissions.addPayPeriodOpen;
 export const getAddCreditOpen = (state: RootState) => state.enterCommissions.addCreditOpen;
 export const getAddAdjustmentOpen = (state: RootState) => state.enterCommissions.addAdjustmentOpen;
@@ -98,6 +111,8 @@ export const {
   setAddDirectOrderOpen,
   setAddPayPeriodOpen,
   setUploadFileOpen,
+  setCommissionRuleSelected,
+  setCommissionRulesDetailsOpen,
 } = enterCommissionsSlice.actions;
 
 export const enterCommissionsReducer = enterCommissionsSlice.reducer;

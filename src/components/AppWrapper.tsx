@@ -13,6 +13,7 @@ import { AddAdjustment } from './commissions/enter-commissions/forms/AddAdjustme
 import { AddCheck } from './commissions/enter-commissions/forms/AddCheck';
 import { AddDirectOrder } from './commissions/enter-commissions/forms/AddDirectOrder';
 import { AddPayPeriod } from './commissions/enter-commissions/forms/AddPayPeriod';
+import { CommissionRuleDetails } from './commissions/commission-rules/forms/CommissionRuleDetails';
 
 dayjs.extend(customParseFormat);
 
@@ -62,6 +63,7 @@ export function AppWrapper(props: IAppWrapper) {
         <AddPayPeriod />
         <AddDirectOrder />
         <AddAdjustment />
+        <CommissionRuleDetails />
       </LocalizationProvider>
     </ThemeProvider>
   );

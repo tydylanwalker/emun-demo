@@ -145,15 +145,15 @@ export function EnterCommissionsTable() {
           onClose={handlePopoverClose}
           anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'center',
+            horizontal: 'right',
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'center',
+            horizontal: 'right',
           }}
           sx={{
-            width: '600px', // Set fixed width
-            maxWidth: '600px', // Optional: limit max width to prevent expansion
+            width: '40vw', // Set fixed width
+            maxWidth: '40vw', // Optional: limit max width to prevent expansion
             height: 'auto', // Adjust height as needed
           }}
         >

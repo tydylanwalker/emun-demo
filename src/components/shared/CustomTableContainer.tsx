@@ -1,6 +1,4 @@
 import { TableContainer, Paper, Stack, TableContainerProps, TablePagination } from '@mui/material';
-import { useAppSelector } from '../../hooks/ReduxHooks';
-import { isModeDark } from '../../store/slices/themeSlice';
 
 export function CustomTableContainer(props: ICustomTableContainerProps & TableContainerProps) {
   const headersShown = props.header || props.taskBar;
@@ -12,9 +10,7 @@ export function CustomTableContainer(props: ICustomTableContainerProps & TableCo
         width: props.width || 'inherit',
         display: 'flex',
         flexDirection: 'column',
-        boxShadow: useAppSelector(isModeDark)
-          ? '-2px 2px 16px rgba(50, 50, 50, 0.5)'
-          : '0px 2px 16px rgba(0, 0, 0, 0.4)',
+        boxShadow: (theme) => theme.shadows[5],
         borderRadius: '1rem',
         overflow: 'hidden',
       }}

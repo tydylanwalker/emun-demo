@@ -30,7 +30,7 @@ export function EnterCommissionsTableRow(props: IEnterCommissionsTableRowProps) 
 
   return (
     <>
-      <TableRow sx={hasError ? { border: 1.5, borderColor: 'error.main' } : {}}>
+      <TableRow sx={hasError ? { border: 2.5, borderColor: 'error.main' } : {}}>
         {/* Render InfoIcon only when there's an error */}
         <TableCell align='center'>
           {props.row['poNumber'].error ? (
